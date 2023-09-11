@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:money_tracker/authentication/login_screen.dart';
 import 'package:money_tracker/documentation/documents_list.dart';
 import 'package:money_tracker/financial/main_financial.dart';
 import 'package:money_tracker/global.dart';
 import 'package:money_tracker/main_screens/about_us.dart';
 import 'package:money_tracker/main_screens/summary_screen.dart';
+import 'package:money_tracker/resources/user_service.dart';
 import 'package:money_tracker/widgets/side_drawer.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:flutter/material.dart';
@@ -19,15 +21,31 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'MoneyTracker',
-      themeMode: ThemeMode.dark,
-      darkTheme: ThemeData(
-        brightness: Brightness.light,
+      title: 'Money Tracker',
+      theme: ThemeData(
+        appBarTheme: const AppBarTheme(
+            iconTheme: IconThemeData(color: Colors.white),
+            color: Color.fromARGB(255, 22, 41, 90),
+            titleTextStyle: TextStyle(color: Colors.white, fontSize: 21)),
+        drawerTheme: const DrawerThemeData(),
+        colorScheme:
+            const ColorScheme.light(secondary: Color.fromARGB(255, 22, 41, 90)),
         useMaterial3: true,
-        colorSchemeSeed: Colors.blue,
-        fontFamily: 'Poppins',
+        fontFamily: "Poppins",
       ),
-      home: const MyHomePage(),
+      home: ValueListenableBuilder<bool>(
+        valueListenable: UserService().isAuthenticated,
+        builder: (context, value, _) {
+          if (value) {
+            return const MyHomePage();
+          } else {
+            return const LoginPage();
+          }
+        },
+      ),
+      supportedLocales: const [
+        Locale('pl', ''),
+      ],
     );
   }
 }

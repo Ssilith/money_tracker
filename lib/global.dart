@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/retry.dart';
+import 'package:intl/intl.dart';
 
 BoxDecoration withShadow([Color? color, int a = 255]) {
   return BoxDecoration(
@@ -28,3 +30,10 @@ List<Color> gradientColors = const [
   Color.fromARGB(255, 221, 232, 255),
   Color.fromARGB(255, 196, 221, 254)
 ];
+
+NumberFormat currencyFormat(String currency) {
+  String localCurrency = currency == "PLN" ? "pl_PL" : "it_IT";
+  return NumberFormat.simpleCurrency(locale: localCurrency);
+}
+
+late RetryClient client;

@@ -1,5 +1,3 @@
-import 'package:intl/intl.dart';
-
 class Document {
   Document(this.documentNumber, this.kind, this.totalGrossPln, this.totalNetPln,
       this.dueDate, this.paymentState, this.client, this.isCost, this.currency);
@@ -81,13 +79,6 @@ List<Document> dataTemplate = [
   Document("16/04/2023", DocumentKind.invoice, 49.98, 40.63,
       DateTime(2023, 4, 30), false, 'WIMPOL Sp. z o.o.', true, "PLN"),
 ];
-
-NumberFormat currencyFormat(String currency) {
-  String localCurrency = currency == "PLN" ? "pl_PL" : "it_IT";
-  return NumberFormat.simpleCurrency(locale: localCurrency);
-}
-
-//
 
 class MonthResult {
   MonthResult(this.monthName, this.revenue, this.cost, this.month,

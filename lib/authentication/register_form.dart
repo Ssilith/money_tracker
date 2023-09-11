@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expandable/expandable.dart';
 import 'package:money_tracker/global.dart';
-import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -11,18 +10,12 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
-  final ExpandableController _addMoreController = ExpandableController();
-  // user data
   final TextEditingController _name = TextEditingController();
   final TextEditingController _surname = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final TextEditingController _passwordRepeat = TextEditingController();
   final TextEditingController _mail = TextEditingController();
   final TextEditingController _phone = TextEditingController();
-  List<TextEditingController> addMoreUsers = [TextEditingController()];
-  bool isMoreThanOne = false;
-  // company data
-  final TextEditingController _companyName = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -159,84 +152,6 @@ class _RegisterFormState extends State<RegisterForm> {
                 hint: "Powtórz hasło",
                 controller: _passwordRepeat),
             const SizedBox(height: 15),
-            AnimatedToggleSwitch<bool>.size(
-                indicatorColor: Theme.of(context).colorScheme.secondary,
-                borderColor: Theme.of(context).colorScheme.secondary,
-                indicatorSize: Size.fromWidth(size.width * 0.46),
-                onChanged: (i) {
-                  setState(() {
-                    isMoreThanOne = i;
-                    _addMoreController.expanded = i;
-                  });
-                },
-                iconBuilder: (value, size) {
-                  String text = value
-                      ? "Dostęp dla innych osób z firmy"
-                      : "Konto tylko dla mnie";
-                  Color color =
-                      value == isMoreThanOne ? Colors.white : Colors.black;
-                  return Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 5),
-                      alignment: Alignment.center,
-                      child: Text(
-                        text,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                            color: color),
-                        textAlign: TextAlign.center,
-                      ));
-                },
-                current: isMoreThanOne,
-                values: const [false, true]),
-            const SizedBox(height: 15),
-            ExpandablePanel(
-                controller: _addMoreController,
-                collapsed: const SizedBox(),
-                expanded: Column(
-                  children: [
-                    const Text(
-                      "Wpisz adres mailowy do osób, którym chcesz dać dostęp do danych twojej firmy przez aplikację.\nOtrzymają oni mail z linkiem do rejestracji.",
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(fontStyle: FontStyle.italic),
-                    ),
-                    for (var i = 0; i < addMoreUsers.length; i++)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: TextInputForm(
-                            width: size.width * 0.92,
-                            hint: "E-mail osoby nr ${i + 2}",
-                            controller: addMoreUsers[i]),
-                      ),
-                    TextButton(
-                        onPressed: () {
-                          TextEditingController newUserController =
-                              TextEditingController();
-                          setState(() {
-                            addMoreUsers.add(newUserController);
-                          });
-                        },
-                        child: Text(
-                          "Dodaj kolejną osobę",
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary),
-                        ))
-                  ],
-                )),
-            const Text("Dane firmy",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-            const Divider(thickness: 2, height: 2),
-            const SizedBox(height: 10),
-            TextInputForm(
-                width: size.width * 0.92,
-                hint: "Nazwa firmy",
-                controller: _companyName),
-            const SizedBox(height: 10),
-            TextInputForm(
-                width: size.width * 0.92,
-                hint: "KRS",
-                controller: _companyName),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20.0),
               child: Center(

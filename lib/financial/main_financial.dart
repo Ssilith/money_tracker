@@ -1,7 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:money_tracker/example_data.dart';
 import 'package:money_tracker/financial/month_details.dart';
 import 'package:money_tracker/global.dart';
 

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:money_tracker/example_data.dart';
+import 'package:money_tracker/global.dart';
 
 class LastDocuments extends StatefulWidget {
   const LastDocuments({super.key});
