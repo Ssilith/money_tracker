@@ -1,17 +1,26 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:money_tracker/authentication/login_screen.dart';
 import 'package:money_tracker/documentation/documents_list.dart';
 import 'package:money_tracker/financial/main_financial.dart';
-import 'package:money_tracker/global.dart';
 import 'package:money_tracker/main_screens/about_us.dart';
 import 'package:money_tracker/main_screens/summary_screen.dart';
+import 'package:money_tracker/resources/initialization_service.dart';
 import 'package:money_tracker/resources/user_service.dart';
 import 'package:money_tracker/widgets/side_drawer.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
+void main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await InitializationService.initializeApp();
+  await Future.delayed(const Duration(seconds: 1));
+  await initializeDateFormatting();
+  FlutterNativeSplash.remove();
   runApp(const MyApp());
 }
 
@@ -25,11 +34,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
             iconTheme: IconThemeData(color: Colors.white),
-            color: Color.fromARGB(255, 22, 41, 90),
+            color: Color(0xFF16295A),
             titleTextStyle: TextStyle(color: Colors.white, fontSize: 21)),
         drawerTheme: const DrawerThemeData(),
-        colorScheme:
-            const ColorScheme.light(secondary: Color.fromARGB(255, 22, 41, 90)),
+        colorScheme: const ColorScheme.light(secondary: Color(0xFF16295A)),
         useMaterial3: true,
         fontFamily: "Poppins",
       ),
@@ -43,6 +51,11 @@ class MyApp extends StatelessWidget {
           }
         },
       ),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       supportedLocales: const [
         Locale('pl', ''),
       ],
@@ -97,44 +110,44 @@ class _MyHomePageState extends State<MyHomePage> {
         MediaQuery.of(context).padding.bottom -
         116;
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 60,
-        iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: Theme.of(context).colorScheme.secondary,
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.account_circle),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-            );
-          },
-        ),
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Panel Klienta",
-              style: TextStyle(color: Colors.white),
-            ),
-          ],
-        ),
-      ),
       drawer: SideDrawer(
         onTap: (x) => changeScreen(x),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                colors: gradientColors)),
-        height: screenHeight,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kIsWeb ? 100 : 0),
-          child: mainScreenList[screenIndex],
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return [
+            SliverAppBar(
+              surfaceTintColor: Theme.of(context).colorScheme.secondary,
+              leading: Builder(
+                builder: (BuildContext context) {
+                  return IconButton(
+                    icon: const Icon(
+                      FontAwesomeIcons.alignLeft,
+                      size: 25,
+                    ),
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                  );
+                },
+              ),
+              centerTitle: true,
+              title: const SizedBox(
+                  height: 60,
+                  child: Image(image: AssetImage('assets/logo.png'))),
+              automaticallyImplyLeading: false,
+              expandedHeight: 30,
+              floating: true,
+              snap: true,
+            )
+          ];
+        },
+        body: SizedBox(
+          height: screenHeight,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kIsWeb ? 100 : 0),
+            child: mainScreenList[screenIndex],
+          ),
         ),
       ),
       bottomNavigationBar: SalomonBottomBar(

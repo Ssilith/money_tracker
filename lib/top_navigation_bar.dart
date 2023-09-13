@@ -48,7 +48,7 @@ class _TopNavigationBarState extends State<TopNavigationBar> {
         children: [
           Row(mainAxisAlignment: MainAxisAlignment.start, children: [
             const Image(
-              image: AssetImage('assets/long_logo_gold.png'),
+              image: AssetImage('assets/logo.png'),
             ),
             const SizedBox(width: 30),
             ShaderMask(
@@ -61,7 +61,7 @@ class _TopNavigationBarState extends State<TopNavigationBar> {
                 Rect.fromLTWH(0, 0, bounds.width, bounds.height),
               ),
               child: const Text(
-                "Panel klienta - RenX Polska",
+                "Panel klienta",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             )

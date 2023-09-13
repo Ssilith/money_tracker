@@ -17,32 +17,22 @@ class ChipFilter extends StatelessWidget {
       child: InkWell(
         onTap: () => callback(),
         child: Container(
-          alignment: Alignment.center,
-          //  height: 36,
-          padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-          decoration: BoxDecoration(
-              color: isSelected
-                  ? Theme.of(context).colorScheme.secondary
-                  : Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                  color: Theme.of(context).colorScheme.secondary, width: 2)),
-          child: Row(
-            children: [
-              Image(
-                image: filterData['image'],
-                height: 30,
-              ),
-              Text(filterData['name'],
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15,
-                      color: isSelected
-                          ? Colors.white
-                          : Theme.of(context).colorScheme.secondary))
-            ],
-          ),
-        ),
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+            decoration: BoxDecoration(
+                color: isSelected
+                    ? Theme.of(context).colorScheme.secondary
+                    : Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                    color: Theme.of(context).colorScheme.secondary, width: 2)),
+            child: Text(filterData['name'],
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 15,
+                    color: isSelected
+                        ? Colors.white
+                        : Theme.of(context).colorScheme.secondary))),
       ),
     );
   }

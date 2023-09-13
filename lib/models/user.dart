@@ -10,9 +10,7 @@ class User {
   String? email;
   String? telephone;
   String? token;
-  String? status;
-  String? permissions;
-  String? tutorial;
+  bool? permissions;
   List<String> transactionId;
   List<String> budgetId;
   List<String> notificationId;
@@ -33,9 +31,7 @@ class User {
         email == null &&
         telephone == null &&
         token == null &&
-        status == null &&
         permissions == null &&
-        tutorial == null &&
         transactionId.isEmpty &&
         budgetId.isEmpty &&
         notificationId.isEmpty;

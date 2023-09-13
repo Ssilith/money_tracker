@@ -20,7 +20,7 @@ class _FootState extends State<Foot> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Image(
-              image: AssetImage('assets/long_logo_gold.png'),
+              image: AssetImage('assets/logo.png'),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,

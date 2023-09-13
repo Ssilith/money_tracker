@@ -5,7 +5,7 @@ class UserSimplePreferences {
   static late SharedPreferences _preferences;
 
   // static const _keyFilters = 'widgets';
-  // static const _keyFilters2 = 'currency';
+  static const _keyFilters2 = 'currency';
 
   static Future init() async =>
       _preferences = await SharedPreferences.getInstance();
@@ -37,8 +37,8 @@ class UserSimplePreferences {
   // static List<String>? getChosenWidgets() =>
   //     _preferences.getStringList(_keyFilters);
 
-  // static Future setChosenCurrency(List<String> currency) async =>
-  //     await _preferences.setStringList(_keyFilters2, currency);
-  // static List<String>? getChosenCurrency() =>
-  //     _preferences.getStringList(_keyFilters2);
+  static Future setChosenCurrency(List<String> currency) async =>
+      await _preferences.setStringList(_keyFilters2, currency);
+  static List<String>? getChosenCurrency() =>
+      _preferences.getStringList(_keyFilters2);
 }

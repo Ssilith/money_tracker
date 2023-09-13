@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:expandable/expandable.dart';
-import 'package:money_tracker/global.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:money_tracker/authentication/login_screen.dart';
+import 'package:money_tracker/create_document/privacy_policy.dart';
+import 'package:money_tracker/models/user.dart';
+import 'package:money_tracker/resources/user_service.dart';
+import 'package:money_tracker/widgets/message.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -16,12 +20,23 @@ class _RegisterFormState extends State<RegisterForm> {
   final TextEditingController _passwordRepeat = TextEditingController();
   final TextEditingController _mail = TextEditingController();
   final TextEditingController _phone = TextEditingController();
+  bool privicyPolicy = false;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        leading: InkWell(
+          onTap: () {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => const LoginPage(),
+              ),
+            );
+          },
+          child: Icon(MdiIcons.arrowLeftCircle, size: 30, color: Colors.white),
+        ),
         automaticallyImplyLeading: true,
         title: const Text("Formularz rejestracyjny"),
       ),
@@ -29,89 +44,11 @@ class _RegisterFormState extends State<RegisterForm> {
         padding:
             EdgeInsets.symmetric(vertical: 4.0, horizontal: size.width * 0.04),
         child: ListView(
-          //crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "Wypełnij formularz rejestracyjny i rozpocznij korzystanie z naszej aplikacji.",
+              "Wypełnij formularz rejestracyjny i rozpocznij korzystanie z aplikacji.",
               textAlign: TextAlign.justify,
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
-            ),
-            const Text(
-              "Gdy wyślesz poprawnie wypełniony formularz twoje konto stanie się aktywne, jednak zanim będziesz mógł zobaczyć dane swojej firmy, musisz przejść weryfikację.",
-              textAlign: TextAlign.justify,
-              style: TextStyle(fontStyle: FontStyle.italic),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Container(
-                decoration: withShadow(),
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                child: ExpandablePanel(
-                    theme: const ExpandableThemeData(hasIcon: false),
-                    header: const Row(
-                      children: [
-                        Icon(Icons.info),
-                        SizedBox(width: 8),
-                        Text(
-                          "Jak wygląda weryfikacja?",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    collapsed: const SizedBox(),
-                    expanded: const Text(
-                      "Dokładamy wszelkich starań, żeby zabezpieczyć wrażliwe dane dotyczące twojej firmy, wobec czego podwójnie weryfikujemy wszystkich nowych użytkowników.\nPierwsza faza weryfikacji jest w pełni automatyczna i polega na sprawdzeniu poprawności wprowadzonych danych w naszym systemie.\nPodczas drugiej fazy nasz pracownik skontaktuję się z firmą, żeby potwierdzić zgodę na przetwarzanie danych w aplikacji.\nWeryfikacja nie powinna potrwać dłużej niż jeden dzień roboczy.",
-                      textAlign: TextAlign.justify,
-                    )),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Container(
-                decoration: withShadow(),
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                child: ExpandablePanel(
-                    theme: const ExpandableThemeData(hasIcon: false),
-                    header: const Row(
-                      children: [
-                        Icon(Icons.info),
-                        SizedBox(width: 8),
-                        Text(
-                          "Skąd aplikacja zna dane mojej firmy?",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    collapsed: const SizedBox(),
-                    expanded: const Text(
-                      "Dane naszych klientów są dobrze zabezpieczone i znajdują się na naszych własnych serwerach. Aplikacja łączy się z serwerem w celu zebrania danych o dokumentach finansowych klienta.\nDane nigdy nie będą pobierane, jeśli klient nie założy konta i nie wyrazi na to zgody. Zgoda może zostać w każdym momencie anulowana. Korzystanie z aplikacji wymaga weryfikacji - ustaw silne hasło i nie udzielaj innym osobom informacji o swoich danych do logowania.",
-                      textAlign: TextAlign.justify,
-                    )),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Container(
-                decoration: withShadow(),
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                child: ExpandablePanel(
-                    theme: const ExpandableThemeData(hasIcon: false),
-                    header: const Row(
-                      children: [
-                        Icon(Icons.info),
-                        SizedBox(width: 8),
-                        Text(
-                          "Kto będzie miał dostęp do moich danych?",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    collapsed: const SizedBox(),
-                    expanded: const Text(
-                      "Ze względów techniczych dostęp do informacji o koncie będzie miał zespół programistów. Nie udostępniamy nigdy danych użytkowników, nie zbieramy danych o użyciu aplikacji.",
-                      textAlign: TextAlign.justify,
-                    )),
-              ),
             ),
             const SizedBox(height: 16),
             const Text("Dane użytkownika",
@@ -122,10 +59,10 @@ class _RegisterFormState extends State<RegisterForm> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextInputForm(
-                    width: size.width * 0.45, hint: "Imię", controller: _name),
+                    width: size.width * 0.45, hint: "Imię*", controller: _name),
                 TextInputForm(
                     width: size.width * 0.45,
-                    hint: "Nazwisko",
+                    hint: "Nazwisko*",
                     controller: _surname),
               ],
             ),
@@ -135,7 +72,7 @@ class _RegisterFormState extends State<RegisterForm> {
               children: [
                 TextInputForm(
                     width: size.width * 0.45,
-                    hint: "E-mail",
+                    hint: "E-mail*",
                     controller: _mail),
                 TextInputForm(
                     width: size.width * 0.45,
@@ -145,20 +82,45 @@ class _RegisterFormState extends State<RegisterForm> {
             ),
             const SizedBox(height: 10),
             TextInputForm(
-                width: size.width * 0.92, hint: "Hasło", controller: _password),
+                width: size.width * 0.92,
+                hint: "Hasło*",
+                controller: _password),
             const SizedBox(height: 10),
             TextInputForm(
                 width: size.width * 0.92,
-                hint: "Powtórz hasło",
+                hint: "Powtórz hasło*",
                 controller: _passwordRepeat),
-            const SizedBox(height: 15),
+            const SizedBox(height: 10),
+            CheckboxListTile(
+              activeColor: Theme.of(context).colorScheme.secondary,
+              controlAffinity: ListTileControlAffinity.leading,
+              value: privicyPolicy,
+              onChanged: (bool? value) {
+                setState(() {
+                  privicyPolicy = !privicyPolicy;
+                });
+              },
+              title: const Text(
+                  "Zgadzam się na przetwarzanie moich danych osobowych.",
+                  textAlign: TextAlign.justify,
+                  style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12)),
+              subtitle: InkWell(
+                  onTap: () => privacyPolicyPdf(),
+                  child: const Text(
+                      "Pełną klauzulę informacyjną znajdziesz pod tym adresem.",
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          fontStyle: FontStyle.italic, fontSize: 12))),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20.0),
               child: Center(
                 child: SizedBox(
                   width: 300,
                   child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        registerUser();
+                      },
                       child: Text("Wyślij formularz",
                           style: TextStyle(
                               color: Theme.of(context).colorScheme.secondary))),
@@ -169,6 +131,44 @@ class _RegisterFormState extends State<RegisterForm> {
         ),
       ),
     );
+  }
+
+  registerUser() async {
+    if (privicyPolicy) {
+      if (_name.text.isNotEmpty &&
+          _surname.text.isNotEmpty &&
+          _mail.text.isNotEmpty &&
+          _password.text.isNotEmpty &&
+          _passwordRepeat.text.isNotEmpty) {
+        if (_password.text == _passwordRepeat.text) {
+          User newUser = User();
+          newUser.name = _name.text.trim();
+          newUser.surname = _surname.text.trim();
+          newUser.email = _mail.text.trim();
+          newUser.telephone = _phone.text;
+          newUser.permissions = privicyPolicy;
+
+          if (!mounted) return;
+          Map<String, dynamic> userRes = await UserService()
+              .addUser(context, newUser, _password.text.trim());
+
+          if (userRes['success']) {
+            if (!mounted) return;
+            Navigator.pop(context);
+            message(context, 'Konto zostało utworzone!',
+                'Twoje konto oraz firma zostały stworzone.', 'success');
+          }
+        } else {
+          message(context, 'Twoje hasła są różne!',
+              'Wpisane hasła nie są takie same.', 'failure');
+        }
+      } else {
+        message(context, 'Brak danych!',
+            'Musisz uzupełnić pola oznaczone gwiazdką*.', 'failure');
+      }
+    } else {
+      message(context, 'Brak zgody!', 'Musisz zaakceptować zgody.', 'failure');
+    }
   }
 }
 

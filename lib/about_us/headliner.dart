@@ -76,7 +76,7 @@ class NeonContainer extends StatelessWidget {
       ),
       child: const Column(
         children: [
-          Image(image: AssetImage('assets/long_logo_glow.png')),
+          Image(image: AssetImage('assets/logo.png')),
           NeonText(
             text: 'DORADZTWO PODATKOWE I KSIĘGOWOŚĆ W NAJLEPSZEJ JAKOŚCI',
             textSize: 40,

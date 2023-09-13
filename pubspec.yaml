@@ -58,8 +58,19 @@ dependencies:
   json_annotation: ^4.8.1
   url_launcher: ^6.1.12
   http: ^1.1.0
+  awesome_snackbar_content: ^0.1.3
+  fl_chart: ^0.63.0
+  collection: ^1.17.2
+  flutter_native_splash: ^2.3.2
+  font_awesome_flutter: ^10.5.0
+  pdf: ^3.10.4
+  printing: ^5.11.0
+
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
+  # flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
 
@@ -78,8 +89,21 @@ dev_dependencies:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/logo.png"
+  image_path: "assets/logo_small.png"
+  adaptive_icon_background: "#FFFFFF"
   min_sdk_android: 21 # android min sdk min:16, default 21
+
+flutter_native_splash:
+    color: "#16295A"
+    image: assets/logo_screen.png
+    android: true
+    # fill: true
+    web: false
+
+    android_12:
+        color: "#16295A"
+        image: assets/logo_screen.png
+        # fill: true
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -146,6 +170,17 @@ flutter:
                 weight: 900
               - asset: fonts/Poppins-BlackItalic.ttf
                 weight: 900
+                style: italic
+        - family: Tinos
+          fonts:
+              - asset: fonts/Tinos-Regular.ttf
+                weight: 400
+              - asset: fonts/Tinos-Italic.ttf
+                style: italic
+              - asset: fonts/Tinos-Bold.ttf
+                weight: 700
+              - asset: fonts/Tinos-BoldItalic.ttf
+                weight: 700
                 style: italic
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

@@ -36,4 +36,6 @@ NumberFormat currencyFormat(String currency) {
   return NumberFormat.simpleCurrency(locale: localCurrency);
 }
 
+List<String> chosenCurrency = <String>[];
+
 late RetryClient client;

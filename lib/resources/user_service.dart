@@ -131,26 +131,6 @@ class UserService {
     return json.decode(res.body);
   }
 
-  addNewSub(
-    BuildContext context,
-    User newUser,
-    String password,
-  ) async {
-    Map<String, dynamic> body = {'newUser': newUser.toJson()};
-    body['newUser']['password'] = password;
-
-    final http.Response res = await client.post(
-      Uri.parse('$_urlPrefix/addNewSub'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Accept-Language': Localizations.localeOf(context).toString(),
-        'Authorization': UserSimplePreferences.accessToken,
-      },
-      body: jsonEncode(body),
-    );
-    return json.decode(res.body);
-  }
-
   updateUserInfo([User? updateUser]) async {
     Map<String, dynamic> body = {'updatedUser': updateUser ?? user};
 
@@ -240,50 +220,5 @@ class UserService {
     }
 
     return decodedBody['success'];
-  }
-
-  Future<List<User>> getUserToAdminByCompany(
-      String adminId, String companyId) async {
-    Map<String, String> headers = <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': UserSimplePreferences.accessToken
-    };
-
-    final http.Response res = await client.get(
-        Uri.parse('$_urlPrefix/$adminId/$companyId/getUserToAdminByCompany'),
-        headers: headers);
-    Map<String, dynamic> decodedBody = json.decode(res.body);
-
-    if (decodedBody['success']) {
-      return List<User>.from(decodedBody['users'].map((u) => User.fromJson(u)));
-    }
-
-    return decodedBody['success'];
-  }
-
-  addCompanyToUser(String userId, String companyId) async {
-    Map<String, String> headers = <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': UserSimplePreferences.accessToken
-    };
-
-    final http.Response res = await client.post(
-        Uri.parse('$_urlPrefix/$userId/$companyId/addCompanyToUser'),
-        headers: headers);
-
-    return json.decode(res.body);
-  }
-
-  removeCompanyFromUser(String userId, String companyId) async {
-    Map<String, String> headers = <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': UserSimplePreferences.accessToken
-    };
-
-    final http.Response res = await client.post(
-        Uri.parse('$_urlPrefix/$userId/$companyId/removeCompanyFromUser'),
-        headers: headers);
-
-    return json.decode(res.body);
   }
 }
