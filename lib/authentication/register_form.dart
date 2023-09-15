@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:money_tracker/authentication/login_screen.dart';
 import 'package:money_tracker/create_document/privacy_policy.dart';
-import 'package:money_tracker/main.dart';
 import 'package:money_tracker/models/user.dart';
 import 'package:money_tracker/resources/user_service.dart';
 import 'package:money_tracker/widgets/message.dart';
@@ -27,20 +26,40 @@ class _RegisterFormState extends State<RegisterForm> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        leading: InkWell(
-          onTap: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => const LoginPage(),
-              ),
-            );
-          },
-          child: Icon(MdiIcons.arrowLeftCircle, size: 30, color: Colors.white),
-        ),
-        automaticallyImplyLeading: true,
-        title: const Text("Formularz rejestracyjny"),
-      ),
+        body: NestedScrollView(
+      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        return [
+          SliverAppBar(
+            pinned: true,
+            elevation: 0,
+            surfaceTintColor: Colors.white.withOpacity(0.7),
+            backgroundColor: Colors.white.withOpacity(0.7),
+            leading: Builder(
+              builder: (BuildContext context) {
+                return InkWell(
+                  onTap: () {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginPage(),
+                      ),
+                    );
+                  },
+                  child: Icon(MdiIcons.arrowLeftCircle,
+                      size: 40, color: Theme.of(context).colorScheme.secondary),
+                );
+              },
+            ),
+            automaticallyImplyLeading: true,
+            title: Text("Formularz rejestracyjny",
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontWeight: FontWeight.w600)),
+            centerTitle: true,
+            floating: true,
+            snap: true,
+          ),
+        ];
+      },
       body: Padding(
         padding:
             EdgeInsets.symmetric(vertical: 4.0, horizontal: size.width * 0.04),
@@ -131,7 +150,7 @@ class _RegisterFormState extends State<RegisterForm> {
           ],
         ),
       ),
-    );
+    ));
   }
 
   registerUser() async {
@@ -157,7 +176,7 @@ class _RegisterFormState extends State<RegisterForm> {
             if (!mounted) return;
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => const MyHomePage(),
+                builder: (context) => const LoginPage(),
               ),
             );
             showInfo('Twoje konto zostało utworzone.', Colors.green);

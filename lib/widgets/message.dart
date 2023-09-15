@@ -16,10 +16,11 @@ showMessage(BuildContext context, String text) {
   );
 }
 
-showInfo(String text, [Color? color, double? width]) {
+showInfo(String text, [Color? color, double? width, double? height]) {
   FToast fToast = FToast();
   fToast.init(navigatorKey.currentContext!);
   Widget box = Container(
+    height: height,
     alignment: Alignment.center,
     width: width ?? 300,
     padding: const EdgeInsets.all(10),

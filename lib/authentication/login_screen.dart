@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     } else {
-      showInfo('Podano nieprawidłowe dane.', Colors.red);
+      showInfo('Podano nieprawidłowe dane.', Colors.red, 300, 40);
     }
   }
 
@@ -54,8 +54,14 @@ class _LoginPageState extends State<LoginPage> {
               hint: const ['E-mail'],
               onPressed: () async {
                 Navigator.pop(context);
-                await UserService()
+                var res = await UserService()
                     .sendResetPwdEmail(context, _remindEmail.text);
+                if (res) {
+                  showInfo("Email został wysłany.", Colors.green);
+                } else {
+                  showInfo(
+                      "Wystąpił błąd podczas wysyłania maila.", Colors.red);
+                }
               },
             );
           },
