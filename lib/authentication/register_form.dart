@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:money_tracker/authentication/login_screen.dart';
 import 'package:money_tracker/create_document/privacy_policy.dart';
+import 'package:money_tracker/main.dart';
 import 'package:money_tracker/models/user.dart';
 import 'package:money_tracker/resources/user_service.dart';
 import 'package:money_tracker/widgets/message.dart';
@@ -154,7 +155,11 @@ class _RegisterFormState extends State<RegisterForm> {
 
           if (userRes['success']) {
             if (!mounted) return;
-            Navigator.pop(context);
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => const MyHomePage(),
+              ),
+            );
             showInfo('Twoje konto zostało utworzone.', Colors.green);
           } else {
             showInfo('Wystąpił błąd poodczas tworzenia konta.', Colors.red);
