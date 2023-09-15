@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:money_tracker/authentication/login_screen.dart';
-import 'package:money_tracker/create_document/privacy_policy.dart';
 import 'package:money_tracker/main.dart';
-import 'package:money_tracker/main_screens/about_us.dart';
 import 'package:money_tracker/main_screens/exchange_rates.dart';
 import 'package:money_tracker/models/user.dart';
+import 'package:money_tracker/profile/edit_profile_form.dart';
 import 'package:money_tracker/resources/user_service.dart';
 import 'package:money_tracker/widgets/popup_window.dart';
 
@@ -35,8 +34,8 @@ class SideDrawer extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(
-                    height: 100,
-                    child: Image(image: AssetImage("assets/money.png")),
+                    height: 110,
+                    child: Image(image: AssetImage("assets/money3.png")),
                   ),
                   const SizedBox(height: 10),
                   Text(
@@ -68,18 +67,18 @@ class SideDrawer extends StatelessWidget {
                   // );
                 },
                 text: "Dodaj wydatek",
-                icon: Icons.add_shopping_cart,
+                icon: Icons.add,
                 size: 26),
             const Divider(
               color: Color.fromARGB(49, 66, 66, 66),
             ),
             DrawerTile(
                 onTap: () {
-                  // Navigator.of(context).pushReplacement(
-                  //   MaterialPageRoute(
-                  //     builder: (context) => const EditProfileForm(),
-                  //   ),
-                  // );
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => const EditProfileForm(),
+                    ),
+                  );
                 },
                 text: "Edytuj konto",
                 icon: Icons.manage_accounts,
@@ -96,15 +95,15 @@ class SideDrawer extends StatelessWidget {
             const Divider(
               color: Color.fromARGB(49, 66, 66, 66),
             ),
-            DrawerTile(
-                onTap: () => Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const AboutUs(),
-                      ),
-                    ),
-                text: "O nas",
-                icon: Icons.info,
-                size: 26),
+            // DrawerTile(
+            //     onTap: () => Navigator.of(context).pushReplacement(
+            //           MaterialPageRoute(
+            //             builder: (context) => const AboutUs(),
+            //           ),
+            //         ),
+            //     text: "O nas",
+            //     icon: Icons.info,
+            //     size: 26),
             DrawerTile(
                 onTap: () => showDialog(
                     context: context,
@@ -126,39 +125,31 @@ class SideDrawer extends StatelessWidget {
                 text: "Wyloguj",
                 icon: Icons.logout,
                 size: 26),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InkWell(
-                      onTap: () {},
-                      // => Navigator.of(context).pushReplacement(
-                      //       MaterialPageRoute(
-                      //         builder: (context) => const ContactPage(),
-                      //       ),
-                      //     ),
-                      child: const Text("Kontakt")),
-                  const SizedBox(height: 8),
-                  InkWell(onTap: () {}, child: const Text("Regulamin")),
-                  const SizedBox(height: 8),
-                  InkWell(
-                      onTap: () => privacyPolicyPdf(),
-                      child: const Text("Polityka prywatności")),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 20, bottom: 5),
-                    child: Text(
-                      "Żyrek Ferrara Client App, version 1.0",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
-                    ),
-                  )
-                ],
-              ),
-            ),
+            // Padding(
+            //   padding:
+            //       const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+            //   child: Column(
+            //     mainAxisSize: MainAxisSize.min,
+            //     mainAxisAlignment: MainAxisAlignment.end,
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       InkWell(
+            //           onTap: () {},
+            //           // => Navigator.of(context).pushReplacement(
+            //           //       MaterialPageRoute(
+            //           //         builder: (context) => const ContactPage(),
+            //           //       ),
+            //           //     ),
+            //           child: const Text("Kontakt")),
+            //       const SizedBox(height: 8),
+            //       InkWell(onTap: () {}, child: const Text("Regulamin")),
+            //       const SizedBox(height: 8),
+            //       InkWell(
+            //           onTap: () => privacyPolicyPdf(),
+            //           child: const Text("Polityka prywatności")),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),

@@ -3,6 +3,7 @@ import 'package:money_tracker/authentication/register_form.dart';
 import 'package:money_tracker/global.dart';
 import 'package:money_tracker/resources/user_service.dart';
 import 'package:money_tracker/widgets/input_dialog.dart';
+import 'package:money_tracker/widgets/message.dart';
 import '../main.dart';
 
 class LoginPage extends StatefulWidget {
@@ -34,7 +35,9 @@ class _LoginPageState extends State<LoginPage> {
           builder: (context) => const MyHomePage(),
         ),
       );
-    } else {}
+    } else {
+      showInfo('Podano nieprawidłowe dane.', Colors.red);
+    }
   }
 
   void changePassword() {
@@ -103,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                       Text(
                         "Money Tracker",
                         style: TextStyle(
-                            color: Color(0xFFd3ac55),
+                            color: Color(0xFFd5ac55),
                             fontSize: 22,
                             fontWeight: FontWeight.w500),
                       )

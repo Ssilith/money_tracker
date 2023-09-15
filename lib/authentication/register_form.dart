@@ -155,19 +155,18 @@ class _RegisterFormState extends State<RegisterForm> {
           if (userRes['success']) {
             if (!mounted) return;
             Navigator.pop(context);
-            message(context, 'Konto zostało utworzone!',
-                'Twoje konto oraz firma zostały stworzone.', 'success');
+            showInfo('Twoje konto zostało utworzone.', Colors.green);
+          } else {
+            showInfo('Wystąpił błąd poodczas tworzenia konta.', Colors.red);
           }
         } else {
-          message(context, 'Twoje hasła są różne!',
-              'Wpisane hasła nie są takie same.', 'failure');
+          showInfo('Wpisane hasła nie są takie same.', Colors.blue);
         }
       } else {
-        message(context, 'Brak danych!',
-            'Musisz uzupełnić pola oznaczone gwiazdką*.', 'failure');
+        showInfo('Musisz uzupełnić pola oznaczone gwiazdką*.', Colors.blue);
       }
     } else {
-      message(context, 'Brak zgody!', 'Musisz zaakceptować zgody.', 'failure');
+      showInfo('Musisz zaakceptować zgody.', Colors.blue);
     }
   }
 }

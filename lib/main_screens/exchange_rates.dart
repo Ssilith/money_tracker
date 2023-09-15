@@ -3,6 +3,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:money_tracker/main.dart';
 import 'package:money_tracker/resources/user_simple_preferences.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:money_tracker/widgets/indicator.dart';
 import '../api/nbp_currency_api.dart';
 import '../global.dart';
 import 'package:collection/collection.dart';
@@ -93,7 +94,7 @@ class _ExchangeRatesState extends State<ExchangeRates> {
             future: nbpCurrency,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
+                return const Center(child: Indicator());
               } else if (snapshot.hasError) {
                 return Container(
                     padding: const EdgeInsets.all(10),
@@ -294,11 +295,10 @@ Widget buildLineChart(CurrencyData currencyData) {
                   ? const Color.fromARGB(255, 237, 136, 34)
                   : const Color.fromARGB(255, 14, 54, 99),
               barWidth: 2.5,
-              isStrokeCapRound: true,
+              isStrokeCapRound: false,
               belowBarData: BarAreaData(
                 show: true,
-                color: (currencyData.fromName == 'PLN' ||
-                            currencyData.fromName == 'WIG 30'
+                color: (currencyData.fromName == 'PLN'
                         ? const Color.fromARGB(255, 244, 208, 161)
                         : const Color.fromARGB(255, 89, 120, 169))
                     .withOpacity(0.3),
