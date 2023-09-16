@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:money_tracker/authentication/register_form.dart';
-import 'package:money_tracker/global.dart';
 import 'package:money_tracker/resources/user_service.dart';
 import 'package:money_tracker/widgets/input_dialog.dart';
 import 'package:money_tracker/widgets/message.dart';
@@ -78,121 +78,113 @@ class _LoginPageState extends State<LoginPage> {
       body: Stack(
         children: [
           Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   gradient: LinearGradient(
                       begin: Alignment.topRight,
                       end: Alignment.bottomLeft,
-                      colors: gradientColors))),
-          Container(
-            color: Colors.white,
-            child: const SizedBox(
-              height: 400,
-              child: Image(
-                image: AssetImage('assets/login.png'),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 50),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  decoration:
-                      withShadow(Theme.of(context).colorScheme.secondary, 80),
-                  width: size.width * 0.8,
-                  height: 82,
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image(image: AssetImage('assets/logo.png')),
-                      SizedBox(width: 5),
-                      Text(
-                        "Money Tracker",
-                        style: TextStyle(
-                            color: Color(0xFFd5ac55),
-                            fontSize: 22,
-                            fontWeight: FontWeight.w500),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: size.width * 0.1, vertical: 20),
-                  child: SingleChildScrollView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30, vertical: 20),
-                      alignment: Alignment.center,
-                      width: size.width * 0.8,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.white70),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextInput(
-                            controller: _email,
-                            hint: "Email",
-                          ),
-                          const SizedBox(height: 10),
-                          TextInput(
-                            controller: _password,
-                            hint: "Hasło",
-                            hideText: true,
-                          ),
-                          const SizedBox(height: 15),
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.secondary,
-                              ),
-                              onPressed: () => authUser(),
-                              child: const Text("Zaloguj się",
-                                  style: TextStyle(color: Colors.white))),
-                          const SizedBox(height: 8),
-                          TextButton(
-                              style: TextButton.styleFrom(
-                                minimumSize: Size.zero,
-                                padding: EdgeInsets.zero,
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
-                              onPressed: () => changePassword(),
-                              child: Text("Nie pamiętam hasła",
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary))),
-                          const SizedBox(height: 8),
-                          TextButton(
-                              style: TextButton.styleFrom(
-                                minimumSize: Size.zero,
-                                padding: EdgeInsets.zero,
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
-                              onPressed: () =>
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const RegisterForm(),
-                                    ),
-                                  ),
-                              child: Text("Nie mam jeszcze konta",
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary))),
-                        ],
+                      colors: [
+                Color.fromARGB(255, 0, 162, 108),
+                Color.fromARGB(255, 0, 184, 121),
+                Color.fromARGB(255, 0, 181, 212),
+                Color.fromARGB(255, 253, 191, 94),
+                Color.fromARGB(255, 253, 223, 158)
+              ]))),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                children: [
+                  if (MediaQuery.of(context).viewInsets.bottom == 0)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 70.0),
+                      child: SvgPicture.asset(
+                        'assets/logo.svg',
+                        height: 200,
                       ),
+                    ),
+                  const SizedBox(height: 30),
+                  const Text(
+                    "Money Tracker",
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 0, 62, 41),
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.1, vertical: 20),
+                child: SingleChildScrollView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 20),
+                    alignment: Alignment.center,
+                    width: size.width * 0.8,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.white70),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextInput(
+                          controller: _email,
+                          hint: "Email",
+                        ),
+                        const SizedBox(height: 10),
+                        TextInput(
+                          controller: _password,
+                          hint: "Hasło",
+                          hideText: true,
+                        ),
+                        const SizedBox(height: 15),
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
+                            ),
+                            onPressed: () => authUser(),
+                            child: const Text("Zaloguj się",
+                                style: TextStyle(color: Colors.white))),
+                        const SizedBox(height: 8),
+                        TextButton(
+                            style: TextButton.styleFrom(
+                              minimumSize: Size.zero,
+                              padding: EdgeInsets.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            onPressed: () => changePassword(),
+                            child: Text("Nie pamiętam hasła",
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary))),
+                        const SizedBox(height: 8),
+                        TextButton(
+                            style: TextButton.styleFrom(
+                              minimumSize: Size.zero,
+                              padding: EdgeInsets.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            onPressed: () =>
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => const RegisterForm(),
+                                  ),
+                                ),
+                            child: Text("Nie mam jeszcze konta",
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary))),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),

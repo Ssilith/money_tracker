@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -39,10 +40,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
             iconTheme: IconThemeData(color: Colors.white),
-            color: Color(0xFF16295A),
+            color: Color(0xFF005b3d),
             titleTextStyle: TextStyle(color: Colors.white, fontSize: 21)),
         drawerTheme: const DrawerThemeData(),
-        colorScheme: const ColorScheme.light(secondary: Color(0xFF16295A)),
+        colorScheme: const ColorScheme.light(secondary: Color(0xFF005b3d)),
         useMaterial3: true,
         fontFamily: "Poppins",
       ),
@@ -137,9 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
               centerTitle: true,
-              title: const SizedBox(
-                  height: 60,
-                  child: Image(image: AssetImage('assets/logo.png'))),
+              title: SvgPicture.asset('assets/logo.svg', height: 50),
               automaticallyImplyLeading: false,
               expandedHeight: 30,
               floating: true,

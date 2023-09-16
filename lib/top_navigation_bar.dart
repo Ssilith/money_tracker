@@ -48,7 +48,7 @@ class _TopNavigationBarState extends State<TopNavigationBar> {
         children: [
           Row(mainAxisAlignment: MainAxisAlignment.start, children: [
             const Image(
-              image: AssetImage('assets/logo.png'),
+              image: AssetImage('assets/logo.svg'),
             ),
             const SizedBox(width: 30),
             ShaderMask(

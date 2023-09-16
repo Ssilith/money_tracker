@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:money_tracker/authentication/register_form.dart';
 import 'package:money_tracker/resources/user_service.dart';
 import 'package:money_tracker/widgets/message.dart';
-import 'package:money_tracker/widgets/simple_button.dart';
+import 'package:money_tracker/widgets/simple_dark_button.dart';
+import 'package:money_tracker/widgets/text_input_form.dart';
 import '../main.dart';
 import '../models/user.dart';
 
@@ -34,8 +34,8 @@ class _EditProfileFormState extends State<EditProfileForm> {
               SliverAppBar(
                 pinned: true,
                 elevation: 0,
-                surfaceTintColor: Colors.white.withOpacity(0.7),
-                backgroundColor: Colors.white.withOpacity(0.7),
+                surfaceTintColor: Theme.of(context).colorScheme.secondary,
+                backgroundColor: Theme.of(context).colorScheme.secondary,
                 leading: Builder(
                   builder: (BuildContext context) {
                     return InkWell(
@@ -47,104 +47,78 @@ class _EditProfileFormState extends State<EditProfileForm> {
                         );
                       },
                       child: Icon(MdiIcons.arrowLeftCircle,
-                          size: 40,
-                          color: Theme.of(context).colorScheme.secondary),
+                          size: 40, color: Colors.white),
                     );
                   },
                 ),
                 automaticallyImplyLeading: true,
-                title: Text("Formularz edycji konta",
+                title: const Text("Formularz edycji konta",
                     style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
-                        fontWeight: FontWeight.w600)),
+                        color: Colors.white, fontWeight: FontWeight.w600)),
                 centerTitle: true,
                 floating: true,
                 snap: true,
               ),
             ];
           },
-          body: Padding(
-            padding: EdgeInsets.only(
-                bottom: 4.0, left: size.width * 0.04, right: size.width * 0.04),
-            child: ListView(
-              children: [
-                const Text("Dane użytkownika",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                const Divider(thickness: 2, height: 2),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextInputForm(
-                      width: size.width * 0.45,
-                      hint: "Imię",
-                      controller: _name,
-                    ),
-                    TextInputForm(
+          body: Container(
+            // color: const Color.fromARGB(255, 253, 223, 158).withOpacity(0.06),
+            height: size.height,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  bottom: 4.0,
+                  left: size.width * 0.04,
+                  right: size.width * 0.04),
+              child: ListView(
+                children: [
+                  const Text("Dane użytkownika",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                  const Divider(thickness: 2, height: 2),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextInputForm(
                         width: size.width * 0.45,
-                        hint: "Nazwisko",
-                        controller: _surname),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextInputForm(
-                      width: size.width * 0.45,
-                      hint: "E-mail",
-                      controller: _mail,
-                    ),
-                    TextInputForm(
-                        width: size.width * 0.45,
-                        hint: "Telefon",
-                        controller: _phone)
-                  ],
-                ),
-                const SizedBox(height: 10),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 70.0),
-                //   child: AnimatedToggleSwitch<String>.size(
-                //     indicatorColor: Theme.of(context).colorScheme.secondary,
-                //     borderColor: Theme.of(context).colorScheme.secondary,
-                //     indicatorSize: Size.fromWidth(size.width * 0.46),
-                //     current: currency,
-                //     values: const ["PLN", "EUR"],
-                //     iconBuilder: (value, size) {
-                //       Color color = currency == value ? Colors.white : Colors.black;
-                //       return Container(
-                //           padding: const EdgeInsets.symmetric(
-                //               vertical: 5, horizontal: 5),
-                //           alignment: Alignment.center,
-                //           child: Text(
-                //             value,
-                //             style: TextStyle(
-                //                 fontWeight: FontWeight.w600,
-                //                 fontSize: 14,
-                //                 color: color),
-                //             textAlign: TextAlign.center,
-                //           ));
-                //     },
-                //     onChanged: (i) {
-                //       setState(() {
-                //         currency = i;
-                //       });
-                //     },
-                //   ),
-                // ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: Center(
-                    child: SimpleButton(
-                        width: 300,
-                        onPressed: () {
-                          updateUser(context, _name, _surname, _phone, _mail);
-                        },
-                        text: "Potwierdź zmiany"),
+                        hint: "Imię",
+                        controller: _name,
+                      ),
+                      TextInputForm(
+                          width: size.width * 0.45,
+                          hint: "Nazwisko",
+                          controller: _surname),
+                    ],
                   ),
-                )
-              ],
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextInputForm(
+                        width: size.width * 0.45,
+                        hint: "E-mail",
+                        controller: _mail,
+                      ),
+                      TextInputForm(
+                          width: size.width * 0.45,
+                          hint: "Telefon",
+                          controller: _phone)
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: Center(
+                      child: SimpleDarkButton(
+                          width: 300,
+                          onPressed: () {
+                            updateUser(context, _name, _surname, _phone, _mail);
+                          },
+                          title: "Potwierdź zmiany"),
+                    ),
+                  )
+                ],
+              ),
             ),
           )),
     );

@@ -41,7 +41,7 @@ class _MainFinancialState extends State<MainFinancial> {
               const Row(
                 children: [
                   Image(
-                    image: AssetImage("assets/logo.png"),
+                    image: AssetImage("assets/logo.svg"),
                     width: 50,
                   ),
                   Column(

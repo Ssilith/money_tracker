@@ -23,12 +23,12 @@ BoxDecoration transparentOnGradient([Color? color]) {
   );
 }
 
-List<Color> gradientColors = const [
-  Color.fromARGB(255, 254, 216, 247),
-  Color.fromARGB(255, 255, 236, 251),
-  Color.fromARGB(255, 240, 240, 232),
-  Color.fromARGB(255, 221, 232, 255),
-  Color.fromARGB(255, 196, 221, 254)
+List<Color> gradientColors = [
+  Color.fromARGB(255, 0, 162, 108),
+  Color.fromARGB(255, 0, 184, 121),
+  Color.fromARGB(255, 0, 181, 212),
+  Color.fromARGB(255, 253, 191, 94),
+  Color.fromARGB(255, 253, 223, 158)
 ];
 
 NumberFormat currencyFormat(String currency) {

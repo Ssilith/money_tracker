@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:money_tracker/authentication/login_screen.dart';
+import 'package:money_tracker/expenses/new_expense_form.dart';
 import 'package:money_tracker/main.dart';
 import 'package:money_tracker/main_screens/exchange_rates.dart';
 import 'package:money_tracker/models/user.dart';
@@ -33,9 +35,9 @@ class SideDrawer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(
+                  SvgPicture.asset(
+                    'assets/logo.svg',
                     height: 110,
-                    child: Image(image: AssetImage("assets/money3.png")),
                   ),
                   const SizedBox(height: 10),
                   Text(
@@ -60,14 +62,36 @@ class SideDrawer extends StatelessWidget {
             const SizedBox(height: 10),
             DrawerTile(
                 onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => const NewExpenseForm(),
+                    ),
+                  );
+                },
+                text: "Dodaj transakcję",
+                icon: Icons.add,
+                size: 26),
+            DrawerTile(
+                onTap: () {
                   // Navigator.of(context).pushReplacement(
                   //   MaterialPageRoute(
                   //     builder: (context) => const AddCompanyForm(),
                   //   ),
                   // );
                 },
-                text: "Dodaj wydatek",
-                icon: Icons.add,
+                text: "Dodaj kategorię",
+                icon: Icons.folder,
+                size: 26),
+            DrawerTile(
+                onTap: () {
+                  // Navigator.of(context).pushReplacement(
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const AddCompanyForm(),
+                  //   ),
+                  // );
+                },
+                text: "Ustaw budżet",
+                icon: Icons.pie_chart,
                 size: 26),
             const Divider(
               color: Color.fromARGB(49, 66, 66, 66),

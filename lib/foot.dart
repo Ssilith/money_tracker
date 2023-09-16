@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Foot extends StatefulWidget {
   const Foot({super.key});
@@ -16,22 +17,18 @@ class _FootState extends State<Foot> {
       height: 160,
       width: size.width,
       color: Theme.of(context).colorScheme.secondary,
-      child: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        SvgPicture.asset('assets/logo.svg'),
+        const Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Image(
-              image: AssetImage('assets/logo.png'),
+            Text(
+              "Żyrek Ferrara Consulting - Panel Klienta",
+              style: TextStyle(color: Colors.white),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  "Żyrek Ferrara Consulting - Panel Klienta",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ],
-            )
-          ]),
+          ],
+        )
+      ]),
     );
   }
 }
