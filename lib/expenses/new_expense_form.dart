@@ -284,7 +284,7 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
               builder: (context) => const MyHomePage(),
             ),
           );
-          showInfo('Kategoria została utworzona.', Colors.green);
+          showInfo('Transakcja została utworzona.', Colors.green);
         } else {
           showInfo('Wystąpił błąd poodczas tworzenia transakcji.', Colors.red);
         }
