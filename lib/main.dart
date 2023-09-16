@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
             iconTheme: IconThemeData(color: Colors.white),
-            color: Color(0xFF005b3d),
+            backgroundColor: Color(0xFF005b3d),
             titleTextStyle: TextStyle(color: Colors.white, fontSize: 21)),
         drawerTheme: const DrawerThemeData(),
         colorScheme: const ColorScheme.light(secondary: Color(0xFF005b3d)),

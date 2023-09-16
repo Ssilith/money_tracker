@@ -20,6 +20,7 @@ class SimpleDarkButton extends StatelessWidget {
         width: width,
         child: ElevatedButton(
             style: ElevatedButton.styleFrom(
+              elevation: 0,
               backgroundColor:
                   buttonColor ?? Theme.of(context).colorScheme.secondary,
             ),

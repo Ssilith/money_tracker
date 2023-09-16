@@ -62,7 +62,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
             ];
           },
           body: Container(
-            // color: const Color.fromARGB(255, 253, 223, 158).withOpacity(0.06),
+            color: const Color.fromARGB(255, 253, 223, 158).withOpacity(0.2),
             height: size.height,
             child: Padding(
               padding: EdgeInsets.only(

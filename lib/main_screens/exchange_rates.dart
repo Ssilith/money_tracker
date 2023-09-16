@@ -51,8 +51,8 @@ class _ExchangeRatesState extends State<ExchangeRates> {
             SliverAppBar(
               pinned: true,
               elevation: 0,
-              surfaceTintColor: Colors.white.withOpacity(0.7),
-              backgroundColor: Colors.white.withOpacity(0.7),
+              surfaceTintColor: Theme.of(context).colorScheme.secondary,
+              backgroundColor: Theme.of(context).colorScheme.secondary,
               leading: Builder(
                 builder: (BuildContext context) {
                   return InkWell(
@@ -64,23 +64,21 @@ class _ExchangeRatesState extends State<ExchangeRates> {
                       );
                     },
                     child: Icon(MdiIcons.arrowLeftCircle,
-                        size: 40,
-                        color: Theme.of(context).colorScheme.secondary),
+                        size: 40, color: Colors.white),
                   );
                 },
               ),
               automaticallyImplyLeading: true,
-              title: Text("Kursy walut",
+              title: const Text("Kursy walut",
                   style: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
-                      fontWeight: FontWeight.w600)),
+                      color: Colors.white, fontWeight: FontWeight.w600)),
               centerTitle: true,
               floating: true,
               snap: true,
               actions: [
                 IconButton(
-                  icon: Icon(Icons.more_vert,
-                      size: 30, color: Theme.of(context).colorScheme.secondary),
+                  icon: const Icon(Icons.more_vert,
+                      size: 30, color: Colors.white),
                   onPressed: () {
                     chooseCurrencyRate(context);
                   },
@@ -96,22 +94,7 @@ class _ExchangeRatesState extends State<ExchangeRates> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: Indicator());
               } else if (snapshot.hasError) {
-                return Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: transparentOnGradient(),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.warning,
-                          color: Colors.red,
-                        ),
-                        Text(
-                          "Wystąpił błąd!",
-                          style: TextStyle(color: Colors.red, fontSize: 18),
-                        ),
-                      ],
-                    ));
+                return Center(child: Text('Błąd: ${snapshot.error}'));
               } else {
                 currencyDataList = snapshot.data!;
                 return Container(

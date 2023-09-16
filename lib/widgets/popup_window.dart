@@ -15,6 +15,7 @@ class PopupWindow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      elevation: 0,
       title: Text(
         title,
         textAlign: TextAlign.center,

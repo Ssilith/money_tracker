@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:money_tracker/authentication/login_screen.dart';
+import 'package:money_tracker/expenses/new_category_form.dart';
 import 'package:money_tracker/expenses/new_expense_form.dart';
 import 'package:money_tracker/main.dart';
 import 'package:money_tracker/main_screens/exchange_rates.dart';
@@ -73,11 +74,8 @@ class SideDrawer extends StatelessWidget {
                 size: 26),
             DrawerTile(
                 onTap: () {
-                  // Navigator.of(context).pushReplacement(
-                  //   MaterialPageRoute(
-                  //     builder: (context) => const AddCompanyForm(),
-                  //   ),
-                  // );
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const NewCategoryForm()));
                 },
                 text: "Dodaj kategorię",
                 icon: Icons.folder,
@@ -119,15 +117,6 @@ class SideDrawer extends StatelessWidget {
             const Divider(
               color: Color.fromARGB(49, 66, 66, 66),
             ),
-            // DrawerTile(
-            //     onTap: () => Navigator.of(context).pushReplacement(
-            //           MaterialPageRoute(
-            //             builder: (context) => const AboutUs(),
-            //           ),
-            //         ),
-            //     text: "O nas",
-            //     icon: Icons.info,
-            //     size: 26),
             DrawerTile(
                 onTap: () => showDialog(
                     context: context,
@@ -149,31 +138,6 @@ class SideDrawer extends StatelessWidget {
                 text: "Wyloguj",
                 icon: Icons.logout,
                 size: 26),
-            // Padding(
-            //   padding:
-            //       const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
-            //   child: Column(
-            //     mainAxisSize: MainAxisSize.min,
-            //     mainAxisAlignment: MainAxisAlignment.end,
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       InkWell(
-            //           onTap: () {},
-            //           // => Navigator.of(context).pushReplacement(
-            //           //       MaterialPageRoute(
-            //           //         builder: (context) => const ContactPage(),
-            //           //       ),
-            //           //     ),
-            //           child: const Text("Kontakt")),
-            //       const SizedBox(height: 8),
-            //       InkWell(onTap: () {}, child: const Text("Regulamin")),
-            //       const SizedBox(height: 8),
-            //       InkWell(
-            //           onTap: () => privacyPolicyPdf(),
-            //           child: const Text("Polityka prywatności")),
-            //     ],
-            //   ),
-            // ),
           ],
         ),
       ),

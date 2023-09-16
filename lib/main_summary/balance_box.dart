@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:money_tracker/global.dart';
 
 class BalanceBox extends StatefulWidget {
   const BalanceBox({super.key});
@@ -36,8 +37,8 @@ class _BalanceBoxState extends State<BalanceBox> {
                           style: TextStyle(
                               color: Colors.white.withOpacity(0.5),
                               fontSize: 16)),
-                      const Text("11247109 zł",
-                          style: TextStyle(
+                      Text(currencyFormat('PLN').format(11222344.50),
+                          style: const TextStyle(
                               color: Colors.white,
                               fontSize: 22,
                               fontWeight: FontWeight.bold)),

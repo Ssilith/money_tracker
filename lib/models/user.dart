@@ -14,10 +14,12 @@ class User {
   List<String> transactionId;
   List<String> budgetId;
   List<String> notificationId;
+  List<String> categoryId;
 
   User()
       : transactionId = [],
         budgetId = [],
+        categoryId = [],
         notificationId = [];
 
   void clear() {
@@ -34,6 +36,7 @@ class User {
         permissions == null &&
         transactionId.isEmpty &&
         budgetId.isEmpty &&
+        categoryId.isEmpty &&
         notificationId.isEmpty;
   }
 

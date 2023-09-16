@@ -8,7 +8,7 @@ import 'network_service.dart';
 class TransactionService {
   final String _urlPrefix = NetworkService.getApiUrl();
 
-  addNewBudget(Transaction transaction) async {
+  addNewTransaction(Transaction transaction) async {
     Map<String, dynamic> body = {'transaction': transaction};
     final http.Response res = await client.post(
       Uri.parse('$_urlPrefix/transaction/addNewTransaction'),
@@ -21,7 +21,7 @@ class TransactionService {
     return json.decode(res.body);
   }
 
-  updateBudget(Transaction transaction) async {
+  updateTransaction(Transaction transaction) async {
     Map<String, dynamic> body = {'transaction': transaction};
     final http.Response res = await client.post(
       Uri.parse('$_urlPrefix/transaction/updateTransaction'),

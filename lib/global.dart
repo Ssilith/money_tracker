@@ -23,7 +23,7 @@ BoxDecoration transparentOnGradient([Color? color]) {
   );
 }
 
-List<Color> gradientColors = [
+List<Color> gradientColors = const [
   Color.fromARGB(255, 0, 162, 108),
   Color.fromARGB(255, 0, 184, 121),
   Color.fromARGB(255, 0, 181, 212),
