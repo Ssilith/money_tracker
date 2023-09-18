@@ -213,6 +213,10 @@ class _SetBudgetFormState extends State<SetBudgetForm> {
           ),
         );
         showInfo('Budżet został ustawiony.', Colors.green);
+      } else if (res['msg'] == 'budgetOverlaps') {
+        showInfo(
+            'Termin nowego budżetu pokrywa się z terminem ustalonego wcześniej budżetu.',
+            Colors.blue);
       } else {
         showInfo('Wystąpił błąd podczas ustawiania budżetu.', Colors.red);
       }
@@ -234,8 +238,3 @@ DateTime setInitialDate() {
 
   return oneMonthAgo;
 }
-
-
-
-
-//TODO: WSZĘDZIE UPDATE USERA
