@@ -44,6 +44,7 @@ class _ExchangeRatesState extends State<ExchangeRates> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -87,44 +88,49 @@ class _ExchangeRatesState extends State<ExchangeRates> {
             ),
           ];
         },
-        body: SingleChildScrollView(
-          child: FutureBuilder<List<CurrencyData>>(
-            future: nbpCurrency,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: Indicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Błąd: ${snapshot.error}'));
-              } else {
-                currencyDataList = snapshot.data!;
-                return Container(
-                  padding: const EdgeInsets.all(10),
-                  width: 600,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ...chosenCurrency
-                          .map<Widget?>((currency) {
-                            var currencyData =
-                                currencyDataList.firstWhereOrNull((data) {
-                              var currentPair = data.fromName;
-                              if (data.toName != null) {
-                                currentPair += " ${data.toName}";
-                              }
-                              return currentPair == currency;
-                            });
+        body: Container(
+          color: const Color.fromARGB(255, 253, 223, 158).withOpacity(0.2),
+          height: size.height,
+          child: SingleChildScrollView(
+            child: FutureBuilder<List<CurrencyData>>(
+              future: nbpCurrency,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: Indicator());
+                } else if (snapshot.hasError) {
+                  return const Center(
+                      child: Text('Wystąpił błąd. Spróbuj ponownie później.'));
+                } else {
+                  currencyDataList = snapshot.data!;
+                  return Container(
+                    padding: const EdgeInsets.all(10),
+                    width: 600,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ...chosenCurrency
+                            .map<Widget?>((currency) {
+                              var currencyData =
+                                  currencyDataList.firstWhereOrNull((data) {
+                                var currentPair = data.fromName;
+                                if (data.toName != null) {
+                                  currentPair += " ${data.toName}";
+                                }
+                                return currentPair == currency;
+                              });
 
-                            return currencyData != null
-                                ? buildCurrencyCard(currencyData, context)
-                                : null;
-                          })
-                          .whereType<Widget>()
-                          .toList(),
-                    ],
-                  ),
-                );
-              }
-            },
+                              return currencyData != null
+                                  ? buildCurrencyCard(currencyData, context)
+                                  : null;
+                            })
+                            .whereType<Widget>()
+                            .toList(),
+                      ],
+                    ),
+                  );
+                }
+              },
+            ),
           ),
         ),
       ),

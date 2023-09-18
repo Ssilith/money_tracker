@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     } else {
-      showInfo('Podano nieprawidłowe dane.', Colors.red, 300, 40);
+      showInfo('Podano nieprawidłowe dane.', Colors.red, 300);
     }
   }
 

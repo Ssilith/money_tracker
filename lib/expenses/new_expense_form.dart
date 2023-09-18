@@ -96,7 +96,8 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Indicator();
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('Błąd: ${snapshot.error}'));
+                  return const Center(
+                      child: Text('Wystąpił błąd. Spróbuj ponownie później.'));
                 } else {
                   if (snapshot.hasData && (snapshot.data as List).isNotEmpty) {
                     categories = snapshot.data!;
