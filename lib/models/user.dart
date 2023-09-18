@@ -11,6 +11,7 @@ class User {
   String? telephone;
   String? token;
   bool? permissions;
+  double? account;
   List<String> transactionId;
   List<String> budgetId;
   List<String> notificationId;
@@ -34,6 +35,7 @@ class User {
         telephone == null &&
         token == null &&
         permissions == null &&
+        account == null &&
         transactionId.isEmpty &&
         budgetId.isEmpty &&
         categoryId.isEmpty &&
