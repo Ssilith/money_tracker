@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:money_tracker/documentation/chip_filter.dart';
-import 'package:money_tracker/documentation/documentation_global.dart';
-import 'package:money_tracker/example_data.dart';
-import 'package:money_tracker/last_documents.dart';
 
 class DocumentList extends StatefulWidget {
   const DocumentList({super.key});
@@ -18,11 +15,11 @@ class _DocumentListState extends State<DocumentList> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double screenHeight = size.height -
-        MediaQuery.of(context).padding.top -
-        MediaQuery.of(context).padding.bottom -
-        116;
+    // Size size = MediaQuery.of(context).size;
+    // double screenHeight = size.height -
+    //     MediaQuery.of(context).padding.top -
+    //     MediaQuery.of(context).padding.bottom -
+    //     116;
     return ListView(
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.zero,
@@ -38,7 +35,7 @@ class _DocumentListState extends State<DocumentList> {
                   filterData: chipFilterList[i],
                   callback: () => setState(() {
                     selectedFilter = i;
-                    groupByClient();
+                    // groupByClient();
                   }),
                   isSelected: i == selectedFilter,
                 )
@@ -65,22 +62,19 @@ class _DocumentListState extends State<DocumentList> {
             ),
           ),
         ),
-        SizedBox(
-          height: screenHeight - 94,
-          child:
-              // all documents
-              ListView.builder(
-            padding: EdgeInsets.zero,
-            itemCount: dataTemplate.length,
-            itemBuilder: (context, index) {
-              return DocumentContainer(
-                  document: dataTemplate[index], width: size.width * 0.94);
-            },
-          ),
+        // SizedBox(
+        //   height: screenHeight - 94,
+        //   child:
+        //       ListView.builder(
+        //     padding: EdgeInsets.zero,
+        //     itemCount: dataTemplate.length,
+        //     itemBuilder: (context, index) {
+        //       return DocumentContainer(
+        //           document: dataTemplate[index], width: size.width * 0.94);
+        //     },
+        //   ),
 
-          // folders
-          //List
-        ),
+        // ),
       ],
     );
   }

@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:money_tracker/main_summary/cost_gauge.dart';
-import 'package:money_tracker/main_summary/financial_result_line_chart.dart';
 import 'package:money_tracker/main_summary/vat_summary.dart';
 
 class MainSummary extends StatefulWidget {
@@ -46,10 +45,10 @@ class _MainSummaryState extends State<MainSummary> {
                   crossAxisCellCount: 1,
                   mainAxisCellCount: 0.9,
                   child: VatSummary()),
-              StaggeredGridTile.count(
-                  crossAxisCellCount: 2,
-                  mainAxisCellCount: 2,
-                  child: FinancialResultLineChart()),
+              // StaggeredGridTile.count(
+              //     crossAxisCellCount: 2,
+              //     mainAxisCellCount: 2,
+              //     child: FinancialResultLineChart()),
             ],
           ),
         ),

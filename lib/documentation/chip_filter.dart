@@ -13,27 +13,40 @@ class ChipFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       child: InkWell(
         onTap: () => callback(),
         child: Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-            decoration: BoxDecoration(
-                color: isSelected
-                    ? Theme.of(context).colorScheme.secondary
-                    : Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                    color: Theme.of(context).colorScheme.secondary, width: 2)),
-            child: Text(filterData['name'],
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15,
-                    color: isSelected
-                        ? Colors.white
-                        : Theme.of(context).colorScheme.secondary))),
+          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+          decoration: BoxDecoration(
+              color: isSelected
+                  ? const Color.fromARGB(255, 236, 242, 254)
+                  : Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                  color: Theme.of(context).colorScheme.secondary,
+                  width: isSelected ? 2 : 1)),
+          child: Row(
+            children: [
+              Text(filterData['name'],
+                  style: TextStyle(
+                      fontWeight:
+                          isSelected ? FontWeight.w600 : FontWeight.w500,
+                      fontSize: 16,
+                      color: Theme.of(context).colorScheme.secondary))
+            ],
+          ),
+        ),
       ),
     );
   }
 }
+
+List chipFilterList = [
+  {"name": "Wystawca"},
+  {"name": "Miesiąc"},
+  {"name": "Rodzaj"},
+  {"name": "Pożyczki"},
+  {"name": "Podatki"},
+];

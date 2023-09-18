@@ -83,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (chosenScreen) {
       case Screens.summaryScreen:
         return const SummaryScreen();
-      case Screens.documents:
+      case Screens.transactions:
         return const DocumentList();
       case Screens.financial:
         return const MainFinancial();
@@ -160,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           SalomonBottomBarItem(
             icon: const Icon(Icons.file_open),
-            title: const Text("Dokumenty"),
+            title: const Text("Transakcje"),
             selectedColor: Theme.of(context).colorScheme.secondary,
           ),
           SalomonBottomBarItem(
@@ -174,4 +174,4 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-enum Screens { summaryScreen, documents, financial }
+enum Screens { summaryScreen, transactions, financial }

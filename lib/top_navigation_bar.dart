@@ -68,7 +68,7 @@ class _TopNavigationBarState extends State<TopNavigationBar> {
           ]),
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             switchScreenButton("Strona główna", Screens.summaryScreen),
-            switchScreenButton("Baza dokumentów", Screens.documents),
+            switchScreenButton("Baza transakcji", Screens.transactions),
             switchScreenButton("Sprawozdania finansowe", Screens.financial),
             // switchScreenButton("O nas", Screens.aboutUs),
           ])
