@@ -6,6 +6,7 @@ class DropdownInputForm extends StatefulWidget {
   final List<String> items;
   final Function(String?) onChanged;
   final String? selectedValue;
+  final bool addNew;
 
   const DropdownInputForm({
     super.key,
@@ -14,6 +15,7 @@ class DropdownInputForm extends StatefulWidget {
     required this.items,
     required this.onChanged,
     required this.selectedValue,
+    this.addNew = false,
   });
 
   @override
@@ -50,7 +52,13 @@ class _DropdownInputFormState extends State<DropdownInputForm> {
                 items: widget.items.map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                          fontStyle: widget.addNew
+                              ? FontStyle.italic
+                              : FontStyle.normal),
+                    ),
                   );
                 }).toList(),
                 hint: Text(widget.hint),

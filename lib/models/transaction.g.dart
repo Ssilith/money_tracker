@@ -11,7 +11,8 @@ Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction()
   ..amount = (json['amount'] as num?)?.toDouble()
   ..type = json['type'] as String?
   ..category = json['category'] as String?
-  ..date = json['date'] == null ? null : DateTime.parse(json['date'] as String);
+  ..date = json['date'] == null ? null : DateTime.parse(json['date'] as String)
+  ..description = json['description'] as String?;
 
 Map<String, dynamic> _$TransactionToJson(Transaction instance) {
   final val = <String, dynamic>{};
@@ -27,5 +28,6 @@ Map<String, dynamic> _$TransactionToJson(Transaction instance) {
   writeNotNull('type', instance.type);
   writeNotNull('category', instance.category);
   writeNotNull('date', instance.date?.toIso8601String());
+  writeNotNull('description', instance.description);
   return val;
 }

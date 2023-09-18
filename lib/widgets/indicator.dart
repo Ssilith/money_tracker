@@ -13,8 +13,8 @@ class Indicator extends StatelessWidget {
         LoadingAnimationWidget.discreteCircle(
             color: Theme.of(context).colorScheme.secondary,
             size: 60,
-            secondRingColor: const Color.fromARGB(255, 0, 181, 212),
-            thirdRingColor: const Color.fromARGB(255, 253, 223, 158)),
+            secondRingColor: const Color.fromARGB(255, 0, 184, 121),
+            thirdRingColor: const Color.fromARGB(255, 0, 181, 212)),
       ],
     );
   }

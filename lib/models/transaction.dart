@@ -9,6 +9,7 @@ class Transaction {
   String? type;
   String? category;
   DateTime? date;
+  String? description;
 
   Transaction();
 
@@ -21,7 +22,8 @@ class Transaction {
         amount == null &&
         type == null &&
         category == null &&
-        date == null;
+        date == null &&
+        description == null;
   }
 
   factory Transaction.fromJson(Map<String, dynamic> json) =>

@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:money_tracker/authentication/login_screen.dart';
 import 'package:money_tracker/expenses/new_category_form.dart';
 import 'package:money_tracker/expenses/new_expense_form.dart';
+import 'package:money_tracker/expenses/set_budget_form.dart';
 import 'package:money_tracker/main.dart';
 import 'package:money_tracker/main_screens/exchange_rates.dart';
 import 'package:money_tracker/models/user.dart';
@@ -82,14 +83,14 @@ class SideDrawer extends StatelessWidget {
                 size: 26),
             DrawerTile(
                 onTap: () {
-                  // Navigator.of(context).pushReplacement(
-                  //   MaterialPageRoute(
-                  //     builder: (context) => const AddCompanyForm(),
-                  //   ),
-                  // );
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => const SetBudgetForm(),
+                    ),
+                  );
                 },
                 text: "Ustaw budżet",
-                icon: Icons.pie_chart,
+                icon: Icons.attach_money,
                 size: 26),
             const Divider(
               color: Color.fromARGB(49, 66, 66, 66),

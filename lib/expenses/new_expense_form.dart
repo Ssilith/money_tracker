@@ -25,10 +25,12 @@ class NewExpenseForm extends StatefulWidget {
 class _NewExpenseFormState extends State<NewExpenseForm> {
   final TextEditingController _amount = TextEditingController();
   final TextEditingController _date = TextEditingController();
+  final TextEditingController _description = TextEditingController();
   String type = "Wydatek";
   Future? getCategoriesNames;
   String? category;
   String categoryId = "";
+  List<String> categories = [];
 
   @override
   initState() {
@@ -42,6 +44,10 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
       _date.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
     }
     super.initState();
+  }
+
+  void reloadCategories() {
+    getCategoriesNames = CategoryService().getCategoriesNames();
   }
 
   @override
@@ -88,15 +94,14 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
                   return const Indicator();
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Błąd: ${snapshot.error}'));
-                } else if (!snapshot.hasData ||
-                    (snapshot.data as List).isEmpty) {
-                  return const Center(
-                      child: Text(
-                    'Nie znaleziono kategorii.',
-                  ));
                 } else {
-                  List<String> categories = snapshot.data!;
-                  category = category ?? categories[0];
+                  if (snapshot.hasData && (snapshot.data as List).isNotEmpty) {
+                    categories = snapshot.data!;
+                    category = category ?? categories[0];
+                  } else {
+                    categories = ['Dodaj nową kategorię'];
+                    category = 'Dodaj nową kategorię';
+                  }
                   return Container(
                     color: const Color.fromARGB(255, 253, 223, 158)
                         .withOpacity(0.2),
@@ -118,12 +123,13 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
                             children: [
                               TextInputForm(
                                 width: size.width * 0.45,
-                                hint: "Kwota",
+                                hint: "Kwota*",
                                 controller: _amount,
                               ),
                               DropdownInputForm(
+                                key: ValueKey(categories),
                                 width: size.width * 0.45,
-                                hint: "Typ",
+                                hint: "Typ*",
                                 selectedValue: type,
                                 items: const ["Wydatek", "Przychód"],
                                 onChanged: (value) {
@@ -139,9 +145,12 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
                             children: [
                               DropdownInputForm(
                                 width: size.width * 0.8,
-                                hint: "Kategoria",
+                                hint: "Kategoria*",
                                 selectedValue: category,
                                 items: categories,
+                                addNew: category == "Dodaj nową kategorię"
+                                    ? true
+                                    : false,
                                 onChanged: (val) {
                                   setState(() {
                                     category = val ?? categories[0];
@@ -161,7 +170,6 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
                                         type: type,
                                         category: category!,
                                       );
-
                                       final returnedData =
                                           await Navigator.of(context)
                                               .push<ExpenseFormData>(
@@ -179,9 +187,13 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
                                           _date.text = returnedData.date;
                                           type = returnedData.type;
                                           category = returnedData.category;
-
                                           if (returnedData.newCategory !=
                                               null) {
+                                            if (categories[0] ==
+                                                'Dodaj nową kategorię') {
+                                              categories.clear();
+                                              reloadCategories();
+                                            }
                                             categories
                                                 .add(returnedData.newCategory!);
                                             category =
@@ -201,7 +213,7 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
                             children: [
                               TextInputForm(
                                 width: size.width * 0.8,
-                                hint: "Data",
+                                hint: "Data*",
                                 controller: _date,
                               ),
                               Column(
@@ -215,6 +227,12 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
                                 ],
                               )
                             ],
+                          ),
+                          const SizedBox(height: 10),
+                          TextInputForm(
+                            width: size.width * 0.92,
+                            hint: "Opis",
+                            controller: _description,
                           ),
                           const SizedBox(height: 10),
                           Padding(
@@ -275,6 +293,7 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
         transaction.date = DateTime.parse(_date.text);
         transaction.category = cat['category']['_id'].toString();
         transaction.type = type;
+        transaction.description = _description.text;
 
         var res = await TransactionService().addNewTransaction(transaction);
 
@@ -286,13 +305,13 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
           );
           showInfo('Transakcja została utworzona.', Colors.green);
         } else {
-          showInfo('Wystąpił błąd poodczas tworzenia transakcji.', Colors.red);
+          showInfo('Wystąpił błąd podczas tworzenia transakcji.', Colors.red);
         }
       } else {
         showInfo('Musisz uzupełnić pola oznaczone gwiazdką*.', Colors.blue);
       }
     } else {
-      showInfo('Wystąpił błąd poodczas tworzenia transakcji.', Colors.red);
+      showInfo('Sprawdź czy kategoria jest poprawna.', Colors.red);
     }
   }
 }
