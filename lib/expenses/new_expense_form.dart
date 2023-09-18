@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:money_tracker/expenses/new_category_form.dart';
+import 'package:money_tracker/global.dart';
 import 'package:money_tracker/main.dart';
 import 'package:money_tracker/models/transaction.dart';
+import 'package:money_tracker/models/user.dart';
 import 'package:money_tracker/resources/category_service.dart';
 import 'package:money_tracker/resources/transaction_service.dart';
+import 'package:money_tracker/resources/user_service.dart';
 import 'package:money_tracker/widgets/dropdown_input_form.dart';
 import 'package:money_tracker/widgets/indicator.dart';
 import 'package:money_tracker/widgets/message.dart';
@@ -269,10 +272,7 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
                   primarySwatch: getMaterialColor(
                       Theme.of(context).colorScheme.secondary)),
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(50.0),
-              child: child!,
-            ),
+            child: child!,
           );
         });
     if (pickedDate != null) {
@@ -298,6 +298,9 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
         var res = await TransactionService().addNewTransaction(transaction);
 
         if (res['success']) {
+          user.transactionId.add(res['transaction']['_id']);
+          await UserService().updateUserInfo(user);
+
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) => const MyHomePage(),
@@ -314,27 +317,6 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
       showInfo('Sprawdź czy kategoria jest poprawna.', Colors.red);
     }
   }
-}
-
-MaterialColor getMaterialColor(Color color) {
-  final int red = color.red;
-  final int green = color.green;
-  final int blue = color.blue;
-
-  final Map<int, Color> shades = {
-    50: Color.fromRGBO(red, green, blue, .1),
-    100: Color.fromRGBO(red, green, blue, .2),
-    200: Color.fromRGBO(red, green, blue, .3),
-    300: Color.fromRGBO(red, green, blue, .4),
-    400: Color.fromRGBO(red, green, blue, .5),
-    500: Color.fromRGBO(red, green, blue, .6),
-    600: Color.fromRGBO(red, green, blue, .7),
-    700: Color.fromRGBO(red, green, blue, .8),
-    800: Color.fromRGBO(red, green, blue, .9),
-    900: Color.fromRGBO(red, green, blue, 1),
-  };
-
-  return MaterialColor(color.value, shades);
 }
 
 class ExpenseFormData {

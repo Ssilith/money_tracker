@@ -6,7 +6,9 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:money_tracker/expenses/new_expense_form.dart';
 import 'package:money_tracker/main.dart';
 import 'package:money_tracker/models/category.dart';
+import 'package:money_tracker/models/user.dart';
 import 'package:money_tracker/resources/category_service.dart';
+import 'package:money_tracker/resources/user_service.dart';
 import 'package:money_tracker/widgets/message.dart';
 import 'package:money_tracker/widgets/simple_dark_button.dart';
 import 'package:money_tracker/widgets/text_input_form.dart';
@@ -142,6 +144,8 @@ class _NewCategoryFormState extends State<NewCategoryForm> {
 
       var res = await CategoryService().addCategory(category);
       if (res['success']) {
+        user.categoryId.add(res['newCategory']['_id']);
+        await UserService().updateUserInfo(user);
         if (widget.inExpenseFrom) {
           _returnToPreviousPage();
         } else {

@@ -6,9 +6,9 @@ class Budget {
   @JsonKey(name: '_id')
   String? id;
   double? amount;
-  String? category;
   DateTime? startDate;
   DateTime? endDate;
+  bool? income;
 
   Budget();
 
@@ -19,7 +19,7 @@ class Budget {
   bool isEmpty() {
     return id == null &&
         amount == null &&
-        category == null &&
+        income == null &&
         startDate == null &&
         endDate == null;
   }

@@ -9,13 +9,12 @@ part of 'budget.dart';
 Budget _$BudgetFromJson(Map<String, dynamic> json) => Budget()
   ..id = json['_id'] as String?
   ..amount = (json['amount'] as num?)?.toDouble()
-  ..category = json['category'] as String?
   ..startDate = json['startDate'] == null
       ? null
       : DateTime.parse(json['startDate'] as String)
-  ..endDate = json['endDate'] == null
-      ? null
-      : DateTime.parse(json['endDate'] as String);
+  ..endDate =
+      json['endDate'] == null ? null : DateTime.parse(json['endDate'] as String)
+  ..income = json['income'] as bool?;
 
 Map<String, dynamic> _$BudgetToJson(Budget instance) {
   final val = <String, dynamic>{};
@@ -28,8 +27,8 @@ Map<String, dynamic> _$BudgetToJson(Budget instance) {
 
   writeNotNull('_id', instance.id);
   writeNotNull('amount', instance.amount);
-  writeNotNull('category', instance.category);
   writeNotNull('startDate', instance.startDate?.toIso8601String());
   writeNotNull('endDate', instance.endDate?.toIso8601String());
+  writeNotNull('income', instance.income);
   return val;
 }
