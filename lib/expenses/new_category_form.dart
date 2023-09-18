@@ -63,8 +63,6 @@ class _NewCategoryFormState extends State<NewCategoryForm> {
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.w600)),
                 centerTitle: true,
-                floating: true,
-                snap: true,
               ),
             ];
           },

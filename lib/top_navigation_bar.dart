@@ -70,8 +70,7 @@ class _TopNavigationBarState extends State<TopNavigationBar> {
             switchScreenButton("Strona główna", Screens.summaryScreen),
             switchScreenButton("Baza dokumentów", Screens.documents),
             switchScreenButton("Sprawozdania finansowe", Screens.financial),
-            switchScreenButton("Konto", Screens.account),
-            switchScreenButton("O nas", Screens.aboutUs),
+            // switchScreenButton("O nas", Screens.aboutUs),
           ])
         ],
       ),

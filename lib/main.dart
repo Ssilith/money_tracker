@@ -8,7 +8,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:money_tracker/authentication/login_screen.dart';
 import 'package:money_tracker/documentation/documents_list.dart';
 import 'package:money_tracker/financial/main_financial.dart';
-import 'package:money_tracker/main_screens/about_us.dart';
 import 'package:money_tracker/main_screens/summary_screen.dart';
 import 'package:money_tracker/resources/initialization_service.dart';
 import 'package:money_tracker/resources/user_service.dart';
@@ -88,10 +87,6 @@ class _MyHomePageState extends State<MyHomePage> {
         return const DocumentList();
       case Screens.financial:
         return const MainFinancial();
-      case Screens.account:
-        return const AboutUs();
-      case Screens.aboutUs:
-        return const AboutUs();
     }
   }
 
@@ -99,7 +94,6 @@ class _MyHomePageState extends State<MyHomePage> {
     const SummaryScreen(),
     const DocumentList(),
     const MainFinancial(),
-    const AboutUs()
   ];
 
   changeScreen(Screens newScreen) {
@@ -174,15 +168,10 @@ class _MyHomePageState extends State<MyHomePage> {
             title: const Text("Finanse"),
             selectedColor: Theme.of(context).colorScheme.secondary,
           ),
-          SalomonBottomBarItem(
-            icon: const Icon(Icons.account_circle),
-            title: const Text("Profil"),
-            selectedColor: Theme.of(context).colorScheme.secondary,
-          ),
         ],
       ),
     );
   }
 }
 
-enum Screens { summaryScreen, documents, financial, account, aboutUs }
+enum Screens { summaryScreen, documents, financial }

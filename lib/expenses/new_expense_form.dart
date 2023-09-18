@@ -85,8 +85,6 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.w600)),
                 centerTitle: true,
-                floating: true,
-                snap: true,
               ),
             ];
           },
