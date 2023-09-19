@@ -47,22 +47,38 @@ class TransactionService {
     Map<String, dynamic> decodedBody = json.decode(res.body);
 
     if (!decodedBody['success']) [];
-    print(decodedBody['transaction']);
     return decodedBody['transaction'];
   }
 
-  getAllTransactionsForUser() async {
+  getAllTransactionsForUser(String userId) async {
     Map<String, String> headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       'Authorization': UserSimplePreferences.accessToken
     };
 
     final http.Response res = await client.get(
-        Uri.parse('$_urlPrefix/transaction/getAllTransactionsForUser'),
+        Uri.parse('$_urlPrefix/transaction/$userId/getAllTransactionsForUser'),
         headers: headers);
     Map<String, dynamic> decodedBody = json.decode(res.body);
 
     if (!decodedBody['success']) [];
     return decodedBody['transaction'];
+  }
+
+  getLastWeekTopCategories(String userId) async {
+    Map<String, String> headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': UserSimplePreferences.accessToken
+    };
+
+    final http.Response res = await client.get(
+        Uri.parse('$_urlPrefix/transaction/$userId/getLastWeekTopCategories'),
+        headers: headers);
+    Map<String, dynamic> decodedBody = json.decode(res.body);
+
+    if (!decodedBody['success']) return [];
+
+    print(decodedBody);
+    return decodedBody;
   }
 }

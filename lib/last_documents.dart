@@ -55,7 +55,7 @@ class _LastDocumentsState extends State<LastDocuments> {
                       },
                       options: CarouselOptions(
                           autoPlay: true,
-                          height: 120,
+                          height: 85,
                           animateToClosest: false,
                           initialPage: 0,
                           scrollDirection: Axis.horizontal,
@@ -83,7 +83,6 @@ class DocumentContainer extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Container(
-        // constraints: const BoxConstraints(minHeight: 100, maxHeight: 200),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: const Color.fromARGB(249, 243, 246, 254),
@@ -94,30 +93,26 @@ class DocumentContainer extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(
-              child: Text(
-                document['category']['name'],
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Color(int.parse(
-                        document['category']['color'] ?? "0xFFFFFFFF"))),
-              ),
-            ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "Cena",
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                SizedBox(
+                  child: Text(
+                    document['category']['name'],
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Color(int.parse(
+                            document['category']['color'] ?? "0xFF000000"))),
+                  ),
                 ),
                 Text(
                   currencyFormat('PLN').format(document['amount']),
                   style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 22,
-                      color: Colors.red),
+                      color: Colors.black),
                 ),
               ],
             ),
@@ -159,7 +154,9 @@ class PaymentStatusChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       height: 30,
       decoration: BoxDecoration(
-          color: isPaid ? Colors.green : Colors.red,
+          color: isPaid
+              ? const Color.fromARGB(255, 38, 174, 108)
+              : const Color.fromARGB(255, 241, 81, 70),
           borderRadius: BorderRadius.circular(10)),
       child: Row(children: [
         Icon(isPaid ? Icons.check_circle : Icons.cancel_rounded, size: 16),

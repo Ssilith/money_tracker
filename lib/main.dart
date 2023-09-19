@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -107,8 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Size size = MediaQuery.of(context).size;
     double screenHeight = size.height -
         MediaQuery.of(context).padding.top -
-        MediaQuery.of(context).padding.bottom -
-        116;
+        MediaQuery.of(context).padding.bottom;
     return Scaffold(
       drawer: SideDrawer(
         onTap: (x) => changeScreen(x),
@@ -143,7 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
         body: SizedBox(
           height: screenHeight,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: kIsWeb ? 100 : 0),
+            padding: const EdgeInsets.symmetric(horizontal: 0),
             child: mainScreenList[screenIndex],
           ),
         ),
