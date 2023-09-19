@@ -85,7 +85,7 @@ class PieChartBoxState extends State<PieChartBox> {
         color: Color(int.parse(categories[i]['color'].toString())),
         value: percentage,
         title: title,
-        showTitle: categories[i]['category'] == 'Inne' ? false : true,
+        showTitle: percentage < 5 ? false : true,
         radius: 50,
         titleStyle: const TextStyle(
           fontSize: 18,
