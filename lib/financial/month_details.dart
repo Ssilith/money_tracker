@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:money_tracker/global.dart';
 
 class MonthDetails extends StatefulWidget {
   const MonthDetails({super.key});
@@ -159,7 +158,7 @@ class MonthDetailsValueContainer extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 5, horizontal: width * 0.01),
-        decoration: withShadow(),
+        // decoration: withShadow(),
         child: Row(children: [
           SizedBox(width: width * 0.56, child: Text(name)),
           SizedBox(width: width * 0.28, child: Text(value)),

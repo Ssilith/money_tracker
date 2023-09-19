@@ -32,7 +32,6 @@ class _TopNavigationBarState extends State<TopNavigationBar> {
       height: 80,
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 100),
       decoration: const BoxDecoration(
-        //color: Theme.of(context).colorScheme.secondary,
         color: Color.fromARGB(255, 236, 236, 236),
         boxShadow: [
           BoxShadow(

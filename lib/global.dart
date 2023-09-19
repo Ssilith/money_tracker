@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:http/retry.dart';
 import 'package:intl/intl.dart';
 
-BoxDecoration withShadow([Color? color, int a = 255]) {
-  return BoxDecoration(
-    color: color ?? Colors.white,
-    boxShadow: [
-      BoxShadow(
-        color: Color.fromARGB(a, 148, 148, 148),
-        offset: const Offset(5, 5),
-        blurRadius: 10,
-      ),
-    ],
-    borderRadius: BorderRadius.circular(8),
-  );
-}
+// BoxDecoration withShadow([Color? color, int a = 255]) {
+//   return BoxDecoration(
+//     color: color ?? Colors.white,
+//     boxShadow: [
+//       BoxShadow(
+//         color: Color.fromARGB(a, 148, 148, 148),
+//         offset: const Offset(5, 5),
+//         blurRadius: 10,
+//       ),
+//     ],
+//     borderRadius: BorderRadius.circular(8),
+//   );
+// }
 
 BoxDecoration transparentOnGradient([Color? color]) {
   return BoxDecoration(

@@ -36,7 +36,6 @@ class _SummaryScreenState extends State<SummaryScreen> {
     }
     return ListView(
       padding: EdgeInsets.zero,
-      // crossAxisAlignment: CrossAxisAlignment.start,
       children: const [
         SizedBox(height: 10),
         LastDocuments(),

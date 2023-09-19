@@ -40,10 +40,6 @@ class _MainFinancialState extends State<MainFinancial> {
             children: [
               const Row(
                 children: [
-                  Image(
-                    image: AssetImage("assets/logo.svg"),
-                    width: 50,
-                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -52,12 +48,6 @@ class _MainFinancialState extends State<MainFinancial> {
                               height: 1,
                               fontWeight: FontWeight.bold,
                               fontSize: 18)),
-                      Text(
-                          "Sprawozdanie za ten rok nie zostało jeszcze zatwierdzone",
-                          style: TextStyle(
-                              fontSize: 10,
-                              height: 1,
-                              fontWeight: FontWeight.w300))
                     ],
                   ),
                 ],
@@ -130,7 +120,7 @@ class YearValueBox extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "376 296,00 zł",
+                    "376 296,00 zł",
                     style: TextStyle(
                         height: 1,
                         fontSize: 19,
@@ -168,29 +158,18 @@ class YearValueBox extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "436 224,00 zł",
+                    "436 224,00 zł",
                     style: TextStyle(
                         height: 1,
                         fontSize: 19,
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.secondary),
                   ),
-                  const Text("Zysk brutto",
+                  const Text("Zysk",
                       style:
                           TextStyle(fontSize: 11, fontWeight: FontWeight.w300))
                 ],
               ),
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    "Zapłacone podatki: ",
-                    style: TextStyle(fontSize: 10),
-                  ),
-                  TaxBox(value: "86 790 zł", name: "VAT"),
-                  TaxBox(value: "41 568 zł", name: "CIT")
-                ],
-              )
             ],
           ),
         ),
@@ -238,7 +217,7 @@ class QuarterBox extends StatelessWidget {
       child: Container(
         padding:
             EdgeInsets.symmetric(horizontal: size.width * 0.02, vertical: 10),
-        decoration: withShadow(),
+        // decoration: withShadow(),
         // width: size.width * 0.9,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
@@ -324,7 +303,7 @@ class MonthValueBox extends StatelessWidget {
       closedBuilder: (context, _) => Padding(
         padding: EdgeInsets.symmetric(horizontal: size.width * 0.005),
         child: Container(
-          decoration: withShadow(),
+          // decoration: withShadow(),
           width: size.width * 0.29,
           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 6),
           child: Column(

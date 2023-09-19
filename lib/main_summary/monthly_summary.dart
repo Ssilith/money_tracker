@@ -23,7 +23,7 @@ class _VatSummaryState extends State<VatSummary> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "Rozliczenie VAT",
+            "Rozliczenie miesięczne",
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: kIsWeb ? 22 : 14),
           ),
@@ -39,7 +39,7 @@ class _VatSummaryState extends State<VatSummary> {
                     fontSize: kIsWeb ? 20 : 14),
               ),
               Text(
-                "VAT NALEŻNY",
+                "KOSZTY",
                 style: TextStyle(
                     fontSize: kIsWeb ? 12 : 10, fontWeight: FontWeight.bold),
               )
@@ -71,7 +71,7 @@ class _VatSummaryState extends State<VatSummary> {
                     fontSize: kIsWeb ? 20 : 14),
               ),
               Text(
-                "VAT NALICZONY",
+                "PRZYCHODY",
                 style: TextStyle(
                     fontSize: kIsWeb ? 12 : 10, fontWeight: FontWeight.bold),
               )
@@ -101,7 +101,7 @@ class _VatSummaryState extends State<VatSummary> {
                     fontWeight: FontWeight.bold, fontSize: kIsWeb ? 20 : 18),
               ),
               Text(
-                "DEBET",
+                "ZYSK",
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
               )
             ],
