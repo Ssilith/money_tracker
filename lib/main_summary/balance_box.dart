@@ -47,7 +47,7 @@ class _BalanceBoxState extends State<BalanceBox> {
                       color: Theme.of(context).colorScheme.secondary,
                     ),
                     width: size.width,
-                    height: 400,
+                    height: 380,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 35.0),
                       child: Column(
@@ -97,7 +97,7 @@ class _BalanceBoxState extends State<BalanceBox> {
                       child: Container(
                         color: const Color.fromARGB(134, 40, 147, 95),
                         width: size.width,
-                        height: 115,
+                        height: 95,
                       ),
                     ),
                   ),
@@ -106,7 +106,7 @@ class _BalanceBoxState extends State<BalanceBox> {
                     child: ClipPath(
                       clipper: WaveClipperOne(reverse: true),
                       child: Container(
-                        height: 100,
+                        height: 80,
                         width: size.width,
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.only(
