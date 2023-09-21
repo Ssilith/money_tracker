@@ -37,9 +37,9 @@ class CategoryService {
     return Category.fromJson(categories['category']);
   }
 
-  getCategories() async {
+  getCategories(String userId) async {
     final http.Response res = await client.post(
-      Uri.parse('$_urlPrefix/category/getCategories'),
+      Uri.parse('$_urlPrefix/category/$userId/getCategories'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': UserSimplePreferences.accessToken
@@ -52,9 +52,9 @@ class CategoryService {
         cat['category'].map((u) => Category.fromJson(u)));
   }
 
-  getCategoriesNames() async {
+  getCategoriesNames(String userId) async {
     final http.Response res = await client.post(
-      Uri.parse('$_urlPrefix/category/getCategoriesNames'),
+      Uri.parse('$_urlPrefix/category/$userId/getCategoriesNames'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': UserSimplePreferences.accessToken

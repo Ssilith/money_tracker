@@ -11,13 +11,13 @@ class _TilesTitleState extends State<TilesTitle> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 14, 10, 0),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text("Tablica",
               style: TextStyle(
-                  fontSize: 21,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.secondary)),
           TextButton(

@@ -90,6 +90,7 @@ class PieChartBoxState extends State<PieChartBox> {
         titleStyle: const TextStyle(
           fontSize: 18,
           color: Colors.white,
+          fontWeight: FontWeight.bold,
         ),
       );
     });

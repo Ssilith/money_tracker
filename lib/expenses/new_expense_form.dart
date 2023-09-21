@@ -37,7 +37,7 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
 
   @override
   initState() {
-    getCategoriesNames = CategoryService().getCategoriesNames();
+    reloadCategories();
     if (widget.previousData != null) {
       _amount.text = widget.previousData!.amount;
       _date.text = widget.previousData!.date;
@@ -50,7 +50,7 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
   }
 
   void reloadCategories() {
-    getCategoriesNames = CategoryService().getCategoriesNames();
+    getCategoriesNames = CategoryService().getCategoriesNames(user.id!);
   }
 
   @override

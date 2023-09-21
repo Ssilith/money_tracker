@@ -1,8 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:money_tracker/main_summary/cost_gauge.dart';
-import 'package:money_tracker/main_summary/vat_summary.dart';
+import 'package:money_tracker/main_summary/monthly_summary.dart';
 
 class MainSummary extends StatefulWidget {
   const MainSummary({super.key});
@@ -17,19 +16,6 @@ class _MainSummaryState extends State<MainSummary> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (kIsWeb)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Text(
-              "Szybkie podsumowanie",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-            ),
-          ),
-        // const SizedBox(height: 20),
         Padding(
           padding: const EdgeInsets.fromLTRB(10, 0, 10, 15),
           child: StaggeredGrid.count(

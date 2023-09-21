@@ -201,7 +201,7 @@ class _SetBudgetFormState extends State<SetBudgetForm> {
       budget.startDate = DateTime.parse(_startDate.text);
       budget.endDate = DateTime.parse(_endDate.text);
 
-      var res = await BudgetService().addNewBudget(budget);
+      var res = await BudgetService().addNewBudget(budget, user.id!);
 
       if (res['success']) {
         user.budgetId.add(res['budget']['_id']);

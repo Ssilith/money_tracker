@@ -8,10 +8,10 @@ import 'network_service.dart';
 class BudgetService {
   final String _urlPrefix = NetworkService.getApiUrl();
 
-  addNewBudget(Budget budget) async {
+  addNewBudget(Budget budget, String userId) async {
     Map<String, dynamic> body = {'budget': budget};
     final http.Response res = await client.post(
-      Uri.parse('$_urlPrefix/budget/addNewBudget'),
+      Uri.parse('$_urlPrefix/budget/$userId/addNewBudget'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': UserSimplePreferences.accessToken
@@ -32,5 +32,17 @@ class BudgetService {
       body: jsonEncode(body),
     );
     return json.decode(res.body);
+  }
+
+  getCurrentBudget(String userId) async {
+    final http.Response res = await client.get(
+      Uri.parse('$_urlPrefix/budget/$userId/getCurrentBudget'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': UserSimplePreferences.accessToken
+      },
+    );
+    Map<String, dynamic> names = json.decode(res.body);
+    return names;
   }
 }

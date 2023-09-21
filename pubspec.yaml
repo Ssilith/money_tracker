@@ -68,6 +68,7 @@ dependencies:
   flutter_svg: ^2.0.7
   loading_animation_widget: ^1.2.0+4
   flex_color_picker: ^3.3.0
+  percent_indicator: ^4.2.3
 
   flutter_localizations:
     sdk: flutter
