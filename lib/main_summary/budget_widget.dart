@@ -38,17 +38,17 @@ class _BudgetWidgetState extends State<BudgetWidget> {
               return const Center(child: Text('Nie znaleziono budżetu.'));
             } else {
               Map<String, dynamic> budget = snapshot.data!;
+              print(budget);
               double percentage =
                   budget['spentAmount'] / budget['budget']['amount'];
               return Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.0),
                   color: Theme.of(context).colorScheme.secondary,
-                  // Color.fromARGB(255, 38, 174, 108),
-                  gradient: LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: gradientColors),
+                  // gradient: LinearGradient(
+                  //     begin: Alignment.topRight,
+                  //     end: Alignment.bottomLeft,
+                  //     colors: gradientColors),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
@@ -63,15 +63,16 @@ class _BudgetWidgetState extends State<BudgetWidget> {
                             Text(
                               "Bieżący budżet",
                               style: TextStyle(
-                                  color: Colors.black.withOpacity(0.5),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
+                                color: Colors.white.withOpacity(0.5),
+                                fontSize: 16,
+                                // fontWeight: FontWeight.bold,
+                              ),
                             ),
                             Text(
                               currencyFormat('PLN')
                                   .format(budget['leftAmount']),
                               style: const TextStyle(
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -95,8 +96,7 @@ class _BudgetWidgetState extends State<BudgetWidget> {
                                 style: const TextStyle(color: Colors.white),
                               ),
                               barRadius: const Radius.circular(8),
-                              progressColor:
-                                  Theme.of(context).colorScheme.secondary),
+                              progressColor: Colors.green),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -105,14 +105,14 @@ class _BudgetWidgetState extends State<BudgetWidget> {
                               currencyFormat('PLN')
                                   .format(budget['spentAmount']),
                               style: const TextStyle(
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
                               currencyFormat('PLN')
                                   .format(budget['budget']['amount']),
                               style: const TextStyle(
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -123,15 +123,16 @@ class _BudgetWidgetState extends State<BudgetWidget> {
                             Text(
                               "Ważny do",
                               style: TextStyle(
-                                  color: Colors.black.withOpacity(0.5),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
+                                color: Colors.white.withOpacity(0.5),
+                                fontSize: 16,
+                                // fontWeight: FontWeight.bold,
+                              ),
                             ),
                             Text(
                               DateFormat('yyyy-MM-dd').format(
                                   DateTime.parse(budget['budget']['endDate'])),
                               style: const TextStyle(
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold),
                             ),

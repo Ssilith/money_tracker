@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:money_tracker/main_summary/balance_box.dart';
-import 'package:money_tracker/main_summary/budget_widget.dart';
 import 'package:money_tracker/main_summary/tiles_title.dart';
 import 'package:money_tracker/resources/user_service.dart';
 import 'package:money_tracker/widgets/indicator.dart';
@@ -41,7 +40,7 @@ class _SummaryScreenState extends State<SummaryScreen> {
         TilesTitle(),
         LastDocuments(),
         SizedBox(height: 5),
-        BudgetWidget(),
+        // BudgetWidget(),
         // SizedBox(height: 5),
         BalanceBox(),
         SizedBox(height: 5),

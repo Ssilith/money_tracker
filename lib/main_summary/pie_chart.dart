@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import '../global.dart';
 
 class PieChartBox extends StatefulWidget {
-  final Map<String, dynamic> snapshotData;
+  final List categories;
 
-  const PieChartBox({Key? key, required this.snapshotData}) : super(key: key);
+  const PieChartBox({Key? key, required this.categories}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => PieChartBoxState();
@@ -18,8 +18,6 @@ class PieChartBoxState extends State<PieChartBox> {
 
   @override
   Widget build(BuildContext context) {
-    List categories = widget.snapshotData['categories'];
-
     return Row(
       children: [
         Expanded(
@@ -54,7 +52,7 @@ class PieChartBoxState extends State<PieChartBox> {
                 borderData: FlBorderData(show: false),
                 sectionsSpace: 0,
                 centerSpaceRadius: 40,
-                sections: showingSections(categories),
+                sections: showingSections(widget.categories),
               ),
             ),
           ),
@@ -63,7 +61,7 @@ class PieChartBoxState extends State<PieChartBox> {
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: _buildIndicators(categories),
+          children: _buildIndicators(widget.categories),
         ),
         const SizedBox(width: 30),
       ],
