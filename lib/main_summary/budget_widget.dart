@@ -38,7 +38,6 @@ class _BudgetWidgetState extends State<BudgetWidget> {
               return const Center(child: Text('Nie znaleziono budżetu.'));
             } else {
               Map<String, dynamic> budget = snapshot.data!;
-              print(budget);
               double percentage =
                   budget['spentAmount'] / budget['budget']['amount'];
               return Container(

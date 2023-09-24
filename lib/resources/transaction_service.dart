@@ -62,7 +62,7 @@ class TransactionService {
     Map<String, dynamic> decodedBody = json.decode(res.body);
 
     if (!decodedBody['success']) [];
-    return decodedBody['transaction'];
+    return decodedBody['transactions'];
   }
 
   getLastWeekTopCategories(String userId) async {
