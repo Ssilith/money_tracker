@@ -260,7 +260,7 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
   selectDate(TextEditingController controller) async {
     DateTime? pickedDate = await showDatePicker(
         context: context,
-        locale: const Locale('pl', 'PL'),
+        locale: const Locale('pl'),
         initialDate: DateFormat('yyyy-MM-dd').parseStrict(controller.text),
         firstDate: DateTime(2000),
         lastDate: DateTime(2100),
