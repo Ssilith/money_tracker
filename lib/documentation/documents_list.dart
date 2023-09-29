@@ -234,11 +234,13 @@ class _DocumentListState extends State<DocumentList> {
       iconBuilder: (value) => !value
           ? const Icon(
               Icons.calendar_month,
-              size: 26,
+              color: Colors.white,
+              size: 24,
             )
           : const Icon(
               Icons.list,
-              size: 26,
+              color: Colors.white,
+              size: 24,
             ),
       textBuilder: (value) => !value
           ? const Center(
