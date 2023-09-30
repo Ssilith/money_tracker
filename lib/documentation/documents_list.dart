@@ -1,6 +1,7 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:money_tracker/documentation/modal_filer.dart';
 import 'package:money_tracker/last_documents.dart';
 import 'package:money_tracker/models/user.dart';
 import 'package:money_tracker/resources/transaction_service.dart';
@@ -8,7 +9,8 @@ import 'package:money_tracker/widgets/indicator.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class DocumentList extends StatefulWidget {
-  const DocumentList({super.key});
+  final Function(List<dynamic>)? onDocumentsFiltered;
+  const DocumentList({super.key, this.onDocumentsFiltered});
 
   @override
   State<DocumentList> createState() => _DocumentListState();
@@ -22,6 +24,8 @@ class _DocumentListState extends State<DocumentList> {
   bool isCalendarView = true;
   List<dynamic> selectedDayTransactions = [];
   TextEditingController search = TextEditingController();
+  List<dynamic> filteredDocuments = [];
+  List<dynamic>? allDocuments;
 
   @override
   void initState() {
@@ -42,8 +46,28 @@ class _DocumentListState extends State<DocumentList> {
       shrinkWrap: true,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-          child: mainSwitch(),
+          padding: const EdgeInsets.only(left: 10, top: 6, bottom: 6),
+          child: Row(
+            children: [
+              Expanded(child: mainSwitch()),
+              IconButton(
+                  icon: const Icon(Icons.more_vert),
+                  onPressed: () {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return ModalFilter(
+                            originalDocs: allDocuments!,
+                            onFilterApplied: (filteredDocs) {
+                              setState(() {
+                                filteredDocuments = filteredDocs;
+                              });
+                            },
+                          );
+                        });
+                  }),
+            ],
+          ),
         ),
         if (isCalendarView)
           Padding(
@@ -72,6 +96,25 @@ class _DocumentListState extends State<DocumentList> {
               ),
             ),
           ),
+        // if (isCalendarView)
+        //   Padding(
+        //       padding: const EdgeInsets.only(left: 10, right: 10, bottom: 6),
+        //       child: SimpleDarkButton(
+        //           title: "Filtruj",
+        //           onPressed: () {
+        //             showModalBottomSheet(
+        //                 context: context,
+        //                 builder: (BuildContext context) {
+        //                   return ModalFilter(
+        //                     originalDocs: allDocuments!,
+        //                     onFilterApplied: (filteredDocs) {
+        //                       setState(() {
+        //                         filteredDocuments = filteredDocs;
+        //                       });
+        //                     },
+        //                   );
+        //                 });
+        //           })),
         FutureBuilder(
             future: getDocs,
             builder: (context, snapshot) {
@@ -81,10 +124,14 @@ class _DocumentListState extends State<DocumentList> {
                 return const Center(
                     child: Text('Wystąpił błąd. Spróbuj ponownie później.'));
               } else {
+                allDocuments = snapshot.data;
                 List documents = snapshot.data!;
+                if (filteredDocuments.isEmpty) {
+                  filteredDocuments = snapshot.data!;
+                }
                 return isCalendarView
-                    ? buildListView(documents)
-                    : buildCalendar(documents);
+                    ? buildListView(filteredDocuments, documents)
+                    : buildCalendar(filteredDocuments);
               }
             }),
       ],
@@ -100,7 +147,7 @@ class _DocumentListState extends State<DocumentList> {
     }).toList();
   }
 
-  ListView buildListView(List<dynamic> documents) {
+  ListView buildListView(List<dynamic> documents, List data) {
     Size size = MediaQuery.of(context).size;
     return ListView.builder(
       padding: EdgeInsets.zero,
@@ -215,9 +262,10 @@ class _DocumentListState extends State<DocumentList> {
       first: true,
       second: false,
       borderColor: Colors.black,
+      borderRadius: BorderRadius.circular(5),
       borderWidth: 1,
       height: 40,
-      iconRadius: 70,
+      indicatorBorderRadius: BorderRadius.circular(0),
       onChanged: (b) {
         setState(() {
           isCalendarView = b;
