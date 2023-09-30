@@ -11,6 +11,7 @@ class User {
   String? telephone;
   String? token;
   bool? permissions;
+  bool? onboard;
   double? account;
   List<String> transactionId;
   List<String> budgetId;
@@ -35,6 +36,7 @@ class User {
         telephone == null &&
         token == null &&
         permissions == null &&
+        onboard == null &&
         account == null &&
         transactionId.isEmpty &&
         budgetId.isEmpty &&

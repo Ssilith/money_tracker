@@ -8,6 +8,8 @@ import 'package:money_tracker/authentication/login_screen.dart';
 import 'package:money_tracker/documentation/documents_list.dart';
 import 'package:money_tracker/financial/main_financial.dart';
 import 'package:money_tracker/main_screens/summary_screen.dart';
+import 'package:money_tracker/models/user.dart';
+import 'package:money_tracker/profile/onboarding_pages.dart';
 import 'package:money_tracker/resources/initialization_service.dart';
 import 'package:money_tracker/resources/user_service.dart';
 import 'package:money_tracker/widgets/side_drawer.dart';
@@ -49,6 +51,9 @@ class MyApp extends StatelessWidget {
         valueListenable: UserService().isAuthenticated,
         builder: (context, value, _) {
           if (value) {
+            if (user.onboard != true) {
+              return const OnboardingPages();
+            }
             return const MyHomePage();
           } else {
             return const LoginPage();
