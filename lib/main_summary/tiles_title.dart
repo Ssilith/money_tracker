@@ -21,11 +21,7 @@ class _TilesTitleState extends State<TilesTitle> {
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.secondary)),
           TextButton(
-              onPressed: () {
-                // Navigator.of(context).pushReplacement(
-                //   MaterialPageRoute(builder: (_) => const OnboardingPages()),
-                // );
-              },
+              onPressed: () {},
               child: const Text(
                 "Dostosuj",
                 style: TextStyle(color: Colors.black, fontSize: 12),

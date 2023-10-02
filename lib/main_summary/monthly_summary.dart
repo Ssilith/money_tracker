@@ -1,8 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:money_tracker/global.dart';
+import 'package:money_tracker/models/user.dart';
+import 'package:money_tracker/resources/transaction_service.dart';
+import 'package:money_tracker/widgets/indicator.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class MonthlySummary extends StatefulWidget {
   const MonthlySummary({super.key});
@@ -12,102 +13,128 @@ class MonthlySummary extends StatefulWidget {
 }
 
 class _MonthlySummaryState extends State<MonthlySummary> {
+  Future? getMonthlySummary;
+
+  @override
+  void initState() {
+    super.initState();
+    getMonthlySummary = TransactionService().getMonthlySummary(user.id!);
+  }
+
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Container(
       padding: const EdgeInsets.all(10),
-      decoration: transparentOnGradient(),
-      width: 300,
-      height: 200,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Rozliczenie miesięczne",
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: kIsWeb ? 22 : 14),
-          ),
-          const SizedBox(height: 10),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "32 141 zł",
-                style: TextStyle(
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
-                    fontSize: kIsWeb ? 20 : 14),
-              ),
-              Text(
-                "KOSZTY",
-                style: TextStyle(
-                    fontSize: kIsWeb ? 12 : 10, fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
-          SfLinearGauge(
-            showLabels: false,
-            showTicks: false,
-            minimum: 0,
-            maximum: 42312,
-            barPointers: const [
-              LinearBarPointer(
-                edgeStyle: LinearEdgeStyle.bothCurve,
-                thickness: 10,
-                value: 32141,
-                color: Colors.red,
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "43 312 zł",
-                style: TextStyle(
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold,
-                    fontSize: kIsWeb ? 20 : 14),
-              ),
-              Text(
-                "PRZYCHODY",
-                style: TextStyle(
-                    fontSize: kIsWeb ? 12 : 10, fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
-          SfLinearGauge(
-            showLabels: false,
-            showTicks: false,
-            minimum: 0,
-            maximum: 42312,
-            barPointers: const [
-              LinearBarPointer(
-                edgeStyle: LinearEdgeStyle.bothCurve,
-                thickness: 10,
-                value: 42312,
-                color: Colors.green,
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "11 171 zł",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: kIsWeb ? 20 : 18),
-              ),
-              Text(
-                "ZYSK",
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
-        ],
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(249, 243, 246, 254),
+        borderRadius: BorderRadius.circular(10),
       ),
+      width: size.width,
+      child: FutureBuilder(
+          future: getMonthlySummary,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Indicator();
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Błąd: ${snapshot.error}'));
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text('Nie znaleziono danych.'));
+            } else {
+              Map summ = snapshot.data!;
+              double costs = summ['costs'] + 0.0;
+              double income = summ['income'] + 0.0;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Rozliczenie miesięczne",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        currencyFormat("PLN").format(costs),
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16),
+                      ),
+                      const Text(
+                        "KOSZTY",
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  ),
+                  SfLinearGauge(
+                    showLabels: false,
+                    showTicks: false,
+                    minimum: 0,
+                    maximum: costs > income ? costs : income,
+                    barPointers: [
+                      LinearBarPointer(
+                        edgeStyle: LinearEdgeStyle.bothCurve,
+                        thickness: 10,
+                        value: costs,
+                        color: const Color.fromARGB(255, 241, 81, 70),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        currencyFormat("PLN").format(income),
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16),
+                      ),
+                      const Text(
+                        "PRZYCHODY",
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  ),
+                  SfLinearGauge(
+                    showLabels: false,
+                    showTicks: false,
+                    minimum: 0,
+                    maximum: costs > income ? costs : income,
+                    barPointers: [
+                      LinearBarPointer(
+                        edgeStyle: LinearEdgeStyle.bothCurve,
+                        thickness: 10,
+                        value: income,
+                        color: const Color.fromARGB(255, 38, 174, 108),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        currencyFormat("PLN").format((costs - income).abs()),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      Text(
+                        costs > income ? "STRATA" : "ZYSK",
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  ),
+                ],
+              );
+            }
+          }),
     );
   }
 }

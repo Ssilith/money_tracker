@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
-import 'package:money_tracker/global.dart';
 
 class CostGauge extends StatefulWidget {
   const CostGauge({super.key});
@@ -61,7 +60,6 @@ class _CostGaugeState extends State<CostGauge> {
         : const EdgeInsets.fromLTRB(5, 5, 5, 5);
     return Container(
       padding: childPadding,
-      decoration: transparentOnGradient(),
       child: Column(
         children: [
           const Text('240 123,12 zł',

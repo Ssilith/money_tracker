@@ -2,33 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:http/retry.dart';
 import 'package:intl/intl.dart';
 
-// BoxDecoration withShadow([Color? color, int a = 255]) {
-//   return BoxDecoration(
-//     color: color ?? Colors.white,
-//     boxShadow: [
-//       BoxShadow(
-//         color: Color.fromARGB(a, 148, 148, 148),
-//         offset: const Offset(5, 5),
-//         blurRadius: 10,
-//       ),
-//     ],
-//     borderRadius: BorderRadius.circular(8),
-//   );
-// }
-
-BoxDecoration transparentOnGradient([Color? color]) {
-  return BoxDecoration(
-    color: color ?? Colors.white38,
-    borderRadius: BorderRadius.circular(8),
-  );
-}
-
 List<Color> gradientColors = const [
   Color.fromARGB(255, 0, 162, 108),
   Color.fromARGB(255, 0, 184, 121),
   Color.fromARGB(255, 0, 181, 212),
   Color.fromARGB(255, 253, 191, 94),
   Color.fromARGB(255, 253, 223, 158)
+];
+
+List<String> months = [
+  'Styczeń',
+  'Luty',
+  'Marzec',
+  'Kwiecień',
+  'Maj',
+  'Czerwiec',
+  'Lipiec',
+  'Sierpień',
+  'Wrzesień',
+  'Październik',
+  'Listopad',
+  'Grudzień'
 ];
 
 NumberFormat currencyFormat(String currency) {

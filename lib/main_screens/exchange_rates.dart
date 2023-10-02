@@ -89,7 +89,6 @@ class _ExchangeRatesState extends State<ExchangeRates> {
           ];
         },
         body: SizedBox(
-          // color: const Color.fromARGB(255, 253, 223, 158).withOpacity(0.2),
           height: size.height,
           child: SingleChildScrollView(
             child: FutureBuilder<List<CurrencyData>>(

@@ -95,4 +95,34 @@ class TransactionService {
     if (!decodedBody['success']) return [];
     return Transaction.fromJson(decodedBody['transaction']);
   }
+
+  getMonthlySummary(String userId) async {
+    Map<String, String> headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': UserSimplePreferences.accessToken
+    };
+
+    final http.Response res = await client.get(
+        Uri.parse('$_urlPrefix/transaction/$userId/getMonthlySummary'),
+        headers: headers);
+    Map<String, dynamic> decodedBody = json.decode(res.body);
+
+    if (!decodedBody['success']) return [];
+    return decodedBody['summary'];
+  }
+
+  getYearlySummary(String userId) async {
+    Map<String, String> headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': UserSimplePreferences.accessToken
+    };
+
+    final http.Response res = await client.get(
+        Uri.parse('$_urlPrefix/transaction/$userId/getYearlySummary'),
+        headers: headers);
+    Map<String, dynamic> decodedBody = json.decode(res.body);
+
+    if (!decodedBody['success']) return [];
+    return decodedBody['summary'];
+  }
 }
