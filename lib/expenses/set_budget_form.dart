@@ -77,9 +77,10 @@ class _SetBudgetFormState extends State<SetBudgetForm> {
             height: size.height,
             child: Padding(
               padding: EdgeInsets.only(
-                  bottom: 4.0,
-                  left: size.width * 0.04,
-                  right: size.width * 0.04),
+                bottom: 4.0,
+                left: size.width * 0.04,
+                right: size.width * 0.04,
+              ),
               child: ListView(
                 children: [
                   const Text("Dane budżetu",
@@ -96,13 +97,13 @@ class _SetBudgetFormState extends State<SetBudgetForm> {
                   Row(
                     children: [
                       TextInputForm(
-                        width: size.width * 0.395,
+                        width: size.width * 0.391,
                         hint: "Data początkowa*",
                         controller: _startDate,
                       ),
                       const SizedBox(width: 5),
                       TextInputForm(
-                        width: size.width * 0.395,
+                        width: size.width * 0.39,
                         hint: "Data końcowa*",
                         controller: _endDate,
                       ),

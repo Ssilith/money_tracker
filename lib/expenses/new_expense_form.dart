@@ -146,7 +146,7 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
                           Row(
                             children: [
                               DropdownInputForm(
-                                width: size.width * 0.8,
+                                width: size.width * 0.795,
                                 hint: "Kategoria*",
                                 selectedValue: category,
                                 items: categories,
@@ -214,7 +214,7 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
                           Row(
                             children: [
                               TextInputForm(
-                                width: size.width * 0.8,
+                                width: size.width * 0.795,
                                 hint: "Data*",
                                 controller: _date,
                               ),

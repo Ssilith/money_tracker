@@ -97,10 +97,13 @@ class PieChartBoxState extends State<PieChartBox> {
   List<Widget> _buildIndicators(List categories) {
     List<Widget> widgets = [];
     for (var category in categories) {
-      widgets.add(MyIndicator(
-        color: Color(int.parse(category['color'])),
-        text: category['category'],
-        textColor: Colors.white,
+      widgets.add(SizedBox(
+        height: 24,
+        child: MyIndicator(
+          color: Color(int.parse(category['color'])),
+          text: category['category'],
+          textColor: Colors.white,
+        ),
       ));
     }
     return widgets;
@@ -123,7 +126,7 @@ class MyIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: <Widget>[
+      children: [
         Container(
           width: size,
           height: size,
