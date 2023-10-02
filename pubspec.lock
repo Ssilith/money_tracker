@@ -265,14 +265,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
-  enum_to_string:
-    dependency: transitive
-    description:
-      name: enum_to_string
-      sha256: bd9e83a33b754cb43a75b36a9af2a0b92a757bfd9847d2621ca0b1bed45f8e7a
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
   equatable:
     dependency: transitive
     description:
@@ -329,14 +321,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.63.0"
-  flag:
-    dependency: "direct main"
-    description:
-      name: flag
-      sha256: cfca88049e769caf7ec439e6fbd23fd7ff4f332757796a0b7c09d94579c1ea70
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.0.0"
   flex_color_picker:
     dependency: "direct main"
     description:
@@ -443,14 +427,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
-  flutter_staggered_grid_view:
-    dependency: "direct main"
-    description:
-      name: flutter_staggered_grid_view
-      sha256: "1312314293acceb65b92754298754801b0e1f26a1845833b740b30415bbbcf07"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.6.2"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -669,38 +645,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
-  motion:
-    dependency: "direct main"
-    description:
-      name: motion
-      sha256: "1764b7a4c0d5509dba58dc6cfca80c03e3f049e0175c26d0a096f76451a5f23e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.4.0"
-  motion_platform_interface:
-    dependency: transitive
-    description:
-      name: motion_platform_interface
-      sha256: "0b29234fef24d18cd7c3d3f1a2a2f67998aed1c2fb8f5d484900cc9b012328de"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.4.0"
-  motion_web:
-    dependency: transitive
-    description:
-      name: motion_web
-      sha256: "223699d57c7f3dff7d0ffbfb9b3c8b083b9ef3dc0d260040c367c899fd38a4a2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.4.0"
-  neon_widgets:
-    dependency: "direct main"
-    description:
-      name: neon_widgets
-      sha256: "782f43b576b47c192eabd08ff66e16d136d339044ebe441337183dd4dc629daf"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
   package_config:
     dependency: transitive
     description:
@@ -869,14 +813,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.1"
-  random_text_reveal:
-    dependency: "direct main"
-    description:
-      name: random_text_reveal
-      sha256: ae8424845c5fc174add1aeb9ace66157d806df231f47242a5d88e23a17d63b70
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.6"
   salomon_bottom_bar:
     dependency: "direct main"
     description:
@@ -965,14 +901,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.0"
-  simple_ripple_animation:
-    dependency: "direct main"
-    description:
-      name: simple_ripple_animation
-      sha256: e194718e95e77be86a8a6421d236ef4dc5ded1113c26e938e3e7f1a722b922a4
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.7"
   sky_engine:
     dependency: transitive
     description: flutter

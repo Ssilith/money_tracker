@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:money_tracker/global.dart';
 
-class VatSummary extends StatefulWidget {
-  const VatSummary({super.key});
+class MonthlySummary extends StatefulWidget {
+  const MonthlySummary({super.key});
 
   @override
-  State<VatSummary> createState() => _VatSummaryState();
+  State<MonthlySummary> createState() => _MonthlySummaryState();
 }
 
-class _VatSummaryState extends State<VatSummary> {
+class _MonthlySummaryState extends State<MonthlySummary> {
   @override
   Widget build(BuildContext context) {
     return Container(
