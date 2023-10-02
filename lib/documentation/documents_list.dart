@@ -6,6 +6,7 @@ import 'package:money_tracker/last_documents.dart';
 import 'package:money_tracker/models/user.dart';
 import 'package:money_tracker/resources/transaction_service.dart';
 import 'package:money_tracker/widgets/indicator.dart';
+import 'package:money_tracker/widgets/message.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class DocumentList extends StatefulWidget {
@@ -26,10 +27,12 @@ class _DocumentListState extends State<DocumentList> {
   TextEditingController search = TextEditingController();
   List<dynamic> filteredDocuments = [];
   List<dynamic>? allDocuments;
+  late bool firstSnapshot;
 
   @override
   void initState() {
     getDocs = TransactionService().getAllTransactionsForUser(user.id!);
+    firstSnapshot = true;
     super.initState();
   }
 
@@ -109,6 +112,15 @@ class _DocumentListState extends State<DocumentList> {
                 List documents = snapshot.data!;
                 if (filteredDocuments.isEmpty) {
                   filteredDocuments = snapshot.data!;
+                  if (firstSnapshot) {
+                    firstSnapshot = false;
+                  } else {
+                    Future.delayed(Duration.zero, () {
+                      showInfo(
+                          'Żadne transakcje nie spełniają podanych wymogów.',
+                          Colors.red);
+                    });
+                  }
                 }
                 return isCalendarView
                     ? buildListView(filteredDocuments, documents)

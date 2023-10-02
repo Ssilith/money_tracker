@@ -127,7 +127,7 @@ class _ModalFilterState extends State<ModalFilter> {
                           double maxAmount = transaction.amount!;
 
                           currentRangeValues ??= RangeValues(0, maxAmount);
-                          ;
+
                           return RangeSlider(
                             activeColor:
                                 Theme.of(context).colorScheme.secondary,
@@ -237,7 +237,14 @@ class _ModalFilterState extends State<ModalFilter> {
             spacing: 5.0,
             children: categories.map((category) {
               return ChoiceChip(
-                label: Text(category),
+                label: Text(
+                  category,
+                ),
+                checkmarkColor: Colors.white,
+                labelStyle: TextStyle(
+                    color: selectedCategories.contains(category)
+                        ? Colors.white
+                        : Colors.black),
                 selected: selectedCategories.contains(category),
                 onSelected: (selected) {
                   setState(() {
