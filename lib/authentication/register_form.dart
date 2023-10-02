@@ -63,8 +63,8 @@ class _RegisterFormState extends State<RegisterForm> {
           ),
         ];
       },
-      body: Container(
-        color: const Color.fromARGB(255, 253, 223, 158).withOpacity(0.2),
+      body: SizedBox(
+        // color: const Color.fromARGB(255, 253, 223, 158).withOpacity(0.2),
         height: size.height,
         child: Padding(
           padding: EdgeInsets.symmetric(

@@ -66,8 +66,8 @@ class _NewCategoryFormState extends State<NewCategoryForm> {
               ),
             ];
           },
-          body: Container(
-            color: const Color.fromARGB(255, 253, 223, 158).withOpacity(0.2),
+          body: SizedBox(
+            // color: const Color.fromARGB(255, 253, 223, 158).withOpacity(0.2),
             height: size.height,
             child: Padding(
               padding: EdgeInsets.only(

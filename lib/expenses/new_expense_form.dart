@@ -104,9 +104,9 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
                     categories = ['Dodaj nową kategorię'];
                     category = 'Dodaj nową kategorię';
                   }
-                  return Container(
-                    color: const Color.fromARGB(255, 253, 223, 158)
-                        .withOpacity(0.2),
+                  return SizedBox(
+                    // color: const Color.fromARGB(255, 253, 223, 158)
+                    //     .withOpacity(0.2),
                     height: size.height,
                     child: Padding(
                       padding: EdgeInsets.only(
