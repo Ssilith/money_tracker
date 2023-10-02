@@ -1,5 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:money_tracker/models/transaction.dart';
+import 'package:money_tracker/models/user.dart';
+import 'package:money_tracker/resources/category_service.dart';
+import 'package:money_tracker/resources/transaction_service.dart';
+import 'package:money_tracker/widgets/indicator.dart';
 import 'package:money_tracker/widgets/simple_dark_button.dart';
 
 class ModalFilter extends StatefulWidget {
@@ -14,16 +19,19 @@ class ModalFilter extends StatefulWidget {
 }
 
 class _ModalFilterState extends State<ModalFilter> {
-  String? _sortCriteria;
-  Set<String> _selectedCategories = {};
-  late RangeValues _currentRangeValues;
-  final RangeValues _initialRangeValues = const RangeValues(0, 50000);
-  bool _showAmountSlider = false;
-  bool _showCategoriesChoice = false;
+  String? sortCriteria;
+  Set<String> selectedCategories = {};
+  RangeValues? currentRangeValues;
+  bool showAmountSlider = false;
+  bool showCategoriesChoice = false;
+  Future? getCategoriesNames;
+  Future? getBiggestAmount;
 
   @override
   void initState() {
-    _currentRangeValues = _initialRangeValues;
+    getCategoriesNames = CategoryService().getCategoriesNames(user.id!);
+    getBiggestAmount =
+        TransactionService().getBiggestTransactionAmount(user.id!);
     super.initState();
   }
 
@@ -44,46 +52,46 @@ class _ModalFilterState extends State<ModalFilter> {
                 RadioListTile(
                   activeColor: Theme.of(context).colorScheme.secondary,
                   value: 'dateR',
-                  groupValue: _sortCriteria,
+                  groupValue: sortCriteria,
                   onChanged: (value) {
                     setModalState(() {
-                      _sortCriteria = value;
+                      sortCriteria = value;
                     });
                   },
-                  title: const Text('Data rosnąco'),
+                  title: const Text('Daty rosnąco'),
                 ),
                 RadioListTile(
                   activeColor: Theme.of(context).colorScheme.secondary,
                   value: 'dateM',
-                  groupValue: _sortCriteria,
+                  groupValue: sortCriteria,
                   onChanged: (value) {
                     setModalState(() {
-                      _sortCriteria = value;
+                      sortCriteria = value;
                     });
                   },
-                  title: const Text('Data malejąco'),
+                  title: const Text('Daty malejąco'),
                 ),
                 RadioListTile(
                   activeColor: Theme.of(context).colorScheme.secondary,
                   value: 'amountR',
-                  groupValue: _sortCriteria,
+                  groupValue: sortCriteria,
                   onChanged: (value) {
                     setModalState(() {
-                      _sortCriteria = value;
+                      sortCriteria = value;
                     });
                   },
-                  title: const Text('Kwota rosnąco'),
+                  title: const Text('Kwoty rosnąco'),
                 ),
                 RadioListTile(
                   activeColor: Theme.of(context).colorScheme.secondary,
                   value: 'amountM',
-                  groupValue: _sortCriteria,
+                  groupValue: sortCriteria,
                   onChanged: (value) {
                     setModalState(() {
-                      _sortCriteria = value;
+                      sortCriteria = value;
                     });
                   },
-                  title: const Text('Kwota malejąco'),
+                  title: const Text('Kwoty malejąco'),
                 ),
                 Divider(
                     color: Theme.of(context).colorScheme.secondary,
@@ -96,61 +104,76 @@ class _ModalFilterState extends State<ModalFilter> {
                 CheckboxListTile(
                   activeColor: Theme.of(context).colorScheme.secondary,
                   title: const Text('Kwoty'),
-                  value: _showAmountSlider,
+                  value: showAmountSlider,
                   onChanged: (checked) {
                     setModalState(() {
-                      _showAmountSlider = checked!;
+                      showAmountSlider = checked!;
                     });
                   },
                 ),
-                if (_showAmountSlider)
-                  RangeSlider(
-                    activeColor: Theme.of(context).colorScheme.secondary,
-                    inactiveColor: Theme.of(context)
-                        .colorScheme
-                        .secondary
-                        .withOpacity(0.3),
-                    values: _currentRangeValues,
-                    min: _initialRangeValues.start,
-                    max: _initialRangeValues.end,
-                    onChanged: (RangeValues values) {
-                      setModalState(() {
-                        _currentRangeValues = values;
-                      });
-                    },
-                    divisions: 2000,
-                    labels: RangeLabels(
-                      _currentRangeValues.start.round().toString(),
-                      _currentRangeValues.end.round().toString(),
-                    ),
-                  ),
+                if (showAmountSlider)
+                  FutureBuilder(
+                      future: getBiggestAmount,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Indicator();
+                        } else if (snapshot.hasError) {
+                          return const Center(
+                              child: Text(
+                                  'Wystąpił błąd. Spróbuj ponownie później.'));
+                        } else {
+                          Transaction transaction = snapshot.data;
+                          double maxAmount = transaction.amount!;
+
+                          currentRangeValues ??= RangeValues(0, maxAmount);
+                          ;
+                          return RangeSlider(
+                            activeColor:
+                                Theme.of(context).colorScheme.secondary,
+                            inactiveColor: Theme.of(context)
+                                .colorScheme
+                                .secondary
+                                .withOpacity(0.3),
+                            values: currentRangeValues!,
+                            min: 0,
+                            max: maxAmount,
+                            onChanged: (RangeValues values) {
+                              setModalState(() {
+                                currentRangeValues = values;
+                              });
+                            },
+                            divisions: 2000,
+                            labels: RangeLabels(
+                              currentRangeValues!.start.round().toString(),
+                              currentRangeValues!.end.round().toString(),
+                            ),
+                          );
+                        }
+                      }),
                 CheckboxListTile(
                   activeColor: Theme.of(context).colorScheme.secondary,
                   title: const Text('Kategorii'),
-                  value: _showCategoriesChoice,
+                  value: showCategoriesChoice,
                   onChanged: (checked) {
                     setModalState(() {
-                      _showCategoriesChoice = checked!;
+                      showCategoriesChoice = checked!;
                     });
                   },
                 ),
+                if (showCategoriesChoice) buildCategoryButtons(),
                 SimpleDarkButton(
                     onPressed: () {
                       List docs = widget.originalDocs;
-                      String? categoryId = _selectedCategories.isNotEmpty
-                          ? _selectedCategories.first
-                          : null;
-
                       double? minAmount =
-                          _showAmountSlider ? _currentRangeValues.start : null;
+                          showAmountSlider ? currentRangeValues!.start : null;
                       double? maxAmount =
-                          _showAmountSlider ? _currentRangeValues.end : null;
-                      List filteredDocs = filterTransactions(
-                          docs, minAmount, maxAmount, categoryId);
-
-                      if (_sortCriteria != null) {
+                          showAmountSlider ? currentRangeValues!.end : null;
+                      List filteredDocs =
+                          filterTransactions(docs, minAmount, maxAmount);
+                      if (sortCriteria != null) {
                         filteredDocs =
-                            sortTransactions(filteredDocs, _sortCriteria!);
+                            sortTransactions(filteredDocs, sortCriteria!);
                       }
                       widget.onFilterApplied(filteredDocs);
                       Navigator.of(context).pop();
@@ -179,12 +202,13 @@ class _ModalFilterState extends State<ModalFilter> {
     return transactions;
   }
 
-  List filterTransactions(List transactions, double? minAmount,
-      double? maxAmount, String? categoryId) {
+  List filterTransactions(
+      List transactions, double? minAmount, double? maxAmount) {
     return transactions.where((t) {
       if (minAmount != null && t['amount'] < minAmount) return false;
       if (maxAmount != null && t['amount'] > maxAmount) return false;
-      if (categoryId != null && t['category']['_id'] != categoryId) {
+      if (selectedCategories.isNotEmpty &&
+          !selectedCategories.contains(t['category']['name'])) {
         return false;
       }
       return true;
@@ -195,6 +219,40 @@ class _ModalFilterState extends State<ModalFilter> {
     return groupBy(
       transactions,
       (transaction) => DateTime.parse(transaction['date']).month,
+    );
+  }
+
+  Widget buildCategoryButtons() {
+    return FutureBuilder(
+      future: getCategoriesNames,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Indicator();
+        } else if (snapshot.hasError) {
+          return const Center(
+              child: Text('Wystąpił błąd. Spróbuj ponownie później.'));
+        } else {
+          List<String> categories = snapshot.data;
+          return Wrap(
+            spacing: 5.0,
+            children: categories.map((category) {
+              return ChoiceChip(
+                label: Text(category),
+                selected: selectedCategories.contains(category),
+                onSelected: (selected) {
+                  setState(() {
+                    if (selected) {
+                      selectedCategories.add(category);
+                    } else {
+                      selectedCategories.remove(category);
+                    }
+                  });
+                },
+              );
+            }).toList(),
+          );
+        }
+      },
     );
   }
 }

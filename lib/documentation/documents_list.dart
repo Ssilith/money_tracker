@@ -96,25 +96,6 @@ class _DocumentListState extends State<DocumentList> {
               ),
             ),
           ),
-        // if (isCalendarView)
-        //   Padding(
-        //       padding: const EdgeInsets.only(left: 10, right: 10, bottom: 6),
-        //       child: SimpleDarkButton(
-        //           title: "Filtruj",
-        //           onPressed: () {
-        //             showModalBottomSheet(
-        //                 context: context,
-        //                 builder: (BuildContext context) {
-        //                   return ModalFilter(
-        //                     originalDocs: allDocuments!,
-        //                     onFilterApplied: (filteredDocs) {
-        //                       setState(() {
-        //                         filteredDocuments = filteredDocs;
-        //                       });
-        //                     },
-        //                   );
-        //                 });
-        //           })),
         FutureBuilder(
             future: getDocs,
             builder: (context, snapshot) {
