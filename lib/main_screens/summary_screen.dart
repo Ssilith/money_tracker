@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:money_tracker/main_summary/balance_box.dart';
+import 'package:money_tracker/main_summary/cost_gauge.dart';
 import 'package:money_tracker/main_summary/financial_result_line_chart.dart';
+import 'package:money_tracker/main_summary/income_radial_bar.dart';
 import 'package:money_tracker/main_summary/monthly_summary.dart';
 import 'package:money_tracker/main_summary/tiles_title.dart';
 import 'package:money_tracker/resources/user_service.dart';
@@ -51,10 +53,14 @@ class _SummaryScreenState extends State<SummaryScreen> {
           padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 8),
           child: MonthlySummary(),
         ),
-        // Padding(
-        //   padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 8),
-        //   child: CostGauge(),
-        // ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 8),
+          child: CostGauge(),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 8),
+          child: IncomeRadailBar(),
+        ),
         Padding(
           padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 8),
           child: FinancialResultLineChart(),
