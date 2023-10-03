@@ -96,7 +96,7 @@ class _ExchangeRatesState extends State<ExchangeRates> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: Indicator());
-                } else if (snapshot.hasError) {
+                } else if (snapshot.hasError || snapshot.data!.isEmpty) {
                   return const Center(
                       child: Text('Wystąpił błąd. Spróbuj ponownie później.'));
                 } else {

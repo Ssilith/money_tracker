@@ -19,7 +19,6 @@ class _EditProfileFormState extends State<EditProfileForm> {
   final TextEditingController _surname = TextEditingController();
   final TextEditingController _mail = TextEditingController();
   final TextEditingController _phone = TextEditingController();
-  final TextEditingController _account = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,6 @@ class _EditProfileFormState extends State<EditProfileForm> {
     _surname.text = user.surname ?? "";
     _mail.text = user.email ?? "";
     _phone.text = user.telephone ?? "";
-    _account.text = user.account.toString();
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: NestedScrollView(
@@ -93,23 +91,18 @@ class _EditProfileFormState extends State<EditProfileForm> {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  TextInputForm(
-                    width: size.width * 0.92,
-                    hint: "E-mail",
-                    controller: _mail,
-                  ),
-                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TextInputForm(
+                        width: size.width * 0.45,
+                        hint: "E-mail",
+                        controller: _mail,
+                      ),
+                      TextInputForm(
                           width: size.width * 0.45,
                           hint: "Telefon",
                           controller: _phone),
-                      TextInputForm(
-                          width: size.width * 0.45,
-                          hint: "Saldo konta",
-                          controller: _account),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -119,8 +112,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
                       child: SimpleDarkButton(
                           width: 300,
                           onPressed: () {
-                            updateUser(context, _name, _surname, _phone, _mail,
-                                _account);
+                            updateUser(context, _name, _surname, _phone, _mail);
                           },
                           title: "Potwierdź zmiany"),
                     ),
@@ -138,8 +130,7 @@ updateUser(
     TextEditingController name,
     TextEditingController surname,
     TextEditingController phone,
-    TextEditingController mail,
-    TextEditingController account) async {
+    TextEditingController mail) async {
   if (name.text.isEmpty) {
     showInfo('Imię jest wymagane.', Colors.blue);
     return;
@@ -158,7 +149,6 @@ updateUser(
   if (name.text.isNotEmpty ||
       surname.text.isNotEmpty ||
       mail.text.isNotEmpty ||
-      account.text.isNotEmpty ||
       phone.text.isEmpty) {
     User updatedUser = user;
     updatedUser.name = name.text.trim();
@@ -167,11 +157,6 @@ updateUser(
 
     if (phone.text != "") {
       updatedUser.telephone = phone.text;
-    }
-
-    if (account.text != "") {
-      updatedUser.account =
-          double.parse(account.text.trim().replaceAll(',', '.'));
     }
 
     if (!context.mounted) return;

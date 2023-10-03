@@ -40,7 +40,7 @@ class _LastDocumentsState extends State<LastDocuments> {
                 } else if (snapshot.hasError) {
                   return const Center(
                       child: Text('Wystąpił błąd. Spróbuj ponownie później.'));
-                } else if (!snapshot.hasData) {
+                } else if (snapshot.data!.isEmpty) {
                   return const Center(
                       child: Text('Nie znaleziono transakcji.'));
                 } else {

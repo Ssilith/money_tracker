@@ -79,7 +79,7 @@ class _CostGaugeState extends State<CostGauge> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Indicator();
-            } else if (snapshot.hasError) {
+            } else if (snapshot.hasError || snapshot.data!.isEmpty) {
               return Center(child: Text('Błąd: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return const Center(child: Text('Nie znaleziono danych.'));
@@ -100,82 +100,89 @@ class _CostGaugeState extends State<CostGauge> {
                     "KOSZTY W POPRZEDNIM MIESIĄCU",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
-                  SizedBox(
-                    height: 180,
-                    child: SfRadialGauge(
-                      enableLoadingAnimation: true,
-                      axes: <RadialAxis>[
-                        RadialAxis(
-                            maximumLabels: 1,
-                            minimum: 0,
-                            maximum:
-                                monthCost['monthlyAverage']['averageCost'] * 2,
-                            showLabels: false,
-                            showTicks: false,
-                            labelsPosition: ElementsPosition.outside,
-                            ranges: gaugeRanges(
-                                monthCost['monthlyAverage']['averageCost']),
-                            pointers: <GaugePointer>[
-                              NeedlePointer(
-                                enableAnimation: true,
-                                value: monthCost['thisMonth']['cost'] == null
-                                    ? 0.00
-                                    : monthCost['thisMonth']['cost'].toDouble(),
-                                needleLength: 0.9,
-                                needleEndWidth: 5,
-                              )
-                            ],
-                            annotations: <GaugeAnnotation>[
-                              GaugeAnnotation(
-                                  widget: SizedBox(
-                                    height: 100,
-                                    child: Column(
-                                      children: [
-                                        Text(
+                  if (monthCost['monthlyAverage']['averageCost'] != 0 &&
+                      monthCost['thisMonth']['cost'] != 0)
+                    SizedBox(
+                      height: 180,
+                      child: SfRadialGauge(
+                        enableLoadingAnimation: true,
+                        axes: <RadialAxis>[
+                          RadialAxis(
+                              maximumLabels: 1,
+                              minimum: 0,
+                              maximum: monthCost['monthlyAverage']
+                                      ['averageCost'] *
+                                  2,
+                              showLabels: false,
+                              showTicks: false,
+                              labelsPosition: ElementsPosition.outside,
+                              ranges: gaugeRanges(
+                                  monthCost['monthlyAverage']['averageCost']),
+                              pointers: <GaugePointer>[
+                                NeedlePointer(
+                                  enableAnimation: true,
+                                  value: monthCost['thisMonth']['cost'] == null
+                                      ? 0.00
+                                      : monthCost['thisMonth']['cost']
+                                          .toDouble(),
+                                  needleLength: 0.9,
+                                  needleEndWidth: 5,
+                                )
+                              ],
+                              annotations: <GaugeAnnotation>[
+                                GaugeAnnotation(
+                                    widget: SizedBox(
+                                      height: 100,
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                              (monthCost['thisMonth']['cost'] -
+                                                          monthCost[
+                                                                  'monthlyAverage']
+                                                              [
+                                                              'averageCost']) ==
+                                                      null
+                                                  ? "0"
+                                                  : currencyFormat("PLN").format(
+                                                      (monthCost['thisMonth']
+                                                                  ['cost'] -
+                                                              monthCost[
+                                                                      'monthlyAverage']
+                                                                  [
+                                                                  'averageCost'])
+                                                          .abs()),
+                                              style: const TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w700)),
+                                          Text(
                                             (monthCost['thisMonth']['cost'] -
                                                         monthCost[
                                                                 'monthlyAverage']
                                                             ['averageCost']) ==
                                                     null
                                                 ? "0"
-                                                : currencyFormat("PLN").format(
-                                                    (monthCost['thisMonth']
+                                                : (monthCost['thisMonth']
                                                                 ['cost'] -
                                                             monthCost[
                                                                     'monthlyAverage']
-                                                                ['averageCost'])
-                                                        .abs()),
+                                                                [
+                                                                'averageCost']) >
+                                                        0
+                                                    ? "POWYŻEJ ŚREDNIEJ"
+                                                    : "PONIŻEJ ŚREDNIEJ",
                                             style: const TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w700)),
-                                        Text(
-                                          (monthCost['thisMonth']['cost'] -
-                                                      monthCost[
-                                                              'monthlyAverage']
-                                                          ['averageCost']) ==
-                                                  null
-                                              ? "0"
-                                              : (monthCost['thisMonth']
-                                                              ['cost'] -
-                                                          monthCost[
-                                                                  'monthlyAverage']
-                                                              ['averageCost']) >
-                                                      0
-                                                  ? "POWYŻEJ ŚREDNIEJ"
-                                                  : "PONIŻEJ ŚREDNIEJ",
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500),
-                                        )
-                                      ],
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500),
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  angle: 90,
-                                  positionFactor: 1.5)
-                            ]),
-                      ],
+                                    angle: 90,
+                                    positionFactor: 1.5)
+                              ]),
+                        ],
+                      ),
                     ),
-                  ),
                 ],
               );
             }

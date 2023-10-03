@@ -1,6 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:money_tracker/authentication/register_form.dart';
+import 'package:money_tracker/models/user.dart';
+import 'package:money_tracker/profile/onboarding_pages.dart';
 import 'package:money_tracker/resources/user_service.dart';
 import 'package:money_tracker/widgets/input_dialog.dart';
 import 'package:money_tracker/widgets/message.dart';
@@ -29,12 +33,19 @@ class _LoginPageState extends State<LoginPage> {
     bool success =
         await UserService().login(_email.text, _password.text, context);
     if (success) {
-      if (!mounted) return;
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const MyHomePage(),
-        ),
-      );
+      if (user.onboard != true) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const OnboardingPages(),
+          ),
+        );
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const MyHomePage(),
+          ),
+        );
+      }
     } else {
       showInfo('Podano nieprawidłowe dane.', Colors.red, 300);
     }

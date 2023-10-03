@@ -35,7 +35,8 @@ class _BalanceBoxState extends State<BalanceBox> {
           } else if (snapshot.hasError) {
             return const Center(
                 child: Text('Wystąpił błąd. Spróbuj ponownie później.'));
-          } else if (!snapshot.hasData) {
+          } else if (snapshot.data!.isEmpty ||
+              snapshot.data!['success'] == false) {
             return const Center(child: Text('Nie znaleziono transakcji.'));
           } else {
             var data = snapshot.data!;

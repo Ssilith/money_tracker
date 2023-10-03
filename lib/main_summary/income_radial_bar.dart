@@ -39,7 +39,7 @@ class _IncomeRadailBarState extends State<IncomeRadailBar> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Indicator();
-              } else if (snapshot.hasError) {
+              } else if (snapshot.hasError || snapshot.data!.isEmpty) {
                 return Center(child: Text('Błąd: ${snapshot.error}'));
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return const Center(child: Text('Nie znaleziono danych.'));

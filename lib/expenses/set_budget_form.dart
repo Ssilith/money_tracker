@@ -25,7 +25,6 @@ class _SetBudgetFormState extends State<SetBudgetForm> {
   final TextEditingController _startDate = TextEditingController();
   final TextEditingController _endDate = TextEditingController();
   DateTime now = DateTime.now();
-  bool income = false;
 
   @override
   void initState() {
@@ -120,23 +119,23 @@ class _SetBudgetFormState extends State<SetBudgetForm> {
                       )
                     ],
                   ),
-                  const SizedBox(height: 10),
-                  CheckboxListTile(
-                    contentPadding:
-                        const EdgeInsetsDirectional.symmetric(horizontal: 5),
-                    activeColor: Theme.of(context).colorScheme.secondary,
-                    value: income,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        income = !income;
-                      });
-                    },
-                    title: const Text(
-                        "Czy chcesz, aby przychody liczyły się do budżetu?",
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(
-                            fontStyle: FontStyle.normal, fontSize: 14)),
-                  ),
+                  // const SizedBox(height: 10),
+                  // CheckboxListTile(
+                  //   contentPadding:
+                  //       const EdgeInsetsDirectional.symmetric(horizontal: 5),
+                  //   activeColor: Theme.of(context).colorScheme.secondary,
+                  //   value: income,
+                  //   onChanged: (bool? value) {
+                  //     setState(() {
+                  //       income = !income;
+                  //     });
+                  //   },
+                  //   title: const Text(
+                  //       "Czy chcesz, aby przychody liczyły się do budżetu?",
+                  //       textAlign: TextAlign.justify,
+                  //       style: TextStyle(
+                  //           fontStyle: FontStyle.normal, fontSize: 14)),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     child: Center(
@@ -198,7 +197,6 @@ class _SetBudgetFormState extends State<SetBudgetForm> {
         _endDate.text.isNotEmpty) {
       Budget budget = Budget();
       budget.amount = double.parse(_amount.text.trim().replaceAll(',', '.'));
-      budget.income = income;
       DateTime parsedStartDate = DateTime.parse(_startDate.text);
       DateTime newStartDate = parsedStartDate.add(const Duration(hours: 2));
       DateTime parsedEndDate = DateTime.parse(_endDate.text);

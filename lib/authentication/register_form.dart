@@ -1,4 +1,3 @@
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:money_tracker/authentication/login_screen.dart';
@@ -23,7 +22,6 @@ class _RegisterFormState extends State<RegisterForm> {
   final TextEditingController _passwordRepeat = TextEditingController();
   final TextEditingController _mail = TextEditingController();
   final TextEditingController _phone = TextEditingController();
-  final TextEditingController _account = TextEditingController();
   bool privicyPolicy = false;
 
   @override
@@ -76,29 +74,29 @@ class _RegisterFormState extends State<RegisterForm> {
                 textAlign: TextAlign.justify,
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: ExpandablePanel(
-                      theme: const ExpandableThemeData(hasIcon: false),
-                      header: const Row(
-                        children: [
-                          Icon(Icons.info),
-                          SizedBox(width: 8),
-                          Text(
-                            "Po co nam informacja o stanie konta?",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      collapsed: const SizedBox(),
-                      expanded: const Text(
-                        "Podanie informacji o stanie Twojego konta w aplikacji jest całkowicie opcjonalne. Jednak dzięki dokładnym informacjom o Twoim saldzie możemy precyzyjniej analizować Twoje przychody i wydatki. Ponadto, wiedząc dokładnie, ile masz środków, możesz łatwiej dostosować budżet do rzeczywistych potrzeb, unikając niespodziewanych deficytów.",
-                        textAlign: TextAlign.justify,
-                      )),
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 10),
+              //   child: Container(
+              //     padding: const EdgeInsets.symmetric(vertical: 5),
+              //     child: ExpandablePanel(
+              //         theme: const ExpandableThemeData(hasIcon: false),
+              //         header: const Row(
+              //           children: [
+              //             Icon(Icons.info),
+              //             SizedBox(width: 8),
+              //             Text(
+              //               "Po co nam informacja o stanie konta?",
+              //               style: TextStyle(fontWeight: FontWeight.bold),
+              //             ),
+              //           ],
+              //         ),
+              //         collapsed: const SizedBox(),
+              //         expanded: const Text(
+              //           "Podanie informacji o stanie Twojego konta w aplikacji jest całkowicie opcjonalne. Jednak dzięki dokładnym informacjom o Twoim saldzie możemy precyzyjniej analizować Twoje przychody i wydatki. Ponadto, wiedząc dokładnie, ile masz środków, możesz łatwiej dostosować budżet do rzeczywistych potrzeb, unikając niespodziewanych deficytów.",
+              //           textAlign: TextAlign.justify,
+              //         )),
+              //   ),
+              // ),
               const SizedBox(height: 16),
               const Text("Dane użytkownika",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
@@ -113,28 +111,23 @@ class _RegisterFormState extends State<RegisterForm> {
                       controller: _name),
                   TextInputForm(
                       width: size.width * 0.45,
-                      hint: "Nazwisko*",
+                      hint: "Nazwisko",
                       controller: _surname),
                 ],
-              ),
-              const SizedBox(height: 10),
-              TextInputForm(
-                width: size.width * 0.92,
-                hint: "E-mail*",
-                controller: _mail,
               ),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextInputForm(
+                    width: size.width * 0.45,
+                    hint: "E-mail*",
+                    controller: _mail,
+                  ),
+                  TextInputForm(
                       width: size.width * 0.45,
                       hint: "Telefon",
                       controller: _phone),
-                  TextInputForm(
-                      width: size.width * 0.45,
-                      hint: "Saldo konta",
-                      controller: _account),
                 ],
               ),
               const SizedBox(height: 10),
@@ -194,7 +187,6 @@ class _RegisterFormState extends State<RegisterForm> {
   registerUser() async {
     if (privicyPolicy) {
       if (_name.text.isNotEmpty &&
-          _surname.text.isNotEmpty &&
           _mail.text.isNotEmpty &&
           _password.text.isNotEmpty &&
           _passwordRepeat.text.isNotEmpty) {
@@ -205,13 +197,7 @@ class _RegisterFormState extends State<RegisterForm> {
           newUser.email = _mail.text.trim();
           newUser.telephone = _phone.text;
           newUser.permissions = privicyPolicy;
-
-          if (_account.text != "") {
-            newUser.account =
-                double.parse(_account.text.trim().replaceAll(',', '.'));
-          } else {
-            newUser.account = 0;
-          }
+          newUser.onboard = false;
 
           Map<String, dynamic> userRes = await UserService()
               .addUser(context, newUser, _password.text.trim());

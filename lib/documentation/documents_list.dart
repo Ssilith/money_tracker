@@ -107,6 +107,8 @@ class _DocumentListState extends State<DocumentList> {
               } else if (snapshot.hasError) {
                 return const Center(
                     child: Text('Wystąpił błąd. Spróbuj ponownie później.'));
+              } else if (snapshot.data!.isEmpty) {
+                return const Center(child: Text('Nie znaleziono transakcji.'));
               } else {
                 allDocuments = snapshot.data;
                 List documents = snapshot.data!;

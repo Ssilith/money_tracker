@@ -8,7 +8,6 @@ class Budget {
   double? amount;
   DateTime? startDate;
   DateTime? endDate;
-  bool? income;
 
   Budget();
 
@@ -17,11 +16,7 @@ class Budget {
   }
 
   bool isEmpty() {
-    return id == null &&
-        amount == null &&
-        income == null &&
-        startDate == null &&
-        endDate == null;
+    return id == null && amount == null && startDate == null && endDate == null;
   }
 
   factory Budget.fromJson(Map<String, dynamic> json) => _$BudgetFromJson(json);

@@ -37,8 +37,9 @@ class _MonthlySummaryState extends State<MonthlySummary> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Indicator();
             } else if (snapshot.hasError) {
-              return Center(child: Text('Błąd: ${snapshot.error}'));
-            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(
+                  child: Text('Wystąpił błąd. Spróbuj ponownie później.'));
+            } else if (snapshot.data!.isEmpty) {
               return const Center(child: Text('Nie znaleziono danych.'));
             } else {
               Map summ = snapshot.data!;
@@ -52,69 +53,73 @@ class _MonthlySummaryState extends State<MonthlySummary> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
                   ),
                   const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        currencyFormat("PLN").format(costs),
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16),
-                      ),
-                      const Text(
-                        "KOSZTY",
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
-                  SfLinearGauge(
-                    showLabels: false,
-                    showTicks: false,
-                    minimum: 0,
-                    maximum: costs > income ? costs : income,
-                    barPointers: [
-                      LinearBarPointer(
-                        edgeStyle: LinearEdgeStyle.bothCurve,
-                        thickness: 10,
-                        value: costs,
-                        color: const Color.fromARGB(255, 241, 81, 70),
-                      ),
-                    ],
-                  ),
+                  if (costs != 0)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          currencyFormat("PLN").format(costs),
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
+                        const Text(
+                          "KOSZTY",
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  if (costs != 0)
+                    SfLinearGauge(
+                      showLabels: false,
+                      showTicks: false,
+                      minimum: 0,
+                      maximum: costs > income ? costs : income,
+                      barPointers: [
+                        LinearBarPointer(
+                          edgeStyle: LinearEdgeStyle.bothCurve,
+                          thickness: 10,
+                          value: costs,
+                          color: const Color.fromARGB(255, 241, 81, 70),
+                        ),
+                      ],
+                    ),
                   const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        currencyFormat("PLN").format(income),
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16),
-                      ),
-                      const Text(
-                        "PRZYCHODY",
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
-                  SfLinearGauge(
-                    showLabels: false,
-                    showTicks: false,
-                    minimum: 0,
-                    maximum: costs > income ? costs : income,
-                    barPointers: [
-                      LinearBarPointer(
-                        edgeStyle: LinearEdgeStyle.bothCurve,
-                        thickness: 10,
-                        value: income,
-                        color: const Color.fromARGB(255, 38, 174, 108),
-                      ),
-                    ],
-                  ),
+                  if (income != 0)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          currencyFormat("PLN").format(income),
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
+                        const Text(
+                          "PRZYCHODY",
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  if (income != 0)
+                    SfLinearGauge(
+                      showLabels: false,
+                      showTicks: false,
+                      minimum: 0,
+                      maximum: costs > income ? costs : income,
+                      barPointers: [
+                        LinearBarPointer(
+                          edgeStyle: LinearEdgeStyle.bothCurve,
+                          thickness: 10,
+                          value: income,
+                          color: const Color.fromARGB(255, 38, 174, 108),
+                        ),
+                      ],
+                    ),
                   const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
