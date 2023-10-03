@@ -152,7 +152,10 @@ class _DocumentListState extends State<DocumentList> {
           return Padding(
             padding: const EdgeInsets.all(4.0),
             child: DocumentContainer(
-                document: documents[index], width: size.width * 0.94),
+              document: documents[index],
+              width: size.width * 0.94,
+              showDescription: true,
+            ),
           );
         } else {
           return const SizedBox.shrink();

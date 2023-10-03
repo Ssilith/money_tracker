@@ -199,8 +199,12 @@ class _SetBudgetFormState extends State<SetBudgetForm> {
       Budget budget = Budget();
       budget.amount = double.parse(_amount.text.trim().replaceAll(',', '.'));
       budget.income = income;
-      budget.startDate = DateTime.parse(_startDate.text);
-      budget.endDate = DateTime.parse(_endDate.text);
+      DateTime parsedStartDate = DateTime.parse(_startDate.text);
+      DateTime newStartDate = parsedStartDate.add(const Duration(hours: 2));
+      DateTime parsedEndDate = DateTime.parse(_endDate.text);
+      DateTime newEndDate = parsedEndDate.add(const Duration(hours: 2));
+      budget.startDate = newStartDate;
+      budget.endDate = newEndDate;
 
       var res = await BudgetService().addNewBudget(budget, user.id!);
 

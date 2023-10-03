@@ -289,7 +289,9 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
         Transaction transaction = Transaction();
         transaction.amount =
             double.parse(_amount.text.trim().replaceAll(',', '.'));
-        transaction.date = DateTime.parse(_date.text);
+        DateTime parsedDate = DateTime.parse(_date.text);
+        DateTime newDate = parsedDate.add(const Duration(hours: 2));
+        transaction.date = newDate;
         transaction.category = cat['category']['_id'].toString();
         transaction.type = type;
         transaction.description = _description.text;

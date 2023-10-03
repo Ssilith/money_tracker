@@ -72,10 +72,12 @@ class _LastDocumentsState extends State<LastDocuments> {
 class DocumentContainer extends StatelessWidget {
   final double width;
   final dynamic document;
+  final bool showDescription;
   const DocumentContainer({
     super.key,
     required this.document,
     required this.width,
+    this.showDescription = false,
   });
 
   @override
@@ -137,6 +139,9 @@ class DocumentContainer extends StatelessWidget {
                 )
               ],
             ),
+            showDescription && document['description'] != ""
+                ? Text(document['description'])
+                : const SizedBox.shrink()
           ],
         ),
       ),
