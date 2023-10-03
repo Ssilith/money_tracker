@@ -14,6 +14,9 @@ class IncomeRadailBar extends StatefulWidget {
 
 class _IncomeRadailBarState extends State<IncomeRadailBar> {
   Future? getMonthCost;
+  List<bool> seriesVisibility = [true, true];
+  List<double> labelOpacity = [1.0, 1.0];
+  final animationDuration = const Duration(milliseconds: 500);
 
   @override
   void initState() {
@@ -56,45 +59,83 @@ class _IncomeRadailBarState extends State<IncomeRadailBar> {
                     ),
                     AspectRatio(
                       aspectRatio: 1.7,
-                      child: SfCircularChart(
-                        legend: Legend(
-                            shouldAlwaysShowScrollbar: false,
-                            isVisible: true,
-                            textStyle: const TextStyle(fontSize: 16)),
-                        series: <CircularSeries>[
-                          RadialBarSeries<IncomeData, String>(
-                            dataSource: [
-                              IncomeData(
-                                  months[DateTime.now().month - 1],
-                                  thisMonthIncome,
-                                  const Color.fromARGB(255, 38, 174, 108)),
-                              IncomeData('Średnia', averageIncome,
-                                  Theme.of(context).colorScheme.secondary),
-                            ],
-                            pointColorMapper: (IncomeData data, _) =>
-                                data.color,
-                            xValueMapper: (IncomeData data, _) => data.name,
-                            yValueMapper: (IncomeData data, _) => data.value,
-                            pointRadiusMapper: (IncomeData data, _) =>
-                                data.name == months[DateTime.now().month - 1]
-                                    ? '60%'
-                                    : '100%',
-                            dataLabelMapper: (IncomeData data, _) =>
-                                currencyFormat("PLN").format(data.value),
-                            maximumValue: averageIncome * 0.9999,
-                            cornerStyle: CornerStyle.bothCurve,
-                            trackColor: const Color.fromRGBO(212, 214, 216, 1),
-                            radius: '100%',
-                            gap: '7%',
-                            dataLabelSettings: const DataLabelSettings(
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          SfCircularChart(
+                            legend: Legend(
+                                shouldAlwaysShowScrollbar: false,
                                 isVisible: true,
-                                textStyle: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w900,
-                                ),
-                                showZeroValue: true),
+                                textStyle: const TextStyle(fontSize: 16)),
+                            onLegendTapped: (LegendTapArgs args) {
+                              setState(() {
+                                labelOpacity[args.pointIndex!] =
+                                    labelOpacity[args.pointIndex!] == 1.0
+                                        ? 0.0
+                                        : 1.0;
+                              });
+                            },
+                            series: <CircularSeries>[
+                              RadialBarSeries<IncomeData, String>(
+                                dataSource: [
+                                  IncomeData(
+                                      months[DateTime.now().month - 1],
+                                      thisMonthIncome,
+                                      const Color.fromARGB(255, 38, 174, 108)),
+                                  IncomeData('Średnia', averageIncome,
+                                      Theme.of(context).colorScheme.secondary),
+                                ],
+                                pointColorMapper: (IncomeData data, _) =>
+                                    data.color,
+                                xValueMapper: (IncomeData data, _) => data.name,
+                                yValueMapper: (IncomeData data, _) =>
+                                    data.value,
+                                pointRadiusMapper: (IncomeData data, _) =>
+                                    data.name ==
+                                            months[DateTime.now().month - 1]
+                                        ? '60%'
+                                        : '100%',
+                                maximumValue: averageIncome * 0.9999,
+                                cornerStyle: CornerStyle.bothCurve,
+                                trackColor:
+                                    const Color.fromRGBO(212, 214, 216, 1),
+                                radius: '100%',
+                                gap: '7%',
+                              ),
+                            ],
                           ),
+                          if (seriesVisibility[0])
+                            Positioned(
+                              left: 90,
+                              child: AnimatedOpacity(
+                                opacity: labelOpacity[0],
+                                duration: animationDuration,
+                                child: Text(
+                                  currencyFormat("PLN").format(thisMonthIncome),
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          if (seriesVisibility[1])
+                            Positioned(
+                              top: 10,
+                              child: AnimatedOpacity(
+                                opacity: labelOpacity[1],
+                                duration: animationDuration,
+                                child: Text(
+                                  currencyFormat("PLN").format(averageIncome),
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                              ),
+                            ),
                         ],
                       ),
                     ),
