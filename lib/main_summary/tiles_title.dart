@@ -5,6 +5,7 @@ import 'package:money_tracker/main_summary/cost_gauge.dart';
 import 'package:money_tracker/main_summary/financial_result_line_chart.dart';
 import 'package:money_tracker/main_summary/income_radial_bar.dart';
 import 'package:money_tracker/main_summary/monthly_summary.dart';
+import 'package:money_tracker/resources/user_simple_preferences.dart';
 
 class TilesTitle extends StatefulWidget {
   final Function updateScreen;
@@ -15,6 +16,46 @@ class TilesTitle extends StatefulWidget {
 }
 
 class _TilesTitleState extends State<TilesTitle> {
+  @override
+  void initState() {
+    super.initState();
+    loadSelectedWidgets();
+  }
+
+  void loadSelectedWidgets() {
+    List<String>? savedWidgets = UserSimplePreferences.getChosenWidgets() ??
+        [
+          "Ostatnie dokumenty",
+          "Bieżący budżet",
+          "Rozliczenie miesięczne",
+          "Miesięczne koszty",
+          "Miesięczne wpływy",
+          "Wynik finansowy"
+        ];
+
+    if (savedWidgets.isNotEmpty) {
+      List<WidgetItem> reorderedItems = [];
+      for (var title in savedWidgets) {
+        final match = widgetItems.firstWhere((item) => item.title == title);
+        reorderedItems.add(match);
+      }
+      for (var item in widgetItems) {
+        if (!reorderedItems.contains(item)) {
+          reorderedItems.add(item);
+        }
+      }
+      widgetItems = reorderedItems;
+      for (var item in widgetItems) {
+        if (savedWidgets.contains(item.title)) {
+          item.isSelected = true;
+        } else {
+          item.isSelected = false;
+        }
+      }
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -64,48 +105,54 @@ class _TilesTitleState extends State<TilesTitle> {
                       canvasColor: Colors.transparent,
                     ),
                     child: ReorderableListView.builder(
-                        shrinkWrap: true,
-                        itemCount: widgetItems.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ListTile(
-                              minLeadingWidth: 5,
-                              key: ValueKey(widgetItems[index].title),
-                              title: CheckboxListTile(
-                                activeColor: Colors.white,
-                                checkColor: Colors.blue[900],
-                                value: widgetItems[index].isSelected,
-                                title: Text(widgetItems[index].title,
-                                    style:
-                                        const TextStyle(color: Colors.white)),
-                                onChanged: (bool? value) async {
-                                  modalSetState(() {
-                                    widgetItems[index].isSelected = value!;
-                                  });
-                                  widget.updateScreen();
-                                  // List<String> widgetItemTitles = widgetItems
-                                  //     .map((item) => item.title)
-                                  //     .toList();
-                                  // await UserSimplePreferences.setChosenWidgets(
-                                  //     widgetItemTitles);
-                                },
-                              ),
-                              leading: ReorderableDragStartListener(
-                                key: ValueKey(widgetItems[index]),
-                                index: index,
-                                child: const Icon(Icons.drag_handle,
-                                    color: Colors.white),
-                              ));
-                        },
-                        onReorder: (oldIndex, newIndex) {
-                          setState(() {
-                            if (newIndex > oldIndex) {
-                              newIndex -= 1;
-                            }
-                            final item = widgetItems.removeAt(oldIndex);
-                            widgetItems.insert(newIndex, item);
-                          });
-                          widget.updateScreen();
-                        })));
+                      shrinkWrap: true,
+                      itemCount: widgetItems.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                            minLeadingWidth: 5,
+                            key: ValueKey(widgetItems[index].title),
+                            title: CheckboxListTile(
+                              activeColor: Colors.white,
+                              checkColor: Colors.blue[900],
+                              value: widgetItems[index].isSelected,
+                              title: Text(widgetItems[index].title,
+                                  style: const TextStyle(color: Colors.white)),
+                              onChanged: (bool? value) async {
+                                modalSetState(() {
+                                  widgetItems[index].isSelected = value!;
+                                });
+                                widget.updateScreen();
+                                List<String> selectedWidgets = widgetItems
+                                    .where((item) => item.isSelected)
+                                    .map((item) => item.title)
+                                    .toList();
+                                await UserSimplePreferences.setChosenWidgets(
+                                    selectedWidgets);
+                              },
+                            ),
+                            leading: ReorderableDragStartListener(
+                              key: ValueKey(widgetItems[index]),
+                              index: index,
+                              child: const Icon(Icons.drag_handle,
+                                  color: Colors.white),
+                            ));
+                      },
+                      onReorder: (oldIndex, newIndex) {
+                        setState(() {
+                          if (newIndex > oldIndex) {
+                            newIndex -= 1;
+                          }
+                          final item = widgetItems.removeAt(oldIndex);
+                          widgetItems.insert(newIndex, item);
+                        });
+                        widget.updateScreen();
+
+                        List<String> reorderedWidgets =
+                            widgetItems.map((item) => item.title).toList();
+                        UserSimplePreferences.setChosenWidgets(
+                            reorderedWidgets);
+                      },
+                    )));
           },
         ),
       ),

@@ -68,4 +68,6 @@ MaterialColor getMaterialColor(Color color) {
 
 List<String> chosenCurrency = <String>[];
 
+List<String> chosenWidgets = <String>[];
+
 late RetryClient client;
