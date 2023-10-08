@@ -25,6 +25,21 @@ List<String> months = [
   'Grudzień'
 ];
 
+Map<String, int> monthNameToNumber = {
+  'Styczeń': 1,
+  'Luty': 2,
+  'Marzec': 3,
+  'Kwiecień': 4,
+  'Maj': 5,
+  'Czerwiec': 6,
+  'Lipiec': 7,
+  'Sierpień': 8,
+  'Wrzesień': 9,
+  'Październik': 10,
+  'Listopad': 11,
+  'Grudzień': 12
+};
+
 NumberFormat currencyFormat(String currency) {
   String localCurrency = currency == "PLN" ? "pl_PL" : "it_IT";
   return NumberFormat.simpleCurrency(locale: localCurrency);

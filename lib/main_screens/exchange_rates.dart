@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:money_tracker/api/eurostat_currency_api.dart';
 import 'package:money_tracker/main.dart';
 import 'package:money_tracker/resources/user_simple_preferences.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -33,13 +34,20 @@ class ExchangeRates extends StatefulWidget {
 
 class _ExchangeRatesState extends State<ExchangeRates> {
   List<CurrencyData> currencyDataList = [];
+  Future<List<CurrencyData>>? combinedCurrency;
 
   @override
   void initState() {
     super.initState();
-    nbpCurrency = getCurrencyList();
+    combinedCurrency = getCurrenciesCombined();
     chosenCurrency = UserSimplePreferences.getChosenCurrency() ??
-        ["PLN EUR", "PLN GBP", "PLN USD"];
+        ["EUR PLN", "GBP PLN", "USD PLN"];
+  }
+
+  Future<List<CurrencyData>> getCurrenciesCombined() async {
+    List<CurrencyData> nbpCurrency = await getCurrencyList();
+    List<CurrencyData> eurCurrency = await getEurCurrencyList();
+    return nbpCurrency + eurCurrency;
   }
 
   @override
@@ -92,7 +100,7 @@ class _ExchangeRatesState extends State<ExchangeRates> {
           height: size.height,
           child: SingleChildScrollView(
             child: FutureBuilder<List<CurrencyData>>(
-              future: nbpCurrency,
+              future: combinedCurrency,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: Indicator());
@@ -144,49 +152,11 @@ class _ExchangeRatesState extends State<ExchangeRates> {
               builder: (BuildContext context, StateSetter modalSetState) {
             return Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      alignment: Alignment.center,
-                      height: 50,
-                      child: chooseAll == true
-                          ? Text(
-                              "Odznacz wszystkie",
-                              style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          : Text(
-                              "Wybierz wszystkie",
-                              style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                    ),
-                    Checkbox(
-                      activeColor: Theme.of(context).colorScheme.secondary,
-                      value: chooseAll,
-                      onChanged: (bool? value) async {
-                        chooseAll = !chooseAll;
-                        modalSetState(() {
-                          if (chooseAll == true) {
-                            chosenCurrency = getAllCurrencies();
-                          } else {
-                            chosenCurrency = [];
-                          }
-                        });
-                        await UserSimplePreferences.setChosenCurrency(
-                            chosenCurrency);
-                        setState(() {});
-                      },
-                    )
-                  ],
-                ),
+                Text("Wybierz waluty",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold)),
                 Expanded(
                   child: ListView.builder(
                     itemCount: currencyDataList.length,
@@ -244,7 +214,7 @@ Widget buildCurrencyCard(CurrencyData currencyData, BuildContext context) {
                     const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               Text(
-                "${currencyData.rate} ${currencyData.fromName == 'PLN' || currencyData.fromName == 'WIG 30' ? 'zł' : '€'}",
+                "${currencyData.rate} ${currencyData.toName == 'PLN' ? 'zł' : currencyData.toName == 'CZK' ? 'Kč' : currencyData.toName == 'CHF' ? 'Fr.' : '€'}",
                 style:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
@@ -278,15 +248,14 @@ Widget buildLineChart(CurrencyData currencyData) {
                   .values
                   .toList(),
               isCurved: false,
-              color: currencyData.fromName == 'PLN' ||
-                      currencyData.fromName == 'WIG 30'
+              color: currencyData.toName == 'PLN'
                   ? const Color.fromARGB(255, 237, 136, 34)
                   : const Color.fromARGB(255, 14, 54, 99),
               barWidth: 2.5,
               isStrokeCapRound: false,
               belowBarData: BarAreaData(
                 show: true,
-                color: (currencyData.fromName == 'PLN'
+                color: (currencyData.toName == 'PLN'
                         ? const Color.fromARGB(255, 244, 208, 161)
                         : const Color.fromARGB(255, 89, 120, 169))
                     .withOpacity(0.3),
@@ -304,9 +273,11 @@ Widget buildLineChart(CurrencyData currencyData) {
 
 getAllCurrencies() {
   return [
-    'PLN EUR',
-    'PLN GBP',
-    'PLN CHF',
-    'PLN USD',
+    'EUR PLN',
+    'GBP PLN',
+    'CHF PLN',
+    'USD PLN',
+    'EUR CHF',
+    'EUR CZK',
   ];
 }

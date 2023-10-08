@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:money_tracker/global.dart';
 import 'package:money_tracker/models/transaction.dart';
 import 'package:money_tracker/models/user.dart';
 import 'package:money_tracker/resources/category_service.dart';
@@ -21,9 +22,11 @@ class ModalFilter extends StatefulWidget {
 class _ModalFilterState extends State<ModalFilter> {
   String? sortCriteria;
   Set<String> selectedCategories = {};
+  Set<String> selectedMonths = {};
   RangeValues? currentRangeValues;
   bool showAmountSlider = false;
   bool showCategoriesChoice = false;
+  bool showMonthChoice = false;
   Future? getCategoriesNames;
   Future? getBiggestAmount;
 
@@ -45,10 +48,11 @@ class _ModalFilterState extends State<ModalFilter> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  'Sortuj za pomocą:',
-                  style: TextStyle(fontSize: 18),
-                ),
+                Text("Sortuj",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold)),
                 RadioListTile(
                   activeColor: Theme.of(context).colorScheme.secondary,
                   value: 'dateR',
@@ -58,7 +62,7 @@ class _ModalFilterState extends State<ModalFilter> {
                       sortCriteria = value;
                     });
                   },
-                  title: const Text('Daty rosnąco'),
+                  title: const Text('Data rosnąco'),
                 ),
                 RadioListTile(
                   activeColor: Theme.of(context).colorScheme.secondary,
@@ -69,7 +73,7 @@ class _ModalFilterState extends State<ModalFilter> {
                       sortCriteria = value;
                     });
                   },
-                  title: const Text('Daty malejąco'),
+                  title: const Text('Data malejąco'),
                 ),
                 RadioListTile(
                   activeColor: Theme.of(context).colorScheme.secondary,
@@ -80,7 +84,7 @@ class _ModalFilterState extends State<ModalFilter> {
                       sortCriteria = value;
                     });
                   },
-                  title: const Text('Kwoty rosnąco'),
+                  title: const Text('Kwota rosnąco'),
                 ),
                 RadioListTile(
                   activeColor: Theme.of(context).colorScheme.secondary,
@@ -91,19 +95,20 @@ class _ModalFilterState extends State<ModalFilter> {
                       sortCriteria = value;
                     });
                   },
-                  title: const Text('Kwoty malejąco'),
+                  title: const Text('Kwota malejąco'),
                 ),
                 Divider(
                     color: Theme.of(context).colorScheme.secondary,
                     thickness: 1.2,
                     height: 10),
-                const Text(
-                  'Filtruj za pomocą:',
-                  style: TextStyle(fontSize: 18),
-                ),
+                Text("Filtruj",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold)),
                 CheckboxListTile(
                   activeColor: Theme.of(context).colorScheme.secondary,
-                  title: const Text('Kwoty'),
+                  title: const Text('Kwota'),
                   value: showAmountSlider,
                   onChanged: (checked) {
                     setModalState(() {
@@ -118,8 +123,7 @@ class _ModalFilterState extends State<ModalFilter> {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return const Indicator();
-                        } else if (snapshot.hasError ||
-                            snapshot.data!.isEmpty) {
+                        } else if (snapshot.hasError) {
                           return const Center(
                               child: Text(
                                   'Wystąpił błąd. Spróbuj ponownie później.'));
@@ -154,7 +158,7 @@ class _ModalFilterState extends State<ModalFilter> {
                       }),
                 CheckboxListTile(
                   activeColor: Theme.of(context).colorScheme.secondary,
-                  title: const Text('Kategorii'),
+                  title: const Text('Kategorie'),
                   value: showCategoriesChoice,
                   onChanged: (checked) {
                     setModalState(() {
@@ -163,6 +167,17 @@ class _ModalFilterState extends State<ModalFilter> {
                   },
                 ),
                 if (showCategoriesChoice) buildCategoryButtons(),
+                CheckboxListTile(
+                  activeColor: Theme.of(context).colorScheme.secondary,
+                  title: const Text('Miesięce'),
+                  value: showMonthChoice,
+                  onChanged: (checked) {
+                    setModalState(() {
+                      showMonthChoice = checked!;
+                    });
+                  },
+                ),
+                if (showMonthChoice) buildMonthButtons(),
                 SimpleDarkButton(
                     onPressed: () {
                       List docs = widget.originalDocs;
@@ -210,6 +225,9 @@ class _ModalFilterState extends State<ModalFilter> {
       if (maxAmount != null && t['amount'] > maxAmount) return false;
       if (selectedCategories.isNotEmpty &&
           !selectedCategories.contains(t['category']['name'])) {
+        return false;
+      }
+      if (selectedMonths.isNotEmpty && !isDateInSelectedMonths(t['date'])) {
         return false;
       }
       return true;
@@ -262,5 +280,48 @@ class _ModalFilterState extends State<ModalFilter> {
         }
       },
     );
+  }
+
+  Widget buildMonthButtons() {
+    return Wrap(
+      spacing: 5.0,
+      children: months.map((category) {
+        return ChoiceChip(
+          label: Text(
+            category,
+          ),
+          checkmarkColor: Colors.white,
+          labelStyle: TextStyle(
+              color: selectedMonths.contains(category)
+                  ? Colors.white
+                  : Colors.black),
+          selected: selectedMonths.contains(category),
+          onSelected: (selected) {
+            setState(() {
+              if (selected) {
+                selectedMonths.add(category);
+              } else {
+                selectedMonths.remove(category);
+              }
+            });
+          },
+        );
+      }).toList(),
+    );
+  }
+
+  int getMonthFromDate(String date) {
+    DateTime parsedDate = DateTime.parse(date);
+    return parsedDate.month;
+  }
+
+  bool isDateInSelectedMonths(String date) {
+    int monthNumber = getMonthFromDate(date);
+    for (String month in selectedMonths) {
+      if (monthNameToNumber[month] == monthNumber) {
+        return true;
+      }
+    }
+    return false;
   }
 }

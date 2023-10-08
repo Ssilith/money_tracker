@@ -77,11 +77,16 @@ class _TilesTitleState extends State<TilesTitle> {
                                 title: Text(widgetItems[index].title,
                                     style:
                                         const TextStyle(color: Colors.white)),
-                                onChanged: (bool? value) {
+                                onChanged: (bool? value) async {
                                   modalSetState(() {
                                     widgetItems[index].isSelected = value!;
                                   });
                                   widget.updateScreen();
+                                  // List<String> widgetItemTitles = widgetItems
+                                  //     .map((item) => item.title)
+                                  //     .toList();
+                                  // await UserSimplePreferences.setChosenWidgets(
+                                  //     widgetItemTitles);
                                 },
                               ),
                               leading: ReorderableDragStartListener(

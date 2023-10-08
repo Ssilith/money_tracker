@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserSimplePreferences {
   static late SharedPreferences _preferences;
 
-  // static const _keyFilters = 'widgets';
+  static const _keyFilters = 'widgets';
   static const _keyFilters2 = 'currency';
 
   static Future init() async =>
@@ -32,10 +32,10 @@ class UserSimplePreferences {
   }
 
   //other
-  // static Future setChosenWidgets(List<String> widgets) async =>
-  //     await _preferences.setStringList(_keyFilters, widgets);
-  // static List<String>? getChosenWidgets() =>
-  //     _preferences.getStringList(_keyFilters);
+  static Future setChosenWidgets(List<String> widgets) async =>
+      await _preferences.setStringList(_keyFilters, widgets);
+  static List<String>? getChosenWidgets() =>
+      _preferences.getStringList(_keyFilters);
 
   static Future setChosenCurrency(List<String> currency) async =>
       await _preferences.setStringList(_keyFilters2, currency);

@@ -23,8 +23,8 @@ Future<List<CurrencyData>> getCurrencyList() async {
   }
   for (var i = 0; i < responsesList.length; i++) {
     CurrencyData currencyData = CurrencyData(
-        fromName: "PLN",
-        toName: currencyToGet[i].toUpperCase(),
+        fromName: currencyToGet[i].toUpperCase(),
+        toName: "PLN",
         rate: responsesList[i][responsesList[i].length - 1]['mid'].toString(),
         weekly: List<double>.from(
             responsesList[i].map((element) => element['mid'])));
