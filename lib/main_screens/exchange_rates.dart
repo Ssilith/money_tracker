@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:money_tracker/api/eurostat_currency_api.dart';
-import 'package:money_tracker/main.dart';
 import 'package:money_tracker/resources/user_simple_preferences.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:money_tracker/widgets/indicator.dart';
@@ -53,95 +51,78 @@ class _ExchangeRatesState extends State<ExchangeRates> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return [
-            SliverAppBar(
-              pinned: true,
-              elevation: 0,
-              surfaceTintColor: Theme.of(context).colorScheme.secondary,
-              backgroundColor: Theme.of(context).colorScheme.secondary,
-              leading: Builder(
-                builder: (BuildContext context) {
-                  return InkWell(
-                    onTap: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (context) => const MyHomePage(),
-                        ),
-                      );
-                    },
-                    child: Icon(MdiIcons.arrowLeftCircle,
-                        size: 40, color: Colors.white),
-                  );
+    return SizedBox(
+        height: size.height,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Kursy walut",
+                        style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.secondary)),
+                    IconButton(
+                        onPressed: () => chooseCurrencyRate(context),
+                        icon: const Icon(
+                          Icons.more_vert,
+                          color: Colors.black,
+                          size: 30,
+                        ))
+                  ],
+                ),
+              ),
+              FutureBuilder<List<CurrencyData>>(
+                future: combinedCurrency,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: Indicator());
+                  } else if (snapshot.hasError || snapshot.data!.isEmpty) {
+                    return const Center(
+                        child:
+                            Text('Wystąpił błąd. Spróbuj ponownie później.'));
+                  } else {
+                    currencyDataList = snapshot.data!;
+                    return Container(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      width: 600,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ...chosenCurrency
+                              .map<Widget?>((currency) {
+                                var currencyData =
+                                    currencyDataList.firstWhereOrNull((data) {
+                                  var currentPair = data.fromName;
+                                  if (data.toName != null) {
+                                    currentPair += " ${data.toName}";
+                                  }
+                                  return currentPair == currency;
+                                });
+
+                                return currencyData != null
+                                    ? buildCurrencyCard(currencyData, context)
+                                    : null;
+                              })
+                              .whereType<Widget>()
+                              .toList(),
+                        ],
+                      ),
+                    );
+                  }
                 },
               ),
-              automaticallyImplyLeading: true,
-              title: const Text("Kursy walut",
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w600)),
-              centerTitle: true,
-              floating: true,
-              snap: true,
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.more_vert,
-                      size: 30, color: Colors.white),
-                  onPressed: () {
-                    chooseCurrencyRate(context);
-                  },
-                )
-              ],
-            ),
-          ];
-        },
-        body: SizedBox(
-          height: size.height,
-          child: SingleChildScrollView(
-            child: FutureBuilder<List<CurrencyData>>(
-              future: combinedCurrency,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: Indicator());
-                } else if (snapshot.hasError || snapshot.data!.isEmpty) {
-                  return const Center(
-                      child: Text('Wystąpił błąd. Spróbuj ponownie później.'));
-                } else {
-                  currencyDataList = snapshot.data!;
-                  return Container(
-                    padding: const EdgeInsets.all(10),
-                    width: 600,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ...chosenCurrency
-                            .map<Widget?>((currency) {
-                              var currencyData =
-                                  currencyDataList.firstWhereOrNull((data) {
-                                var currentPair = data.fromName;
-                                if (data.toName != null) {
-                                  currentPair += " ${data.toName}";
-                                }
-                                return currentPair == currency;
-                              });
-
-                              return currencyData != null
-                                  ? buildCurrencyCard(currencyData, context)
-                                  : null;
-                            })
-                            .whereType<Widget>()
-                            .toList(),
-                      ],
-                    ),
-                  );
-                }
-              },
-            ),
+            ],
           ),
-        ),
-      ),
-    );
+        ));
+    //     ),
+    //   ),
+    // );
   }
 
   Future chooseCurrencyRate(BuildContext context) {

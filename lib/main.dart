@@ -7,6 +7,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:money_tracker/authentication/login_screen.dart';
 import 'package:money_tracker/documentation/documents_list.dart';
 import 'package:money_tracker/financial/main_financial.dart';
+import 'package:money_tracker/main_screens/exchange_rates.dart';
 import 'package:money_tracker/main_screens/summary_screen.dart';
 import 'package:money_tracker/resources/initialization_service.dart';
 import 'package:money_tracker/resources/user_service.dart';
@@ -86,6 +87,8 @@ class _MyHomePageState extends State<MyHomePage> {
         return const DocumentList();
       case Screens.financial:
         return const MainFinancial();
+      case Screens.currencies:
+        return const ExchangeRates();
     }
   }
 
@@ -93,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
     const SummaryScreen(),
     const DocumentList(),
     const MainFinancial(),
+    const ExchangeRates(),
   ];
 
   changeScreen(Screens newScreen) {
@@ -166,10 +170,15 @@ class _MyHomePageState extends State<MyHomePage> {
             title: const Text("Finanse"),
             selectedColor: Theme.of(context).colorScheme.secondary,
           ),
+          SalomonBottomBarItem(
+            icon: const Icon(FontAwesomeIcons.arrowTrendUp, size: 20),
+            title: const Text("Kursy walut"),
+            selectedColor: Theme.of(context).colorScheme.secondary,
+          ),
         ],
       ),
     );
   }
 }
 
-enum Screens { summaryScreen, transactions, financial }
+enum Screens { summaryScreen, transactions, financial, currencies }

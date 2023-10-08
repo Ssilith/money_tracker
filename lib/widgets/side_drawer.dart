@@ -2,13 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:money_tracker/authentication/login_screen.dart';
 import 'package:money_tracker/expenses/new_category_form.dart';
 import 'package:money_tracker/expenses/new_expense_form.dart';
 import 'package:money_tracker/expenses/set_budget_form.dart';
 import 'package:money_tracker/main.dart';
-import 'package:money_tracker/main_screens/exchange_rates.dart';
 import 'package:money_tracker/models/user.dart';
 import 'package:money_tracker/profile/edit_profile_form.dart';
 import 'package:money_tracker/resources/user_service.dart';
@@ -129,15 +127,6 @@ class SideDrawer extends StatelessWidget {
                 text: "Usuń konto",
                 icon: Icons.no_accounts,
                 size: 26),
-            DrawerTile(
-                onTap: () => Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const ExchangeRates(),
-                      ),
-                    ),
-                text: "Kursy walut",
-                icon: FontAwesomeIcons.arrowTrendUp,
-                size: 22),
             const Divider(
               color: Color.fromARGB(49, 66, 66, 66),
             ),
