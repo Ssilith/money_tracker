@@ -11,9 +11,20 @@ import 'package:money_tracker/widgets/simple_dark_button.dart';
 class ModalFilter extends StatefulWidget {
   final Function(List filteredDocs) onFilterApplied;
   final List originalDocs;
+  final String? initialSortCriteria;
+  final Set<String> initialSelectedCategories;
+  final Set<String> initialSelectedMonths;
+  final RangeValues? initialRangeValues;
 
-  const ModalFilter(
-      {super.key, required this.onFilterApplied, required this.originalDocs});
+  const ModalFilter({
+    super.key,
+    required this.onFilterApplied,
+    required this.originalDocs,
+    this.initialSortCriteria,
+    this.initialSelectedCategories = const {},
+    this.initialSelectedMonths = const {},
+    this.initialRangeValues,
+  });
 
   @override
   State<ModalFilter> createState() => _ModalFilterState();
@@ -29,13 +40,46 @@ class _ModalFilterState extends State<ModalFilter> {
   bool showMonthChoice = false;
   Future? getCategoriesNames;
   Future? getBiggestAmount;
+  Map? userChoices;
 
   @override
   void initState() {
     getCategoriesNames = CategoryService().getCategoriesNames(user.id!);
     getBiggestAmount =
         TransactionService().getBiggestTransactionAmount(user.id!);
+    sortCriteria = widget.initialSortCriteria ?? 'dateM';
+    selectedCategories = widget.initialSelectedCategories;
+    selectedMonths = widget.initialSelectedMonths;
+    currentRangeValues = widget.initialRangeValues;
+    showAmountSlider = widget.initialRangeValues != null;
+    showCategoriesChoice = widget.initialSelectedCategories.isNotEmpty;
+    showMonthChoice = widget.initialSelectedMonths.isNotEmpty;
     super.initState();
+  }
+
+  Map<String, dynamic> getUserSelections() {
+    Map<String, dynamic> selections = {};
+
+    if (sortCriteria != null) {
+      selections['Sorting'] = sortCriteria;
+    }
+
+    if (showAmountSlider) {
+      selections['Amount Range'] = {
+        'Min': currentRangeValues?.start,
+        'Max': currentRangeValues?.end
+      };
+    }
+
+    if (selectedCategories.isNotEmpty) {
+      selections['Categories'] = selectedCategories.toList();
+    }
+
+    if (selectedMonths.isNotEmpty) {
+      selections['Months'] = selectedMonths.toList();
+    }
+
+    return selections;
   }
 
   @override
@@ -113,6 +157,9 @@ class _ModalFilterState extends State<ModalFilter> {
                   onChanged: (checked) {
                     setModalState(() {
                       showAmountSlider = checked!;
+                      if (!showAmountSlider) {
+                        currentRangeValues = null;
+                      }
                     });
                   },
                 ),
@@ -163,6 +210,9 @@ class _ModalFilterState extends State<ModalFilter> {
                   onChanged: (checked) {
                     setModalState(() {
                       showCategoriesChoice = checked!;
+                      if (!showCategoriesChoice) {
+                        selectedCategories.clear();
+                      }
                     });
                   },
                 ),
@@ -174,6 +224,9 @@ class _ModalFilterState extends State<ModalFilter> {
                   onChanged: (checked) {
                     setModalState(() {
                       showMonthChoice = checked!;
+                      if (!showMonthChoice) {
+                        selectedMonths.clear();
+                      }
                     });
                   },
                 ),
@@ -191,8 +244,17 @@ class _ModalFilterState extends State<ModalFilter> {
                         filteredDocs =
                             sortTransactions(filteredDocs, sortCriteria!);
                       }
+                      if (filteredDocs.isEmpty) {
+                        showAmountSlider = false;
+                        showCategoriesChoice = false;
+                        showMonthChoice = false;
+                        currentRangeValues = null;
+                        selectedCategories.clear();
+                        selectedMonths.clear();
+                        sortCriteria = 'dateM';
+                      }
                       widget.onFilterApplied(filteredDocs);
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pop(getUserSelections());
                     },
                     title: "Zapisz")
               ],

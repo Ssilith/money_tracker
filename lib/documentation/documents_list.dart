@@ -28,6 +28,10 @@ class _DocumentListState extends State<DocumentList> {
   List<dynamic> filteredDocuments = [];
   List<dynamic>? allDocuments;
   late bool firstSnapshot;
+  String? currentSortCriteria = 'dateM';
+  Set<String> currentSelectedCategories = {};
+  Set<String> currentSelectedMonths = {};
+  RangeValues? currentRangeValues;
 
   @override
   void initState() {
@@ -54,21 +58,51 @@ class _DocumentListState extends State<DocumentList> {
             children: [
               Expanded(child: mainSwitch()),
               IconButton(
-                  icon: const Icon(Icons.more_vert),
-                  onPressed: () {
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return ModalFilter(
-                            originalDocs: allDocuments!,
-                            onFilterApplied: (filteredDocs) {
-                              setState(() {
-                                filteredDocuments = filteredDocs;
-                              });
-                            },
-                          );
-                        });
-                  }),
+                icon: const Icon(Icons.more_vert),
+                onPressed: () async {
+                  final selections = await showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return ModalFilter(
+                          originalDocs: allDocuments!,
+                          onFilterApplied: (filteredDocs) {
+                            setState(() {
+                              filteredDocuments = filteredDocs;
+                            });
+                          },
+                          initialSortCriteria: currentSortCriteria,
+                          initialSelectedCategories: currentSelectedCategories,
+                          initialSelectedMonths: currentSelectedMonths,
+                          initialRangeValues: currentRangeValues,
+                        );
+                      });
+                  if (selections != null && filteredDocuments.isNotEmpty) {
+                    setState(() {
+                      currentSortCriteria = selections['Sorting'];
+                      currentSelectedCategories =
+                          Set<String>.from(selections['Categories'] ?? []);
+                      currentSelectedMonths =
+                          Set<String>.from(selections['Months'] ?? []);
+
+                      if (selections.containsKey('Amount Range') &&
+                          selections['Amount Range'] != null) {
+                        currentRangeValues = RangeValues(
+                            selections['Amount Range']['Min'] ?? 0,
+                            selections['Amount Range']['Max'] ?? 0);
+                      } else {
+                        currentRangeValues = null;
+                      }
+                    });
+                  } else {
+                    setState(() {
+                      currentSortCriteria = 'dateM';
+                      currentSelectedCategories.clear();
+                      currentSelectedMonths.clear();
+                      currentRangeValues = null;
+                    });
+                  }
+                },
+              ),
             ],
           ),
         ),
