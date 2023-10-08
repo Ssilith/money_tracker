@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:money_tracker/global.dart';
 
 class MonthDetails extends StatefulWidget {
-  const MonthDetails({super.key});
+  final int selectedMonth;
+  final Map monthlyData;
+  const MonthDetails(
+      {super.key, required this.selectedMonth, required this.monthlyData});
 
   @override
   State<MonthDetails> createState() => _MonthDetailsState();
@@ -12,6 +16,7 @@ class _MonthDetailsState extends State<MonthDetails> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    print(widget.monthlyData);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -21,26 +26,33 @@ class _MonthDetailsState extends State<MonthDetails> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Icon(MdiIcons.arrowLeftCircle,
-                      size: 50, color: Theme.of(context).colorScheme.secondary),
-                ),
-              ],
-            ),
-          ),
-          Text("Styczeń 2023",
-              style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 26,
-                  color: Theme.of(context).colorScheme.secondary)),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                children: [
+                  InkWell(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Icon(MdiIcons.arrowLeftCircle,
+                        size: 50,
+                        color: Theme.of(context).colorScheme.secondary),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        monthNumberToNameMap[widget.selectedMonth]!,
+                        style: TextStyle(
+                            fontSize: 26,
+                            color: Theme.of(context).colorScheme.secondary),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 50),
+                ],
+              )),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: size.width * 0.04),
-            child: MonthDetailsSummary(width: size.width * 0.92),
+            padding: EdgeInsets.symmetric(
+                horizontal: size.width * 0.04, vertical: 10),
+            child: MonthDetailsSummary(
+                width: size.width * 0.92, monthlyData: widget.monthlyData),
           )
         ],
       ),
@@ -50,7 +62,9 @@ class _MonthDetailsState extends State<MonthDetails> {
 
 class MonthDetailsSummary extends StatefulWidget {
   final double width;
-  const MonthDetailsSummary({super.key, required this.width});
+  final Map monthlyData;
+  const MonthDetailsSummary(
+      {super.key, required this.width, required this.monthlyData});
 
   @override
   State<MonthDetailsSummary> createState() => _MonthDetailsSummaryState();
@@ -62,46 +76,46 @@ class _MonthDetailsSummaryState extends State<MonthDetailsSummary> {
     return Column(
       children: [
         MonthDetailsValueTitle(
-            name: "Przychody", value: "123 650 zł", width: widget.width),
-        MonthDetailsValueContainer(
-          width: widget.width,
-          name: "ze sprzedaży",
-          value: "60 782 zł",
-          growth: -3,
-        ),
-        MonthDetailsValueContainer(
-          width: widget.width,
-          name: "finansowe",
-          value: "13 874 zł",
-          growth: 19,
-        ),
-        MonthDetailsValueContainer(
-          width: widget.width,
-          name: "inne",
-          value: "20 098 zł",
-          growth: 70,
-        ),
+            name: "Przychody",
+            value:
+                currencyFormat("PLN").format(widget.monthlyData['totalIncome']),
+            width: widget.width * 0.96),
+        ...widget.monthlyData['incomes']
+            .map((finance) => MonthDetailsValueContainer(
+                  width: widget.width,
+                  name: finance['categoryName'],
+                  value: currencyFormat("PLN").format(finance['amount']),
+                )),
         const SizedBox(height: 14),
         MonthDetailsValueTitle(
-            name: "Koszty", value: "98 067 zł", width: widget.width),
-        MonthDetailsValueContainer(
-          width: widget.width,
-          name: "ze sprzedaży",
-          value: "60 782 zł",
-          growth: -3,
+            name: "Koszty",
+            value:
+                currencyFormat("PLN").format(widget.monthlyData['totalCost']),
+            width: widget.width * 0.96),
+        ...widget.monthlyData['costs']
+            .map((finance) => MonthDetailsValueContainer(
+                  width: widget.width,
+                  name: finance['categoryName'],
+                  value: currencyFormat("PLN").format(finance['amount']),
+                )),
+        const SizedBox(height: 7),
+        Divider(
+          height: 10,
+          color: Theme.of(context).colorScheme.secondary,
+          thickness: 1,
         ),
-        MonthDetailsValueContainer(
-          width: widget.width,
-          name: "finansowe",
-          value: "13 874 zł",
-          growth: 19,
-        ),
-        MonthDetailsValueContainer(
-          width: widget.width,
-          name: "inne",
-          value: "20 098 zł",
-          growth: 70,
-        ),
+        const SizedBox(height: 7),
+        MonthDetailsValueTitle(
+            name: (widget.monthlyData['totalIncome'] -
+                        widget.monthlyData['totalCost']) >=
+                    0
+                ? "Zysk"
+                : "Strata",
+            value: currencyFormat("PLN").format(
+                (widget.monthlyData['totalIncome'] -
+                        widget.monthlyData['totalCost'])
+                    .abs()),
+            width: widget.width * 0.96),
       ],
     );
   }
@@ -122,17 +136,19 @@ class MonthDetailsValueTitle extends StatelessWidget {
     return Row(
       children: [
         SizedBox(
-            width: width * 0.56,
+            width: width * 0.71,
             child: Text(name,
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
-                    fontWeight: FontWeight.w500))),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 17))),
         SizedBox(
-            width: width * 0.44,
+            width: width * 0.29,
             child: Text(value,
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
-                    fontWeight: FontWeight.w500))),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 17))),
       ],
     );
   }
@@ -141,14 +157,12 @@ class MonthDetailsValueTitle extends StatelessWidget {
 class MonthDetailsValueContainer extends StatelessWidget {
   final String name;
   final String value;
-  final int growth;
   final double width;
   const MonthDetailsValueContainer(
       {super.key,
       required this.width,
       required this.name,
-      required this.value,
-      required this.growth});
+      required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -156,27 +170,9 @@ class MonthDetailsValueContainer extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 5, horizontal: width * 0.01),
-        // decoration: withShadow(),
         child: Row(children: [
-          SizedBox(width: width * 0.56, child: Text(name)),
-          SizedBox(width: width * 0.28, child: Text(value)),
-          SizedBox(
-              width: width * 0.14,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Icon(
-                      growth > 0
-                          ? MdiIcons.arrowUpCircle
-                          : MdiIcons.arrowDownCircle,
-                      size: 15,
-                      color: growth > 0 ? Colors.green : Colors.red),
-                  Text("${growth.toString()}%",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: growth > 0 ? Colors.green : Colors.red)),
-                ],
-              )),
+          SizedBox(width: width * 0.7, child: Text(name)),
+          SizedBox(width: width * 0.25, child: Text(value)),
         ]),
       ),
     );

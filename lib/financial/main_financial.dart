@@ -37,14 +37,16 @@ class _MainFinancialState extends State<MainFinancial> {
               return const Center(child: Text('Nie znaleziono transakcji.'));
             } else {
               Map yearlysummary = snapshot.data!;
-              print(yearlysummary);
               List<QuarterValues> refactoredData = refactorData(snapshot.data!);
               return Column(
                 children: [
                   YearValueBox(summary: yearlysummary['yearlySummary']),
                   for (var i in refactoredData)
                     if (i.revenue != 0.0 || i.cost != 0.0 || i.profit != 0.0)
-                      QuarterBox(quarterData: i)
+                      QuarterBox(
+                        quarterData: i,
+                        wholeData: yearlysummary['monthlyData'],
+                      )
                 ],
               );
             }
@@ -75,12 +77,12 @@ class YearValueBox extends StatelessWidget {
               children: [
                 const Text("Przychody",
                     style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                        TextStyle(fontSize: 17, fontWeight: FontWeight.w500)),
                 Text(
                   currencyFormat("PLN").format(summary['totalIncome']),
                   style: const TextStyle(
                       height: 1,
-                      fontSize: 19,
+                      fontSize: 21,
                       fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 38, 174, 108)),
                 ),
@@ -102,12 +104,12 @@ class YearValueBox extends StatelessWidget {
               children: [
                 const Text("Koszty",
                     style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                        TextStyle(fontSize: 17, fontWeight: FontWeight.w500)),
                 Text(
                   currencyFormat("PLN").format(summary['totalCost']),
                   style: const TextStyle(
                       height: 1,
-                      fontSize: 19,
+                      fontSize: 21,
                       fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 241, 81, 70)),
                 ),
@@ -132,13 +134,13 @@ class YearValueBox extends StatelessWidget {
                         ? "Zysk"
                         : "Strata",
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w500)),
+                        fontSize: 17, fontWeight: FontWeight.w500)),
                 Text(
                   currencyFormat("PLN").format(
                       (summary['totalIncome'] - summary['totalCost']).abs()),
                   style: const TextStyle(
                       height: 1,
-                      fontSize: 19,
+                      fontSize: 21,
                       fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 1, 60, 110)),
                 ),
@@ -153,59 +155,72 @@ class YearValueBox extends StatelessWidget {
 
 class QuarterBox extends StatelessWidget {
   final QuarterValues quarterData;
-  const QuarterBox({super.key, required this.quarterData});
+  final List wholeData;
+  const QuarterBox(
+      {super.key, required this.quarterData, required this.wholeData});
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: size.width * 0.03, vertical: 6),
+      padding:
+          EdgeInsets.symmetric(horizontal: size.width * 0.05, vertical: 10),
       child: Container(
         padding:
-            EdgeInsets.symmetric(horizontal: size.width * 0.02, vertical: 10),
+            EdgeInsets.symmetric(horizontal: size.width * 0.04, vertical: 10),
         decoration: BoxDecoration(
-          color: const Color.fromARGB(249, 243, 246, 254),
+          border: Border.all(
+              color: Theme.of(context).colorScheme.secondary, width: 1),
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            quarterData.name,
-            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            dividerColor: Colors.transparent,
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8, top: 2),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                QuarterValueBox(
-                    value: quarterData.revenue,
-                    color: const Color.fromARGB(255, 38, 174, 108),
-                    text: "Przychody",
-                    alignment: CrossAxisAlignment.start),
-                QuarterValueBox(
-                    value: quarterData.cost,
-                    color: const Color.fromARGB(255, 241, 81, 70),
-                    text: "Koszty",
-                    alignment: CrossAxisAlignment.center),
-                QuarterValueBox(
-                    value: quarterData.profit,
-                    color: const Color.fromARGB(255, 1, 60, 110),
-                    text: "Zysk",
-                    alignment: CrossAxisAlignment.end),
-              ],
+          child: ExpansionTile(
+            iconColor: Colors.black,
+            title: Text(
+              quarterData.name,
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 24),
             ),
-          ),
-          Row(
             children: [
-              for (var i in quarterData.months)
-                if (i.revenue != 0.0 || i.cost != 0.0 || i.profit != 0.0)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                    child: MonthValueBox(monthData: i),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8, top: 2),
+                  child: Column(
+                    children: [
+                      QuarterValueBox(
+                          value: quarterData.revenue,
+                          color: const Color.fromARGB(255, 38, 174, 108),
+                          text: "Przychody",
+                          alignment: CrossAxisAlignment.start),
+                      QuarterValueBox(
+                          value: quarterData.cost,
+                          color: const Color.fromARGB(255, 241, 81, 70),
+                          text: "Koszty",
+                          alignment: CrossAxisAlignment.center),
+                      QuarterValueBox(
+                          value: quarterData.profit.abs(),
+                          color: const Color.fromARGB(255, 1, 60, 110),
+                          text: quarterData.profit >= 0 ? "Zysk" : "Strata",
+                          alignment: CrossAxisAlignment.end),
+                    ],
                   ),
+                ),
+                Column(
+                  children: [
+                    for (var i in quarterData.months)
+                      MonthValueBox(
+                        monthData: i,
+                        wholeData: wholeData,
+                      ),
+                  ],
+                )
+              ]),
             ],
-          )
-        ]),
+          ),
+        ),
       ),
     );
   }
@@ -227,19 +242,23 @@ class QuarterValueBox extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return SizedBox(
-      width: size.width * 0.3,
-      child: Column(
-        crossAxisAlignment: alignment,
-        children: [
-          Text(currencyFormat("PLN").format(value),
-              style: TextStyle(
-                  height: 0.8,
-                  color: color,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18)),
-          Text(text,
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w300))
-        ],
+      width: size.width * 0.9,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(text,
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
+            Text(currencyFormat("PLN").format(value),
+                style: TextStyle(
+                    height: 0.8,
+                    color: color,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18))
+          ],
+        ),
       ),
     );
   }
@@ -247,45 +266,94 @@ class QuarterValueBox extends StatelessWidget {
 
 class MonthValueBox extends StatelessWidget {
   final MonthValues monthData;
-  const MonthValueBox({super.key, required this.monthData});
+  final List wholeData;
+  const MonthValueBox(
+      {super.key, required this.monthData, required this.wholeData});
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return OpenContainer(
-      closedBuilder: (context, _) => Container(
-        width: size.width * 0.29,
-        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 6),
-        child: Column(
-          children: [
-            Text(monthData.name,
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
-            const Divider(
-              height: 3,
-              color: Colors.black26,
-              thickness: 0.5,
-            ),
-            Text(currencyFormat("PLN").format(monthData.revenue),
-                style: const TextStyle(
-                    color: Color.fromARGB(255, 38, 174, 108),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16)),
-            Text(currencyFormat("PLN").format(monthData.cost),
-                style: const TextStyle(
-                    color: Color.fromARGB(255, 241, 81, 70),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16)),
-            Divider(height: 3, color: Theme.of(context).colorScheme.secondary),
-            Text(currencyFormat("PLN").format(monthData.profit),
-                style: const TextStyle(
-                    color: Color.fromARGB(255, 1, 60, 110),
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16)),
-          ],
+      closedBuilder: (context, _) => Padding(
+        padding: EdgeInsets.symmetric(horizontal: size.width * 0.005),
+        child: Container(
+          width: size.width * 0.9,
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+          child: Column(
+            children: [
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Text(monthData.name,
+                    style: const TextStyle(
+                        fontSize: 21, fontWeight: FontWeight.w500)),
+                const Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Icon(
+                    Icons.info,
+                    color: Colors.black,
+                    size: 20.0,
+                  ),
+                )
+              ]),
+              const Divider(
+                height: 10,
+                color: Colors.black26,
+                thickness: 0.5,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("Przychody",
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w300)),
+                      Text(currencyFormat("PLN").format(monthData.revenue),
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 38, 174, 108),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18)),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("Koszty",
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w300)),
+                      Text(currencyFormat("PLN").format(monthData.cost),
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 241, 81, 70),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18)),
+                    ],
+                  ),
+                  const Divider(height: 3, color: Colors.black),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(monthData.profit >= 0 ? "Zysk" : "Strata",
+                          style: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w500)),
+                      Text(currencyFormat("PLN").format(monthData.profit.abs()),
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 1, 60, 110),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18)),
+                    ],
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
-      openBuilder: (context, _) => const MonthDetails(),
+      openBuilder: (context, _) => MonthDetails(
+        selectedMonth: monthData.number,
+        monthlyData: wholeData.firstWhere(
+            (data) => data['month'] == monthData.number,
+            orElse: () => null),
+      ),
       transitionType: ContainerTransitionType.fadeThrough,
       transitionDuration: const Duration(milliseconds: 1200),
     );
@@ -293,8 +361,9 @@ class MonthValueBox extends StatelessWidget {
 }
 
 class MonthValues {
-  MonthValues(this.name, this.revenue, this.cost, this.profit);
+  MonthValues(this.name, this.revenue, this.cost, this.profit, this.number);
   final String name;
+  final int number;
   final double revenue;
   final double cost;
   final double profit;
@@ -346,15 +415,18 @@ List<QuarterValues> refactorData(Map<String, dynamic> yearlySummary) {
   };
 
   for (MonthlyData mData in monthlyDataObjects) {
-    String quarter = monthToQuarterMap[mData.month]!;
-    quarterMonthsMap[quarter]!.add(
-      MonthValues(
-        monthNumberToNameMap[mData.month]!,
-        mData.totalIncome,
-        mData.totalCost,
-        mData.totalIncome - mData.totalCost,
-      ),
-    );
+    if (mData.totalIncome != 0.0 || mData.totalCost != 0.0) {
+      String quarter = monthToQuarterMap[mData.month]!;
+      quarterMonthsMap[quarter]!.add(
+        MonthValues(
+          monthNumberToNameMap[mData.month]!,
+          mData.totalIncome,
+          mData.totalCost,
+          mData.totalIncome - mData.totalCost,
+          mData.month,
+        ),
+      );
+    }
   }
 
   List<QuarterValues> quarters = [];
@@ -372,7 +444,7 @@ List<QuarterValues> refactorData(Map<String, dynamic> yearlySummary) {
   return quarters;
 }
 
-final Map<int, String> monthToQuarterMap = {
+Map<int, String> monthToQuarterMap = {
   1: "Kwartał 1",
   2: "Kwartał 1",
   3: "Kwartał 1",
