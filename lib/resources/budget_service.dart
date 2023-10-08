@@ -21,8 +21,8 @@ class BudgetService {
     return json.decode(res.body);
   }
 
-  updateBudget(Budget budget) async {
-    Map<String, dynamic> body = {'budget': budget};
+  updateBudget(Budget budget, String userId) async {
+    Map<String, dynamic> body = {'budget': budget, 'userId': userId};
     final http.Response res = await client.post(
       Uri.parse('$_urlPrefix/budget/updateBudget'),
       headers: <String, String>{

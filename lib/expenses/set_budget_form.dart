@@ -119,23 +119,6 @@ class _SetBudgetFormState extends State<SetBudgetForm> {
                       )
                     ],
                   ),
-                  // const SizedBox(height: 10),
-                  // CheckboxListTile(
-                  //   contentPadding:
-                  //       const EdgeInsetsDirectional.symmetric(horizontal: 5),
-                  //   activeColor: Theme.of(context).colorScheme.secondary,
-                  //   value: income,
-                  //   onChanged: (bool? value) {
-                  //     setState(() {
-                  //       income = !income;
-                  //     });
-                  //   },
-                  //   title: const Text(
-                  //       "Czy chcesz, aby przychody liczyły się do budżetu?",
-                  //       textAlign: TextAlign.justify,
-                  //       style: TextStyle(
-                  //           fontStyle: FontStyle.normal, fontSize: 14)),
-                  // ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20.0),
                     child: Center(
