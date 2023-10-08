@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:money_tracker/authentication/login_screen.dart';
 import 'package:money_tracker/documentation/documents_list.dart';
+import 'package:money_tracker/expenses/new_expense_form.dart';
 import 'package:money_tracker/financial/main_financial.dart';
 import 'package:money_tracker/main_screens/exchange_rates.dart';
 import 'package:money_tracker/main_screens/summary_screen.dart';
@@ -114,6 +115,20 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       drawer: SideDrawer(
         onTap: (x) => changeScreen(x),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const NewExpenseForm(),
+            ),
+          );
+        },
+        foregroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        shape: const CircleBorder(),
+        // elevation: 0,
+        child: const Icon(Icons.add),
       ),
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {

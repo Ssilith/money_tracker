@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:money_tracker/authentication/login_screen.dart';
 import 'package:money_tracker/expenses/new_category_form.dart';
-import 'package:money_tracker/expenses/new_expense_form.dart';
 import 'package:money_tracker/expenses/set_budget_form.dart';
 import 'package:money_tracker/main.dart';
 import 'package:money_tracker/models/user.dart';
@@ -62,17 +61,6 @@ class SideDrawer extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            DrawerTile(
-                onTap: () {
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context) => const NewExpenseForm(),
-                    ),
-                  );
-                },
-                text: "Dodaj transakcję",
-                icon: Icons.add,
-                size: 26),
             DrawerTile(
                 onTap: () {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
