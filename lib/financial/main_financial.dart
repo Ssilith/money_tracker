@@ -1,8 +1,10 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:money_tracker/financial/month_details.dart';
 import 'package:money_tracker/global.dart';
+import 'package:money_tracker/models/user.dart';
+import 'package:money_tracker/resources/transaction_service.dart';
+import 'package:money_tracker/widgets/indicator.dart';
 
 class MainFinancial extends StatefulWidget {
   const MainFinancial({super.key});
@@ -12,187 +14,138 @@ class MainFinancial extends StatefulWidget {
 }
 
 class _MainFinancialState extends State<MainFinancial> {
-  final List<QuarterValues> yearExample = [
-    QuarterValues([
-      MonthValues("Styczeń", 201951, 98359, 103591),
-      MonthValues("Luty", 152465, 72596, 79869),
-      MonthValues("Marzec", 153535, 67875, 85661),
-    ], "Kwartał 1", 507951, 238830, 269121),
-    QuarterValues([
-      MonthValues("Kwiecień", 155712, 80661, 75052),
-      MonthValues("Maj", 148857, 56805, 92052),
-    ], "Kwartał 2", 304569, 137466, 167104),
-  ];
+  Future? yearlySumm;
+
+  @override
+  void initState() {
+    yearlySumm = TransactionService().getYearlySummaryAndTransactions(user.id!);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              const Row(
+    return SingleChildScrollView(
+      child: FutureBuilder(
+          future: yearlySumm,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Indicator();
+            } else if (snapshot.hasError) {
+              return const Center(
+                  child: Text('Wystąpił błąd. Spróbuj ponownie później.'));
+            } else if (snapshot.data!.isEmpty) {
+              return const Center(child: Text('Nie znaleziono transakcji.'));
+            } else {
+              Map yearlysummary = snapshot.data!;
+              print(yearlysummary);
+              List<QuarterValues> refactoredData = refactorData(snapshot.data!);
+              return Column(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("2023",
-                          style: TextStyle(
-                              height: 1,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18)),
-                    ],
-                  ),
+                  YearValueBox(summary: yearlysummary['yearlySummary']),
+                  for (var i in refactoredData)
+                    if (i.revenue != 0.0 || i.cost != 0.0 || i.profit != 0.0)
+                      QuarterBox(quarterData: i)
                 ],
-              ),
-              const YearValueBox(),
-              for (var i in yearExample) QuarterBox(quarterData: i)
-            ],
-          ),
-        ),
-      ],
+              );
+            }
+          }),
     );
   }
 }
 
 class YearValueBox extends StatelessWidget {
-  const YearValueBox({super.key});
+  final Map summary;
+  const YearValueBox({super.key, required this.summary});
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Column(
       children: [
-        Container(
-          padding: const EdgeInsets.all(5),
-          decoration: BoxDecoration(
-              color: Colors.white70, borderRadius: BorderRadius.circular(10)),
-          width: size.width * 0.9,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "812 520,00 zł",
-                    style: TextStyle(
-                        height: 1,
-                        fontSize: 19,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green),
-                  ),
-                  Text("Przychody",
-                      style:
-                          TextStyle(fontSize: 11, fontWeight: FontWeight.w300))
-                ],
-              ),
-              Row(
-                children: [
-                  Icon(MdiIcons.arrowUpCircle, color: Colors.green),
-                  const SizedBox(
-                    width: 100,
-                    child: Text("14% więcej niż w zeszłym roku",
-                        style: TextStyle(fontSize: 11, height: 1)),
-                  ),
-                ],
-              )
-            ],
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+          child: Container(
+            height: 70,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(249, 243, 246, 254),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text("Przychody",
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                Text(
+                  currencyFormat("PLN").format(summary['totalIncome']),
+                  style: const TextStyle(
+                      height: 1,
+                      fontSize: 19,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 38, 174, 108)),
+                ),
+              ],
+            ),
           ),
         ),
-        const SizedBox(height: 5),
-        Container(
-          padding: const EdgeInsets.all(5),
-          decoration: BoxDecoration(
-              color: Colors.white70, borderRadius: BorderRadius.circular(10)),
-          width: size.width * 0.9,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "376 296,00 zł",
-                    style: TextStyle(
-                        height: 1,
-                        fontSize: 19,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red),
-                  ),
-                  Text("Koszty",
-                      style:
-                          TextStyle(fontSize: 11, fontWeight: FontWeight.w300))
-                ],
-              ),
-              Row(
-                children: [
-                  Icon(MdiIcons.arrowUpCircle, color: Colors.red),
-                  const SizedBox(
-                    width: 100,
-                    child: Text("5% więcej niż w zeszłym roku",
-                        style: TextStyle(fontSize: 11, height: 1)),
-                  ),
-                ],
-              )
-            ],
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+          child: Container(
+            height: 70,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(249, 243, 246, 254),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text("Koszty",
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                Text(
+                  currencyFormat("PLN").format(summary['totalCost']),
+                  style: const TextStyle(
+                      height: 1,
+                      fontSize: 19,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 241, 81, 70)),
+                ),
+              ],
+            ),
           ),
         ),
-        const SizedBox(height: 5),
-        Container(
-          padding: const EdgeInsets.all(5),
-          decoration: BoxDecoration(
-              color: Colors.white70, borderRadius: BorderRadius.circular(10)),
-          width: size.width * 0.9,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "436 224,00 zł",
-                    style: TextStyle(
-                        height: 1,
-                        fontSize: 19,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.secondary),
-                  ),
-                  const Text("Zysk",
-                      style:
-                          TextStyle(fontSize: 11, fontWeight: FontWeight.w300))
-                ],
-              ),
-            ],
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
+          child: Container(
+            height: 70,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(249, 243, 246, 254),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                    (summary['totalIncome'] - summary['totalCost']) >= 0
+                        ? "Zysk"
+                        : "Strata",
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w500)),
+                Text(
+                  currencyFormat("PLN").format(
+                      (summary['totalIncome'] - summary['totalCost']).abs()),
+                  style: const TextStyle(
+                      height: 1,
+                      fontSize: 19,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 1, 60, 110)),
+                ),
+              ],
+            ),
           ),
         ),
-      ],
-    );
-  }
-}
-
-class TaxBox extends StatelessWidget {
-  final String value;
-  final String name;
-  const TaxBox({super.key, required this.value, required this.name});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
-        const SizedBox(width: 5),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
-          decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.secondary,
-              borderRadius: BorderRadius.circular(20)),
-          child: Text(name,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  fontSize: 12)),
-        )
       ],
     );
   }
@@ -210,12 +163,14 @@ class QuarterBox extends StatelessWidget {
       child: Container(
         padding:
             EdgeInsets.symmetric(horizontal: size.width * 0.02, vertical: 10),
-        // decoration: withShadow(),
-        // width: size.width * 0.9,
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(249, 243, 246, 254),
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(
             quarterData.name,
-            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
+            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 8, top: 2),
@@ -224,17 +179,17 @@ class QuarterBox extends StatelessWidget {
               children: [
                 QuarterValueBox(
                     value: quarterData.revenue,
-                    color: Colors.green,
+                    color: const Color.fromARGB(255, 38, 174, 108),
                     text: "Przychody",
                     alignment: CrossAxisAlignment.start),
                 QuarterValueBox(
                     value: quarterData.cost,
-                    color: Colors.red,
+                    color: const Color.fromARGB(255, 241, 81, 70),
                     text: "Koszty",
                     alignment: CrossAxisAlignment.center),
                 QuarterValueBox(
                     value: quarterData.profit,
-                    color: Theme.of(context).colorScheme.secondary,
+                    color: const Color.fromARGB(255, 1, 60, 110),
                     text: "Zysk",
                     alignment: CrossAxisAlignment.end),
               ],
@@ -242,7 +197,12 @@ class QuarterBox extends StatelessWidget {
           ),
           Row(
             children: [
-              for (var i in quarterData.months) MonthValueBox(monthData: i),
+              for (var i in quarterData.months)
+                if (i.revenue != 0.0 || i.cost != 0.0 || i.profit != 0.0)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    child: MonthValueBox(monthData: i),
+                  ),
             ],
           )
         ]),
@@ -276,9 +236,9 @@ class QuarterValueBox extends StatelessWidget {
                   height: 0.8,
                   color: color,
                   fontWeight: FontWeight.w500,
-                  fontSize: 16)),
+                  fontSize: 18)),
           Text(text,
-              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w300))
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w300))
         ],
       ),
     );
@@ -293,41 +253,36 @@ class MonthValueBox extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return OpenContainer(
-      closedBuilder: (context, _) => Padding(
-        padding: EdgeInsets.symmetric(horizontal: size.width * 0.005),
-        child: Container(
-          // decoration: withShadow(),
-          width: size.width * 0.29,
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 6),
-          child: Column(
-            children: [
-              Text(monthData.name,
-                  style: const TextStyle(
-                      fontSize: 11, fontWeight: FontWeight.w500)),
-              const Divider(
-                height: 3,
-                color: Colors.black26,
-                thickness: 0.5,
-              ),
-              Text(currencyFormat("PLN").format(monthData.revenue),
-                  style: const TextStyle(
-                      color: Colors.green,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12)),
-              Text(currencyFormat("PLN").format(monthData.cost),
-                  style: const TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12)),
-              Divider(
-                  height: 3, color: Theme.of(context).colorScheme.secondary),
-              Text(currencyFormat("PLN").format(monthData.profit),
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12)),
-            ],
-          ),
+      closedBuilder: (context, _) => Container(
+        width: size.width * 0.29,
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 6),
+        child: Column(
+          children: [
+            Text(monthData.name,
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+            const Divider(
+              height: 3,
+              color: Colors.black26,
+              thickness: 0.5,
+            ),
+            Text(currencyFormat("PLN").format(monthData.revenue),
+                style: const TextStyle(
+                    color: Color.fromARGB(255, 38, 174, 108),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16)),
+            Text(currencyFormat("PLN").format(monthData.cost),
+                style: const TextStyle(
+                    color: Color.fromARGB(255, 241, 81, 70),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16)),
+            Divider(height: 3, color: Theme.of(context).colorScheme.secondary),
+            Text(currencyFormat("PLN").format(monthData.profit),
+                style: const TextStyle(
+                    color: Color.fromARGB(255, 1, 60, 110),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16)),
+          ],
         ),
       ),
       openBuilder: (context, _) => const MonthDetails(),
@@ -353,3 +308,81 @@ class QuarterValues {
   final double cost;
   final double profit;
 }
+
+class MonthlyData {
+  final int month;
+  final List<Map<String, dynamic>> costs;
+  final double totalCost;
+  final List<Map<String, dynamic>> incomes;
+  final double totalIncome;
+
+  MonthlyData({
+    required this.month,
+    required this.costs,
+    required this.totalCost,
+    required this.incomes,
+    required this.totalIncome,
+  });
+}
+
+List<QuarterValues> refactorData(Map<String, dynamic> yearlySummary) {
+  List<Map<String, dynamic>> monthlyDataList =
+      List<Map<String, dynamic>>.from(yearlySummary['monthlyData']);
+
+  List<MonthlyData> monthlyDataObjects = monthlyDataList
+      .map((data) => MonthlyData(
+          month: data['month'],
+          costs: List<Map<String, dynamic>>.from(data['costs']),
+          totalCost: data['totalCost'] + 0.0,
+          incomes: List<Map<String, dynamic>>.from(data['incomes']),
+          totalIncome: data['totalIncome'] + 0.0))
+      .toList();
+
+  Map<String, List<MonthValues>> quarterMonthsMap = {
+    "Kwartał 1": [],
+    "Kwartał 2": [],
+    "Kwartał 3": [],
+    "Kwartał 4": []
+  };
+
+  for (MonthlyData mData in monthlyDataObjects) {
+    String quarter = monthToQuarterMap[mData.month]!;
+    quarterMonthsMap[quarter]!.add(
+      MonthValues(
+        monthNumberToNameMap[mData.month]!,
+        mData.totalIncome,
+        mData.totalCost,
+        mData.totalIncome - mData.totalCost,
+      ),
+    );
+  }
+
+  List<QuarterValues> quarters = [];
+  quarterMonthsMap.forEach((quarter, months) {
+    if (months.isNotEmpty) {
+      double quarterRevenue = months.fold(0.0, (prev, m) => prev + m.revenue);
+      double quarterCost = months.fold(0.0, (prev, m) => prev + m.cost);
+      double quarterProfit = months.fold(0.0, (prev, m) => prev + m.profit);
+
+      quarters.add(QuarterValues(
+          months, quarter, quarterRevenue, quarterCost, quarterProfit));
+    }
+  });
+
+  return quarters;
+}
+
+final Map<int, String> monthToQuarterMap = {
+  1: "Kwartał 1",
+  2: "Kwartał 1",
+  3: "Kwartał 1",
+  4: "Kwartał 2",
+  5: "Kwartał 2",
+  6: "Kwartał 2",
+  7: "Kwartał 3",
+  8: "Kwartał 3",
+  9: "Kwartał 3",
+  10: "Kwartał 4",
+  11: "Kwartał 4",
+  12: "Kwartał 4"
+};

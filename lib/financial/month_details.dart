@@ -30,8 +30,6 @@ class _MonthDetailsState extends State<MonthDetails> {
                   child: Icon(MdiIcons.arrowLeftCircle,
                       size: 50, color: Theme.of(context).colorScheme.secondary),
                 ),
-                Icon(Icons.more_vert,
-                    size: 30, color: Theme.of(context).colorScheme.secondary)
               ],
             ),
           ),

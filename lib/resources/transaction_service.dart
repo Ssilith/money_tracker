@@ -141,4 +141,20 @@ class TransactionService {
     if (!decodedBody['success']) return [];
     return decodedBody['summary'];
   }
+
+  getYearlySummaryAndTransactions(String userId) async {
+    Map<String, String> headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Authorization': UserSimplePreferences.accessToken
+    };
+
+    final http.Response res = await client.get(
+        Uri.parse(
+            '$_urlPrefix/transaction/$userId/getYearlySummaryAndTransactions'),
+        headers: headers);
+    Map<String, dynamic> decodedBody = json.decode(res.body);
+
+    if (!decodedBody['success']) return [];
+    return decodedBody;
+  }
 }
