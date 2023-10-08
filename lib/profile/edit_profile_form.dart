@@ -143,7 +143,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
                       iconBuilder: (value, size) {
                         String text = value
                             ? "Chcę zaktualizować aktualny budżet"
-                            : "Nie chcę edytować aktualnego budżetu";
+                            : "Nie chcę edytować budżetu";
                         Color color =
                             value == editBudget ? Colors.white : Colors.black;
                         return Container(

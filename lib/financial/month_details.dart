@@ -78,7 +78,7 @@ class _MonthDetailsSummaryState extends State<MonthDetailsSummary> {
             name: "Przychody",
             value:
                 currencyFormat("PLN").format(widget.monthlyData['totalIncome']),
-            width: widget.width * 0.96),
+            width: widget.width * 0.98),
         ...widget.monthlyData['incomes']
             .map((finance) => MonthDetailsValueContainer(
                   width: widget.width,
@@ -90,7 +90,7 @@ class _MonthDetailsSummaryState extends State<MonthDetailsSummary> {
             name: "Koszty",
             value:
                 currencyFormat("PLN").format(widget.monthlyData['totalCost']),
-            width: widget.width * 0.96),
+            width: widget.width * 0.98),
         ...widget.monthlyData['costs']
             .map((finance) => MonthDetailsValueContainer(
                   width: widget.width,
@@ -114,7 +114,7 @@ class _MonthDetailsSummaryState extends State<MonthDetailsSummary> {
                 (widget.monthlyData['totalIncome'] -
                         widget.monthlyData['totalCost'])
                     .abs()),
-            width: widget.width * 0.96),
+            width: widget.width * 0.98),
       ],
     );
   }
@@ -135,14 +135,14 @@ class MonthDetailsValueTitle extends StatelessWidget {
     return Row(
       children: [
         SizedBox(
-            width: width * 0.71,
+            width: width * 0.65,
             child: Text(name,
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
                     fontWeight: FontWeight.w500,
                     fontSize: 17))),
         SizedBox(
-            width: width * 0.29,
+            width: width * 0.35,
             child: Text(value,
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
