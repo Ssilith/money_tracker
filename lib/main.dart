@@ -171,7 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
             selectedColor: Theme.of(context).colorScheme.secondary,
           ),
           SalomonBottomBarItem(
-            icon: const Icon(FontAwesomeIcons.arrowTrendUp, size: 20),
+            icon: const Icon(FontAwesomeIcons.arrowTrendUp, size: 18),
             title: const Text("Kursy walut"),
             selectedColor: Theme.of(context).colorScheme.secondary,
           ),
