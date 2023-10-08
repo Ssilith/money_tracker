@@ -28,13 +28,6 @@ class _MainFinancialState extends State<MainFinancial> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const Opacity(
-          opacity: 0.6,
-          child: Image(
-            image: AssetImage("assets/doc_1.png"),
-            width: 300,
-          ),
-        ),
         SingleChildScrollView(
           child: Column(
             children: [
