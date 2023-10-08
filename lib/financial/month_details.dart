@@ -16,7 +16,6 @@ class _MonthDetailsState extends State<MonthDetails> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    print(widget.monthlyData);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
