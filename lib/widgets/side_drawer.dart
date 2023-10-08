@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -105,6 +107,27 @@ class SideDrawer extends StatelessWidget {
                 },
                 text: "Edytuj konto",
                 icon: Icons.manage_accounts,
+                size: 26),
+            DrawerTile(
+                onTap: () => showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return PopupWindow(
+                        title: "Usuń konto",
+                        message: "Czy na pewno chcesz usunąć konto?",
+                        onPressed: () async {
+                          await UserService().deleteAccount(context, user.id!);
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const LoginPage(),
+                            ),
+                          );
+                        },
+                      );
+                    }),
+                text: "Usuń konto",
+                icon: Icons.no_accounts,
                 size: 26),
             DrawerTile(
                 onTap: () => Navigator.of(context).pushReplacement(

@@ -64,7 +64,7 @@ class _DocumentListState extends State<DocumentList> {
                       context: context,
                       builder: (BuildContext context) {
                         return ModalFilter(
-                          originalDocs: allDocuments!,
+                          originalDocs: allDocuments ?? [],
                           onFilterApplied: (filteredDocs) {
                             setState(() {
                               filteredDocuments = filteredDocs;

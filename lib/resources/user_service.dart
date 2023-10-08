@@ -77,6 +77,25 @@ class UserService {
     return decodedBody['success'];
   }
 
+  deleteAccount(BuildContext context, String userId) async {
+    final http.Response res = await client.delete(
+        Uri.parse('$_urlPrefix/$userId/deleteAccount'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept-Language': Localizations.localeOf(context).toString(),
+          'authorization': UserSimplePreferences.accessToken,
+          'refreshToken': UserSimplePreferences.refreshToken
+        });
+
+    Map<String, dynamic> decodedBody = jsonDecode(res.body);
+    if (decodedBody['success']) {
+      UserSimplePreferences.removeAccessToken();
+      UserSimplePreferences.removeRefreshToken();
+      user.clear();
+    }
+    return decodedBody['success'];
+  }
+
   refreshToken() async {
     final http.Response res = await client
         .post(Uri.parse('$_urlPrefix/refreshToken'), headers: <String, String>{
