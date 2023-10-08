@@ -397,7 +397,11 @@ updateBudget(
     if (budgetRes['success']) {
       if (!context.mounted) return;
       updateUser(context, name, surname, phone, mail);
-      // showInfo('Twoje dane zostały zmienione.', Colors.green);
+    } else if (!budgetRes['success'] &&
+        budgetRes['message'] == 'budgetOverlaps') {
+      showInfo(
+          'Termin nowego budżetu pokrywa się z terminem ustalonego wcześniej budżetu.',
+          Colors.blue);
     } else {
       if (!context.mounted) return;
       showInfo('Podczas zmiany danych budżetu wystąpił błąd.', Colors.red);
