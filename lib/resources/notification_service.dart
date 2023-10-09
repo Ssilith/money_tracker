@@ -10,7 +10,8 @@ class NotificationService {
 
   NotificationService._internal() {
     const initializationSettings = InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/notification_icon'),
+      // android: AndroidInitializationSettings('@mipmap/notification_icon'),
+      android: AndroidInitializationSettings('@mipmap/logo'),
     );
 
     flutterLocalNotificationsPlugin.initialize(initializationSettings);

@@ -277,7 +277,8 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
     if (pickedDate != null) {
       String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
       setState(() {
-        _date.text = formattedDate;
+        // _date.text = formattedDate;
+        controller.text = formattedDate;
       });
     }
   }
