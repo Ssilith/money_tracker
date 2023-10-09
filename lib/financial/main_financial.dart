@@ -82,7 +82,7 @@ class YearValueBox extends StatelessWidget {
                   currencyFormat("PLN").format(summary['totalIncome']),
                   style: const TextStyle(
                       height: 1,
-                      fontSize: 21,
+                      fontSize: 25,
                       fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 38, 174, 108)),
                 ),
@@ -109,7 +109,7 @@ class YearValueBox extends StatelessWidget {
                   currencyFormat("PLN").format(summary['totalCost']),
                   style: const TextStyle(
                       height: 1,
-                      fontSize: 21,
+                      fontSize: 25,
                       fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 241, 81, 70)),
                 ),
@@ -140,7 +140,7 @@ class YearValueBox extends StatelessWidget {
                       (summary['totalIncome'] - summary['totalCost']).abs()),
                   style: const TextStyle(
                       height: 1,
-                      fontSize: 21,
+                      fontSize: 25,
                       fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 1, 60, 110)),
                 ),

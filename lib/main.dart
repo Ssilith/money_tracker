@@ -15,6 +15,7 @@ import 'package:money_tracker/resources/user_service.dart';
 import 'package:money_tracker/widgets/side_drawer.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +24,7 @@ void main() async {
   await Future.delayed(const Duration(seconds: 1));
   await initializeDateFormatting();
   FlutterNativeSplash.remove();
+  tz.initializeTimeZones();
   runApp(const MyApp());
 }
 
