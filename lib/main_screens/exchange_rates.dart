@@ -35,7 +35,7 @@ class ExchangeRates extends StatefulWidget {
 class _ExchangeRatesState extends State<ExchangeRates> {
   List<CurrencyData> currencyDataList = [];
   Future<List<CurrencyData>>? combinedCurrency;
-  // final NotificationService notificationService = NotificationService();
+  final NotificationService notificationService = NotificationService();
 
   @override
   void initState() {
@@ -71,14 +71,14 @@ class _ExchangeRatesState extends State<ExchangeRates> {
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).colorScheme.secondary)),
                     IconButton(
-                        onPressed: () => chooseCurrencyRate(context),
-                        // onPressed: () {
-                        //   AppSettings.openAppSettings();
-                        //   notificationService.showNotification(
-                        //     title: 'Instant Notification',
-                        //     body: 'This is an instant notification.',
-                        //   );
-                        // },
+                        // onPressed: () => chooseCurrencyRate(context),
+                        onPressed: () {
+                          // AppSettings.openAppSettings();
+                          notificationService.showNotification(
+                            title: 'Limit budżetu',
+                            body: 'Wykorzystano już 90% ustawionego budżetu.',
+                          );
+                        },
                         icon: const Icon(
                           Icons.more_vert,
                           color: Colors.black,
