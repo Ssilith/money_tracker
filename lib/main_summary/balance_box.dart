@@ -3,8 +3,10 @@ import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:intl/intl.dart';
 import 'package:money_tracker/global.dart';
 import 'package:money_tracker/main_summary/pie_chart.dart';
+import 'package:money_tracker/models/budget.dart';
 import 'package:money_tracker/models/user.dart';
 import 'package:money_tracker/resources/budget_service.dart';
+import 'package:money_tracker/resources/notification_service.dart';
 import 'package:money_tracker/widgets/indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
@@ -17,6 +19,7 @@ class BalanceBox extends StatefulWidget {
 
 class _BalanceBoxState extends State<BalanceBox> {
   Future? getCurrentBudget;
+  final NotificationService notificationService = NotificationService();
 
   @override
   void initState() {
@@ -37,9 +40,11 @@ class _BalanceBoxState extends State<BalanceBox> {
                 child: Text('Wystąpił błąd. Spróbuj ponownie później.'));
           } else if (snapshot.data!.isEmpty ||
               snapshot.data!['success'] == false) {
-            return const Center(child: Text('Nie znaleziono transakcji.'));
+            return const Center(
+                child: Text('Nie znaleziono budżetu lub transakcji.'));
           } else {
             var data = snapshot.data!;
+            sentNotifications(data);
             double percentage = data['spentAmount'] / data['budget']['amount'];
             return Stack(
               children: [
@@ -180,5 +185,29 @@ class _BalanceBoxState extends State<BalanceBox> {
             );
           }
         });
+  }
+
+  sentNotifications(var data) async {
+    if (data['over90'] && !data['budget']['notification']['sentBudgetValue']) {
+      notificationService.showNotification(
+        title: 'Limit budżetu',
+        body:
+            'Wykorzystano już ${data['budget']['notification']['budgetValue']}% ustawionego budżetu.',
+      );
+
+      Budget updatedBudget = Budget.fromJson(data['budget']);
+      updatedBudget.notification!['sentBudgetValue'] = true;
+      await BudgetService().updateBudget(updatedBudget, user.id!);
+    }
+    if (data['over100'] && !data['budget']['notification']['sentBudgetOver']) {
+      notificationService.showNotification(
+        title: 'Przekroczenie budżetu',
+        body:
+            'Przekroczono już ${data['budget']['notification']['budgetOver']}% ustawionego budżetu.',
+      );
+      Budget updatedBudget = Budget.fromJson(data['budget']);
+      updatedBudget.notification!['sentBudgetOver'] = true;
+      await BudgetService().updateBudget(updatedBudget, user.id!);
+    }
   }
 }

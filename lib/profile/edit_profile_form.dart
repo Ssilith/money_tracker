@@ -20,6 +20,8 @@ class EditProfileForm extends StatefulWidget {
   State<EditProfileForm> createState() => _EditProfileFormState();
 }
 
+//TODO: inf o powiadomieniach
+
 class _EditProfileFormState extends State<EditProfileForm> {
   final TextEditingController _name = TextEditingController();
   final TextEditingController _surname = TextEditingController();
@@ -126,6 +128,10 @@ class _EditProfileFormState extends State<EditProfileForm> {
                     ],
                   ),
                   const SizedBox(height: 10),
+                  const Text("Dane powiadomień",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                  const SizedBox(height: 10),
                   const Text("Dane budżetu",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
@@ -178,6 +184,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
                           } else {
                             if (!isBudgetDataInitialized) {
                               var data = snapshot.data!;
+                              print(data);
                               id = data['budget']['_id'];
                               DateTime startDate =
                                   DateTime.parse(data['budget']['startDate']);

@@ -12,6 +12,7 @@ class User {
   String? token;
   bool? permissions;
   bool? onboard;
+  bool? notifications;
   List<String> transactionId;
   List<String> budgetId;
   List<String> notificationId;
@@ -36,6 +37,7 @@ class User {
         token == null &&
         permissions == null &&
         onboard == null &&
+        notifications == null &&
         transactionId.isEmpty &&
         budgetId.isEmpty &&
         categoryId.isEmpty &&

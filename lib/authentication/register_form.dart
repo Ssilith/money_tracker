@@ -1,4 +1,5 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+import 'package:app_settings/app_settings.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +8,8 @@ import 'package:money_tracker/authentication/login_screen.dart';
 import 'package:money_tracker/create_document/privacy_policy.dart';
 import 'package:money_tracker/global.dart';
 import 'package:money_tracker/models/user.dart';
+import 'package:money_tracker/models/notification.dart';
+import 'package:money_tracker/resources/notification_service.dart';
 import 'package:money_tracker/resources/user_service.dart';
 import 'package:money_tracker/widgets/message.dart';
 import 'package:money_tracker/widgets/simple_dark_button.dart';
@@ -32,7 +35,7 @@ class _RegisterFormState extends State<RegisterForm> {
   List<TextEditingController> dayMoreNot = [TextEditingController()];
   List<TextEditingController> hourMoreNot = [TextEditingController()];
   bool isMoreThanOne = false;
-  String value = "90";
+  List<String> notificationIds = [];
 
   @override
   void initState() {
@@ -219,46 +222,28 @@ class _RegisterFormState extends State<RegisterForm> {
                   collapsed: const SizedBox(),
                   expanded: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Expanded(
-                              child: Text("O wykorzystanym limicie budżetu")),
-                          Container(
-                            width: 77,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 4.0),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                value: value,
-                                isExpanded: true,
-                                onChanged: (val) {
-                                  setState(() {
-                                    value = val ?? "90";
-                                  });
-                                },
-                                items: ["95", "90", "85", "80", "70", "50"]
-                                    .map((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(
-                                      value,
-                                    ),
-                                  );
-                                }).toList(),
-                                dropdownColor: Theme.of(context).canvasColor,
-                                iconEnabledColor:
-                                    Theme.of(context).colorScheme.secondary,
-                              ),
-                            ),
-                          ),
-                          const Text("%")
-                        ],
-                      ),
                       const Text(
-                        "Wpisz nazwę oraz dzień i godzinę, w których chcesz otrzymywać comiesięczne powiadomienie o płatnościach.",
+                        "Wpisz nazwę oraz dzień i godzinę, w których chcesz otrzymywać comiesięczne powiadomienie o płatnościach.\n",
                         textAlign: TextAlign.justify,
                         style: TextStyle(fontStyle: FontStyle.italic),
+                      ),
+                      InkWell(
+                        child: Row(
+                          children: [
+                            const Expanded(
+                              child: Text(
+                                "Sprawdź, czy aplikacja zezwala na wysyłanie powiadomień tutaj:",
+                                maxLines: 2,
+                              ),
+                            ),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: Theme.of(context).colorScheme.secondary,
+                              size: 28,
+                            )
+                          ],
+                        ),
+                        onTap: () => AppSettings.openAppSettings(),
                       ),
                       for (var i = 0; i < nameMoreNot.length; i++)
                         Padding(
@@ -311,13 +296,15 @@ class _RegisterFormState extends State<RegisterForm> {
                         ),
                       TextButton(
                           onPressed: () {
-                            TextEditingController newNotController =
-                                TextEditingController();
                             setState(() {
-                              nameMoreNot.add(newNotController);
-                              dayMoreNot.add(newNotController);
-                              hourMoreNot.add(newNotController);
+                              nameMoreNot.add(TextEditingController());
+                              dayMoreNot.add(TextEditingController());
+                              hourMoreNot.add(TextEditingController());
                             });
+                            dayMoreNot[nameMoreNot.length - 1].text =
+                                DateFormat('dd').format(DateTime.now());
+                            hourMoreNot[nameMoreNot.length - 1].text =
+                                DateFormat('HH:mm').format(DateTime.now());
                           },
                           child: Text(
                             "Dodaj kolejne powiadomienie",
@@ -354,8 +341,9 @@ class _RegisterFormState extends State<RegisterForm> {
                   child: SizedBox(
                       width: 300,
                       child: SimpleDarkButton(
-                        onPressed: () {
-                          registerUser();
+                        onPressed: () async {
+                          if (isMoreThanOne) await addNotification();
+                          await registerUser();
                         },
                         buttonColor: Theme.of(context).colorScheme.secondary,
                         title: "Wyślij formularz",
@@ -383,6 +371,11 @@ class _RegisterFormState extends State<RegisterForm> {
           newUser.telephone = _phone.text;
           newUser.permissions = privicyPolicy;
           newUser.onboard = false;
+          newUser.notifications = isMoreThanOne;
+
+          if (isMoreThanOne) {
+            newUser.notificationId.addAll(notificationIds);
+          }
 
           Map<String, dynamic> userRes = await UserService()
               .addUser(context, newUser, _password.text.trim());
@@ -406,6 +399,24 @@ class _RegisterFormState extends State<RegisterForm> {
       }
     } else {
       showInfo('Musisz zaakceptować zgody.', Colors.blue);
+    }
+  }
+
+  addNotification() async {
+    for (var i = 0; i < nameMoreNot.length; i++) {
+      if (nameMoreNot[i].text.isNotEmpty &&
+          dayMoreNot[i].text.isNotEmpty &&
+          hourMoreNot[i].text.isNotEmpty) {
+        MyNotification newNotification = MyNotification();
+        newNotification.name = nameMoreNot[i].text.trim();
+        DateTime date = combineDateAndTime(dayMoreNot[i], hourMoreNot[i]);
+        newNotification.date = date;
+        var res =
+            await NotificationService().addNewNotification(newNotification);
+        if (res['success']) {
+          notificationIds.add(res['notification']['_id']);
+        }
+      }
     }
   }
 
@@ -467,4 +478,22 @@ class _RegisterFormState extends State<RegisterForm> {
       });
     }
   }
+}
+
+DateTime combineDateAndTime(TextEditingController dateController,
+    TextEditingController timeController) {
+  DateTime date = DateFormat('dd').parseStrict(dateController.text);
+  DateTime time = DateFormat('HH:mm').parseStrict(timeController.text);
+  DateTime combinedDateTime = DateTime(
+    date.year,
+    date.month,
+    date.day,
+    time.hour,
+    time.minute,
+  );
+
+  DateTime combinedDateTimePlusOneHour =
+      combinedDateTime.add(const Duration(hours: 1));
+
+  return combinedDateTimePlusOneHour;
 }

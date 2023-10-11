@@ -12,9 +12,9 @@ Budget _$BudgetFromJson(Map<String, dynamic> json) => Budget()
   ..startDate = json['startDate'] == null
       ? null
       : DateTime.parse(json['startDate'] as String)
-  ..endDate = json['endDate'] == null
-      ? null
-      : DateTime.parse(json['endDate'] as String);
+  ..endDate =
+      json['endDate'] == null ? null : DateTime.parse(json['endDate'] as String)
+  ..notification = json['notification'] as Map<String, dynamic>?;
 
 Map<String, dynamic> _$BudgetToJson(Budget instance) {
   final val = <String, dynamic>{};
@@ -29,5 +29,6 @@ Map<String, dynamic> _$BudgetToJson(Budget instance) {
   writeNotNull('amount', instance.amount);
   writeNotNull('startDate', instance.startDate?.toIso8601String());
   writeNotNull('endDate', instance.endDate?.toIso8601String());
+  writeNotNull('notification', instance.notification);
   return val;
 }

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:money_tracker/api/eurostat_currency_api.dart';
-import 'package:money_tracker/resources/notification_service.dart';
 import 'package:money_tracker/resources/user_simple_preferences.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:money_tracker/widgets/indicator.dart';
 import '../api/nbp_currency_api.dart';
 import '../global.dart';
 import 'package:collection/collection.dart';
-import 'package:app_settings/app_settings.dart';
 
 late Future<List<CurrencyData>> nbpCurrency;
 bool chooseAll = false;
@@ -35,7 +33,6 @@ class ExchangeRates extends StatefulWidget {
 class _ExchangeRatesState extends State<ExchangeRates> {
   List<CurrencyData> currencyDataList = [];
   Future<List<CurrencyData>>? combinedCurrency;
-  final NotificationService notificationService = NotificationService();
 
   @override
   void initState() {
@@ -71,14 +68,7 @@ class _ExchangeRatesState extends State<ExchangeRates> {
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).colorScheme.secondary)),
                     IconButton(
-                        // onPressed: () => chooseCurrencyRate(context),
-                        onPressed: () {
-                          // AppSettings.openAppSettings();
-                          notificationService.showNotification(
-                            title: 'Limit budżetu',
-                            body: 'Wykorzystano już 90% ustawionego budżetu.',
-                          );
-                        },
+                        onPressed: () => chooseCurrencyRate(context),
                         icon: const Icon(
                           Icons.more_vert,
                           color: Colors.black,

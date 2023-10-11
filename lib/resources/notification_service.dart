@@ -1,16 +1,32 @@
 import 'dart:io';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:money_tracker/models/notification.dart';
+import 'package:money_tracker/resources/network_service.dart';
 import 'package:timezone/timezone.dart' as tz;
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:money_tracker/resources/user_simple_preferences.dart';
+import '../global.dart';
+
+class NotificationConstants {
+  static const String channelID = 'your_channel_id';
+  static const String channelName = 'your_channel_name';
+  static const String channelDescription = 'your_channel_description';
+}
 
 class NotificationService {
+  final String _urlPrefix = NetworkService.getApiUrl();
   static final NotificationService _singleton = NotificationService._internal();
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  factory NotificationService() {
+    return _singleton;
+  }
+
   NotificationService._internal() {
     const initializationSettings = InitializationSettings(
-      // android: AndroidInitializationSettings('@mipmap/notification_icon'),
       android: AndroidInitializationSettings('@mipmap/logo'),
     );
 
@@ -21,38 +37,51 @@ class NotificationService {
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
           ?.createNotificationChannel(const AndroidNotificationChannel(
-            'your_channel_id',
-            'your_channel_name',
-            description: 'your_channel_description',
+            NotificationConstants.channelID,
+            NotificationConstants.channelName,
+            description: NotificationConstants.channelDescription,
             importance: Importance.high,
           ));
     }
   }
 
-  factory NotificationService() {
-    return _singleton;
-  }
+  Future<void> scheduleMonthlyNotification(int day, int hour, int minute,
+      {int notificationId = 0}) async {
+    const AndroidNotificationDetails androidDetails =
+        AndroidNotificationDetails(
+      NotificationConstants.channelID,
+      NotificationConstants.channelName,
+      channelDescription: NotificationConstants.channelDescription,
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+    const NotificationDetails notificationDetails =
+        NotificationDetails(android: androidDetails);
 
-  Future<void> simpleNotification() async {
-    await flutterLocalNotificationsPlugin.show(
+    final now = tz.TZDateTime.now(tz.local);
+    var scheduledDate =
+        tz.TZDateTime(tz.local, now.year, now.month, day, hour, minute);
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate =
+          tz.TZDateTime(tz.local, now.year, now.month + 1, day, hour, minute);
+    }
+    print('Scheduled Date: $scheduledDate');
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
       0,
-      'Simple Notification Title',
-      'Simple Notification Body',
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'your_channel_id',
-          'your_channel_name',
-          channelDescription: 'your_channel_description',
-        ),
-      ),
+      'Notification Title',
+      'Notification Body',
+      scheduledDate,
+      notificationDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.dayOfMonthAndTime,
     );
   }
 
-  Future<void> showNotification({
-    required String title,
-    required String body,
-    int id = 0,
-  }) async {
+  Future<void> showNotification(
+      {required String title, required String body, int id = 0}) async {
     const AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails(
       'your_channel_id',
@@ -73,33 +102,44 @@ class NotificationService {
     );
   }
 
-  void scheduleMonthlyNotification() {
-    const AndroidNotificationDetails androidDetails =
-        AndroidNotificationDetails(
-      'channel_id',
-      'channel_name',
-      channelDescription: 'channel_description',
-      importance: Importance.max,
-      priority: Priority.high,
+  addNewNotification(MyNotification notification) async {
+    Map<String, dynamic> body = {'notification': notification};
+    final http.Response res = await client.post(
+      Uri.parse('$_urlPrefix/notification/addNewNotification'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': UserSimplePreferences.accessToken
+      },
+      body: jsonEncode(body),
     );
-    const NotificationDetails notificationDetails =
-        NotificationDetails(android: androidDetails);
+    return json.decode(res.body);
+  }
 
-    final currentYear = DateTime.now().year;
-    final currentMonth = DateTime.now().month;
-
-    final scheduledDate = tz.TZDateTime(tz.local, currentYear, currentMonth, 10,
-        8); //10th day of the month at 8 AM
-
-    flutterLocalNotificationsPlugin.zonedSchedule(
-      0,
-      'Notification Title',
-      'Notification Body',
-      scheduledDate,
-      notificationDetails,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+  updateNotification(MyNotification notification) async {
+    Map<String, dynamic> body = {'notification': notification};
+    final http.Response res = await client.post(
+      Uri.parse('$_urlPrefix/notification/updateNotification'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': UserSimplePreferences.accessToken
+      },
+      body: jsonEncode(body),
     );
+    return json.decode(res.body);
+  }
+
+  getNotifications(String userId) async {
+    final http.Response res = await client.post(
+      Uri.parse('$_urlPrefix/notification/$userId/getNotifications'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': UserSimplePreferences.accessToken
+      },
+    );
+    Map<String, dynamic> cat = json.decode(res.body);
+    if (!cat['success']) return [];
+
+    return List<MyNotification>.from(
+        cat['notification'].map((u) => MyNotification.fromJson(u)));
   }
 }

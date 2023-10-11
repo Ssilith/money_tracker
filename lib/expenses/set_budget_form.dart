@@ -25,6 +25,8 @@ class _SetBudgetFormState extends State<SetBudgetForm> {
   final TextEditingController _startDate = TextEditingController();
   final TextEditingController _endDate = TextEditingController();
   DateTime now = DateTime.now();
+  int value = 90;
+  int over = 100;
 
   @override
   void initState() {
@@ -119,16 +121,101 @@ class _SetBudgetFormState extends State<SetBudgetForm> {
                       )
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
-                    child: Center(
-                      child: SimpleDarkButton(
-                          width: 300,
-                          onPressed: () {
-                            setNewBudget();
-                          },
-                          title: "Wyślij formularz"),
+                  if (user.notifications ?? true)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 20),
+                        const Text("Powiadomienia",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20)),
+                        const Divider(thickness: 2, height: 2),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Expanded(
+                                child: Text("O wykorzystanym limicie budżetu")),
+                            Container(
+                              width: 77,
+                              height: 40,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 4.0),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<int>(
+                                  value: value,
+                                  isExpanded: true,
+                                  onChanged: (val) {
+                                    setState(() {
+                                      value = val ?? 90;
+                                    });
+                                  },
+                                  items:
+                                      [95, 90, 85, 80, 70, 50].map((int value) {
+                                    return DropdownMenuItem<int>(
+                                      value: value,
+                                      child: Text(
+                                        value.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  dropdownColor: Theme.of(context).canvasColor,
+                                  iconEnabledColor:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                              ),
+                            ),
+                            const Text("%")
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Expanded(
+                                child: Text("O przekroczeniu limitu budżetu")),
+                            Container(
+                              width: 77,
+                              height: 40,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 4.0),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<int>(
+                                  value: over,
+                                  isExpanded: true,
+                                  onChanged: (val) {
+                                    setState(() {
+                                      over = val ?? 100;
+                                    });
+                                  },
+                                  items: [115, 110, 105, 100].map((int value) {
+                                    return DropdownMenuItem<int>(
+                                      value: value,
+                                      child: Text(
+                                        value.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  dropdownColor: Theme.of(context).canvasColor,
+                                  iconEnabledColor:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                              ),
+                            ),
+                            const Text("%")
+                          ],
+                        ),
+                      ],
                     ),
+                  if (!(user.notifications ?? false))
+                    const SizedBox(height: 10),
+                  Center(
+                    child: SimpleDarkButton(
+                        width: 300,
+                        onPressed: () {
+                          setNewBudget();
+                        },
+                        title: "Wyślij formularz"),
                   )
                 ],
               ),
@@ -178,6 +265,11 @@ class _SetBudgetFormState extends State<SetBudgetForm> {
     if (_amount.text.isNotEmpty &&
         _startDate.text.isNotEmpty &&
         _endDate.text.isNotEmpty) {
+      Map<String, dynamic> notification = {
+        'budgetValue': value,
+        'budgetOver': over
+      };
+
       Budget budget = Budget();
       budget.amount = double.parse(_amount.text.trim().replaceAll(',', '.'));
       DateTime parsedStartDate = DateTime.parse(_startDate.text);
@@ -186,6 +278,7 @@ class _SetBudgetFormState extends State<SetBudgetForm> {
       DateTime newEndDate = parsedEndDate.add(const Duration(hours: 2));
       budget.startDate = newStartDate;
       budget.endDate = newEndDate;
+      budget.notification = notification;
 
       var res = await BudgetService().addNewBudget(budget, user.id!);
 

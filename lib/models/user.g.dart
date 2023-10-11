@@ -15,6 +15,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User()
   ..token = json['token'] as String?
   ..permissions = json['permissions'] as bool?
   ..onboard = json['onboard'] as bool?
+  ..notifications = json['notifications'] as bool?
   ..transactionId =
       (json['transactionId'] as List<dynamic>).map((e) => e as String).toList()
   ..budgetId =
@@ -41,6 +42,7 @@ Map<String, dynamic> _$UserToJson(User instance) {
   writeNotNull('token', instance.token);
   writeNotNull('permissions', instance.permissions);
   writeNotNull('onboard', instance.onboard);
+  writeNotNull('notifications', instance.notifications);
   val['transactionId'] = instance.transactionId;
   val['budgetId'] = instance.budgetId;
   val['notificationId'] = instance.notificationId;
