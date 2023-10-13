@@ -120,9 +120,6 @@ class _ExchangeRatesState extends State<ExchangeRates> {
             ],
           ),
         ));
-    //     ),
-    //   ),
-    // );
   }
 
   Future chooseCurrencyRate(BuildContext context) {
@@ -197,56 +194,53 @@ Widget buildCurrencyCard(CurrencyData currencyData, BuildContext context) {
               Text(
                 "${currencyData.rate} ${currencyData.toName == 'PLN' ? 'zł' : currencyData.toName == 'CZK' ? 'Kč' : currencyData.toName == 'CHF' ? 'Fr.' : '€'}",
                 style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             ],
           ),
           const SizedBox(height: 10),
-          buildLineChart(currencyData),
+          buildLineChart(currencyData, context),
         ],
       ),
     ),
   );
 }
 
-Widget buildLineChart(CurrencyData currencyData) {
+Widget buildLineChart(CurrencyData currencyData, BuildContext context) {
   return SizedBox(
     height: 180,
-    child: Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: LineChart(
-        LineChartData(
-          gridData: const FlGridData(show: true),
-          titlesData: const FlTitlesData(show: false),
-          borderData: FlBorderData(show: false),
-          lineBarsData: [
-            LineChartBarData(
-              dotData: const FlDotData(show: true),
-              spots: currencyData.weekly
-                  .asMap()
-                  .map((index, rate) =>
-                      MapEntry(index, FlSpot(index.toDouble(), rate)))
-                  .values
-                  .toList(),
-              isCurved: false,
-              color: currencyData.toName == 'PLN'
-                  ? const Color.fromARGB(255, 237, 136, 34)
-                  : const Color.fromARGB(255, 14, 54, 99),
-              barWidth: 2.5,
-              isStrokeCapRound: false,
-              belowBarData: BarAreaData(
-                show: true,
-                color: (currencyData.toName == 'PLN'
-                        ? const Color.fromARGB(255, 244, 208, 161)
-                        : const Color.fromARGB(255, 89, 120, 169))
-                    .withOpacity(0.3),
-              ),
+    child: LineChart(
+      LineChartData(
+        gridData: const FlGridData(show: false),
+        titlesData: const FlTitlesData(show: false),
+        borderData: FlBorderData(show: false),
+        lineBarsData: [
+          LineChartBarData(
+            dotData: const FlDotData(show: false),
+            spots: currencyData.weekly
+                .asMap()
+                .map((index, rate) =>
+                    MapEntry(index, FlSpot(index.toDouble(), rate)))
+                .values
+                .toList(),
+            isCurved: false,
+            color: currencyData.toName == 'PLN'
+                ? Theme.of(context).colorScheme.secondary
+                : const Color.fromARGB(255, 14, 54, 99),
+            barWidth: 2.5,
+            isStrokeCapRound: false,
+            belowBarData: BarAreaData(
+              show: true,
+              color: (currencyData.toName == 'PLN'
+                      ? const Color.fromARGB(255, 38, 174, 108)
+                      : const Color.fromARGB(255, 89, 120, 169))
+                  .withOpacity(0.3),
             ),
-          ],
-          lineTouchData: const LineTouchData(
-              touchTooltipData:
-                  LineTouchTooltipData(tooltipBgColor: Colors.white)),
-        ),
+          ),
+        ],
+        lineTouchData: const LineTouchData(
+            touchTooltipData:
+                LineTouchTooltipData(tooltipBgColor: Colors.white)),
       ),
     ),
   );
