@@ -9,9 +9,9 @@ import 'package:money_tracker/resources/user_simple_preferences.dart';
 import '../global.dart';
 
 class NotificationConstants {
-  static const String channelID = 'your_channel_id';
-  static const String channelName = 'your_channel_name';
-  static const String channelDescription = 'your_channel_description';
+  static const String channelID = 'my_channel_id';
+  static const String channelName = 'my_channel_name';
+  static const String channelDescription = 'my_channel_description';
 }
 
 class NotificationService {
@@ -45,8 +45,8 @@ class NotificationService {
     }
   }
 
-  Future<void> scheduleMonthlyNotification(int day, int hour, int minute,
-      {int notificationId = 0}) async {
+  Future<void> scheduleMonthlyNotification(
+      int day, int hour, int minute, String name, int id) async {
     const AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails(
       NotificationConstants.channelID,
@@ -65,12 +65,13 @@ class NotificationService {
       scheduledDate =
           tz.TZDateTime(tz.local, now.year, now.month + 1, day, hour, minute);
     }
+
     print('Scheduled Date: $scheduledDate');
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
-      0,
-      'Notification Title',
-      'Notification Body',
+      id,
+      'Przypomnenie o płatności!',
+      'Pamiętaj o zapłacie podatku $name.',
       scheduledDate,
       notificationDetails,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
@@ -84,9 +85,9 @@ class NotificationService {
       {required String title, required String body, int id = 0}) async {
     const AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails(
-      'your_channel_id',
-      'your_channel_name',
-      channelDescription: 'your_channel_description',
+      NotificationConstants.channelID,
+      NotificationConstants.channelName,
+      channelDescription: NotificationConstants.channelDescription,
       importance: Importance.max,
       priority: Priority.max,
     );

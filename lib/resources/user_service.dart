@@ -9,7 +9,6 @@ import 'network_service.dart';
 class UserService {
   static final UserService _instance = UserService._();
 
-  //Private constructor for singleton use
   UserService._() {
     if (UserSimplePreferences.refreshToken != '') isAuthenticated.value = true;
   }
@@ -19,7 +18,6 @@ class UserService {
   final String _urlPrefix = NetworkService.getApiUrl();
   final ValueNotifier<bool> isAuthenticated = ValueNotifier(false);
 
-  //AUTH
   Future<bool> login(
       String email, String password, BuildContext context) async {
     final http.Response res = await client.post(
@@ -34,8 +32,8 @@ class UserService {
 
     if (decodedBody['success']) {
       UserSimplePreferences.accessToken = decodedBody['accessToken']!;
-      UserSimplePreferences.refreshToken = decodedBody['refreshToken']!;
       await getUserData();
+      UserSimplePreferences.refreshToken = decodedBody['refreshToken']!;
     }
 
     return decodedBody['success'];
@@ -127,9 +125,6 @@ class UserService {
     return decodedBody['success'];
   }
 
-  //OTHER
-  //this method required user to confirm his identity
-  //verificationToken is the token that can be obtained from /confirmIdentity endpoint
   addUser(
     BuildContext context,
     User newUser,

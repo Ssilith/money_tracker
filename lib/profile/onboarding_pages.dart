@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:money_tracker/main.dart';
+import 'package:money_tracker/models/notification.dart';
 import 'package:money_tracker/models/user.dart';
+import 'package:money_tracker/resources/notification_service.dart';
 import 'package:money_tracker/resources/user_service.dart';
 
 class OnboardingPages extends StatefulWidget {
@@ -14,6 +16,7 @@ class OnboardingPages extends StatefulWidget {
 
 class _OnboardingPagesState extends State<OnboardingPages> {
   final introKey = GlobalKey<IntroductionScreenState>();
+  final notificationService = NotificationService();
 
   void _onIntroEnd(context) async {
     user.onboard = true;
@@ -21,6 +24,25 @@ class _OnboardingPagesState extends State<OnboardingPages> {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => const MyHomePage()),
     );
+  }
+
+  @override
+  void initState() {
+    setCyclicNotifications();
+    super.initState();
+  }
+
+  setCyclicNotifications() async {
+    if (user.notifications ?? false) {
+      int id = 13;
+      List<MyNotification> notif =
+          await NotificationService().getNotifications(user.id!);
+      for (MyNotification n in notif) {
+        await notificationService.scheduleMonthlyNotification(
+            n.date!.day, n.date!.hour, n.date!.minute, n.name!, id);
+        id++;
+      }
+    }
   }
 
   @override

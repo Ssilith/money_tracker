@@ -10,9 +10,7 @@ import 'package:money_tracker/expenses/new_expense_form.dart';
 import 'package:money_tracker/financial/main_financial.dart';
 import 'package:money_tracker/main_screens/exchange_rates.dart';
 import 'package:money_tracker/main_screens/summary_screen.dart';
-import 'package:money_tracker/models/user.dart';
 import 'package:money_tracker/resources/initialization_service.dart';
-import 'package:money_tracker/resources/notification_service.dart';
 import 'package:money_tracker/resources/user_service.dart';
 import 'package:money_tracker/widgets/side_drawer.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
@@ -110,28 +108,6 @@ class _MyHomePageState extends State<MyHomePage> {
       chosenScreen = newScreen;
     });
   }
-
-  final notificationService = NotificationService();
-  @override
-  void initState() {
-    super.initState();
-    _requestExactAlarmPermission();
-  }
-
-  _requestExactAlarmPermission() async {
-    // ...
-    await notificationService.scheduleMonthlyNotification(
-        DateTime.now().day, DateTime.now().hour, DateTime.now().minute + 2);
-    // ...
-  }
-
-  // Future<void> _requestExactAlarmPermission() async {
-  //   if (user.notifications ?? true) {
-  //     final notificationService = NotificationService();
-  //     notificationService.scheduleMonthlyNotification(11, 20, 40);
-  //     print('Scheduling notification for:');
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
