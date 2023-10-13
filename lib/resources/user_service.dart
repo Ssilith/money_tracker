@@ -176,23 +176,6 @@ class UserService {
     return decodedBody['success'];
   }
 
-  Future<List<User>> getUsersForAdmin(
-      [String sort = "UserView.alphabetic"]) async {
-    Map<String, String> headers = <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': UserSimplePreferences.accessToken,
-      'Sort': sort
-    };
-
-    final http.Response res = await client
-        .get(Uri.parse('$_urlPrefix/getUsersForAdmin'), headers: headers);
-
-    Map<String, dynamic> decodedBody = json.decode(res.body);
-    if (!decodedBody['success']) return [];
-
-    return List<User>.from(decodedBody['users'].map((u) => User.fromJson(u)));
-  }
-
   resetUserPassword(String password) async {
     Map<String, dynamic> body = {'email': user.email, 'password': password};
     final http.Response res =
@@ -216,23 +199,5 @@ class UserService {
             body: jsonEncode(body));
     Map<String, dynamic> userId = json.decode(res.body);
     return userId["id"];
-  }
-
-  Future<List<User>> getUserToAdmin(String adminId) async {
-    Map<String, String> headers = <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Authorization': UserSimplePreferences.accessToken
-    };
-
-    final http.Response res = await client.get(
-        Uri.parse('$_urlPrefix/$adminId/getUserToAdmin'),
-        headers: headers);
-    Map<String, dynamic> decodedBody = json.decode(res.body);
-
-    if (decodedBody['success']) {
-      return List<User>.from(decodedBody['users'].map((u) => User.fromJson(u)));
-    }
-
-    return decodedBody['success'];
   }
 }

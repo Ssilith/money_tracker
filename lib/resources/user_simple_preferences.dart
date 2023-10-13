@@ -10,7 +10,6 @@ class UserSimplePreferences {
   static Future init() async =>
       _preferences = await SharedPreferences.getInstance();
 
-  //AUTH
   static String get accessToken => _preferences.getString('accessToken') ?? "";
 
   static set accessToken(String value) =>
@@ -31,7 +30,6 @@ class UserSimplePreferences {
     UserService().isAuthenticated.value = false;
   }
 
-  //other
   static Future setChosenWidgets(List<String> widgets) async =>
       await _preferences.setStringList(_keyFilters, widgets);
   static List<String>? getChosenWidgets() =>
