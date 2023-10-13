@@ -66,8 +66,6 @@ class NotificationService {
           tz.TZDateTime(tz.local, now.year, now.month + 1, day, hour, minute);
     }
 
-    print('Scheduled Date: $scheduledDate');
-
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
       'Przypomnenie o płatności!',

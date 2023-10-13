@@ -232,7 +232,7 @@ class _RegisterFormState extends State<RegisterForm> {
                           children: [
                             const Expanded(
                               child: Text(
-                                "Sprawdź, czy aplikacja zezwala na wysyłanie powiadomień tutaj:",
+                                "Sprawdź, czy aplikacja zezwala na wysyłanie powiadomień i alarmów tutaj",
                                 maxLines: 2,
                               ),
                             ),

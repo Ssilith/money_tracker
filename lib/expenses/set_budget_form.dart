@@ -121,7 +121,7 @@ class _SetBudgetFormState extends State<SetBudgetForm> {
                       )
                     ],
                   ),
-                  if (user.notifications ?? true)
+                  if (user.notifications ?? false)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

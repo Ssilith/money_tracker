@@ -1,4 +1,6 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+import 'package:app_settings/app_settings.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -20,8 +22,6 @@ class EditProfileForm extends StatefulWidget {
   State<EditProfileForm> createState() => _EditProfileFormState();
 }
 
-//TODO: inf o powiadomieniach
-
 class _EditProfileFormState extends State<EditProfileForm> {
   final TextEditingController _name = TextEditingController();
   final TextEditingController _surname = TextEditingController();
@@ -30,6 +30,10 @@ class _EditProfileFormState extends State<EditProfileForm> {
   final TextEditingController _amount = TextEditingController();
   final TextEditingController _startDate = TextEditingController();
   final TextEditingController _endDate = TextEditingController();
+  final ExpandableController addMoreController = ExpandableController();
+  bool notification = user.notifications ?? false;
+  int value = 90;
+  int over = 100;
   DateTime now = DateTime.now();
   bool editBudget = false;
   Future? budgetData;
@@ -39,6 +43,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
   @override
   void initState() {
     budgetData = BudgetService().getCurrentBudget(user.id!);
+    addMoreController.expanded = notification;
     super.initState();
   }
 
@@ -83,15 +88,16 @@ class _EditProfileFormState extends State<EditProfileForm> {
               ),
             ];
           },
-          body: SizedBox(
-            // color: const Color.fromARGB(255, 253, 223, 158).withOpacity(0.2),
-            height: size.height,
+          body: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Padding(
               padding: EdgeInsets.only(
                   bottom: 4.0,
                   left: size.width * 0.04,
                   right: size.width * 0.04),
               child: ListView(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 children: [
                   const Text("Dane użytkownika",
                       style:
@@ -131,7 +137,67 @@ class _EditProfileFormState extends State<EditProfileForm> {
                   const Text("Dane powiadomień",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                  const Divider(thickness: 2, height: 2),
                   const SizedBox(height: 10),
+                  AnimatedToggleSwitch<bool>.size(
+                      indicatorColor: Theme.of(context).colorScheme.secondary,
+                      borderColor: Theme.of(context).colorScheme.secondary,
+                      indicatorSize: Size.fromWidth(size.width * 0.46),
+                      onChanged: (i) {
+                        setState(() {
+                          notification = i;
+                          addMoreController.expanded = i;
+                        });
+                      },
+                      iconBuilder: (value, size) {
+                        String text = value
+                            ? "Chcę otrzymywać powiadomienia"
+                            : "Nie chcę otrzymywać powiadomień";
+                        Color color =
+                            value == notification ? Colors.white : Colors.black;
+                        return Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 5),
+                            alignment: Alignment.center,
+                            child: Text(
+                              text,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                  color: color),
+                              textAlign: TextAlign.center,
+                            ));
+                      },
+                      current: notification,
+                      values: const [false, true]),
+                  const SizedBox(height: 15),
+                  ExpandablePanel(
+                      controller: addMoreController,
+                      collapsed: const SizedBox(),
+                      expanded: Column(
+                        children: [
+                          InkWell(
+                            child: Row(
+                              children: [
+                                const Expanded(
+                                  child: Text(
+                                    "Sprawdź, czy aplikacja zezwala na wysyłanie powiadomień i alarmów tutaj",
+                                    maxLines: 2,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.arrow_forward,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                  size: 28,
+                                )
+                              ],
+                            ),
+                            onTap: () => AppSettings.openAppSettings(),
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      )),
                   const Text("Dane budżetu",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
@@ -184,7 +250,10 @@ class _EditProfileFormState extends State<EditProfileForm> {
                           } else {
                             if (!isBudgetDataInitialized) {
                               var data = snapshot.data!;
-                              print(data);
+                              value =
+                                  data['budget']['notification']['budgetValue'];
+                              over =
+                                  data['budget']['notification']['budgetOver'];
                               id = data['budget']['_id'];
                               DateTime startDate =
                                   DateTime.parse(data['budget']['startDate']);
@@ -235,6 +304,106 @@ class _EditProfileFormState extends State<EditProfileForm> {
                                     )
                                   ],
                                 ),
+                                if (notification)
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 20),
+                                      const Text("Powiadomienia",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20)),
+                                      const Divider(thickness: 2, height: 2),
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Expanded(
+                                              child: Text(
+                                                  "O wykorzystanym limicie budżetu")),
+                                          Container(
+                                            width: 77,
+                                            height: 40,
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8.0, vertical: 4.0),
+                                            child: DropdownButtonHideUnderline(
+                                              child: DropdownButton<int>(
+                                                value: value,
+                                                isExpanded: true,
+                                                onChanged: (val) {
+                                                  setState(() {
+                                                    value = val ?? 90;
+                                                  });
+                                                },
+                                                items: [95, 90, 85, 80, 70, 50]
+                                                    .map((int value) {
+                                                  return DropdownMenuItem<int>(
+                                                    value: value,
+                                                    child: Text(
+                                                      value.toString(),
+                                                    ),
+                                                  );
+                                                }).toList(),
+                                                dropdownColor: Theme.of(context)
+                                                    .canvasColor,
+                                                iconEnabledColor:
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .secondary,
+                                              ),
+                                            ),
+                                          ),
+                                          const Text("%")
+                                        ],
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Expanded(
+                                              child: Text(
+                                                  "O przekroczeniu limitu budżetu")),
+                                          Container(
+                                            width: 77,
+                                            height: 40,
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 8.0, vertical: 4.0),
+                                            child: DropdownButtonHideUnderline(
+                                              child: DropdownButton<int>(
+                                                value: over,
+                                                isExpanded: true,
+                                                onChanged: (val) {
+                                                  setState(() {
+                                                    over = val ?? 100;
+                                                  });
+                                                },
+                                                items: [115, 110, 105, 100]
+                                                    .map((int value) {
+                                                  return DropdownMenuItem<int>(
+                                                    value: value,
+                                                    child: Text(
+                                                      value.toString(),
+                                                    ),
+                                                  );
+                                                }).toList(),
+                                                dropdownColor: Theme.of(context)
+                                                    .canvasColor,
+                                                iconEnabledColor:
+                                                    Theme.of(context)
+                                                        .colorScheme
+                                                        .secondary,
+                                              ),
+                                            ),
+                                          ),
+                                          const Text("%")
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                if (!(notification)) const SizedBox(height: 10),
                               ],
                             );
                           }
@@ -246,11 +415,22 @@ class _EditProfileFormState extends State<EditProfileForm> {
                           width: 300,
                           onPressed: () {
                             if (editBudget) {
-                              updateBudget(context, _amount, _startDate,
-                                  _endDate, _name, _surname, _phone, _mail, id);
+                              updateBudget(
+                                  context,
+                                  _amount,
+                                  _startDate,
+                                  _endDate,
+                                  _name,
+                                  _surname,
+                                  _phone,
+                                  _mail,
+                                  id,
+                                  notification,
+                                  value,
+                                  over);
                             } else {
-                              updateUser(
-                                  context, _name, _surname, _phone, _mail);
+                              updateUser(context, _name, _surname, _phone,
+                                  _mail, notification);
                             }
                           },
                           title: "Potwierdź zmiany"),
@@ -306,7 +486,8 @@ updateUser(
     TextEditingController name,
     TextEditingController surname,
     TextEditingController phone,
-    TextEditingController mail) async {
+    TextEditingController mail,
+    bool notification) async {
   if (name.text.isEmpty) {
     showInfo('Imię jest wymagane.', Colors.blue);
     return;
@@ -330,6 +511,7 @@ updateUser(
     updatedUser.name = name.text.trim();
     updatedUser.surname = surname.text.trim();
     updatedUser.email = mail.text.trim();
+    updatedUser.notifications = notification;
 
     if (phone.text != "") {
       updatedUser.telephone = phone.text;
@@ -373,7 +555,10 @@ updateBudget(
     TextEditingController surname,
     TextEditingController phone,
     TextEditingController mail,
-    String id) async {
+    String id,
+    bool notification,
+    int value,
+    int over) async {
   if (amount.text.isEmpty) {
     showInfo('Kwota jest wymagana.', Colors.blue);
     return;
@@ -387,6 +572,13 @@ updateBudget(
   if (amount.text.isNotEmpty ||
       endDate.text.isNotEmpty ||
       startDate.text.isNotEmpty) {
+    Map<String, dynamic> notificationBudget = {
+      'budgetValue': value,
+      'sentBudgetValue': false,
+      'budgetOver': over,
+      'sentBudgetOver': false
+    };
+
     Budget updatedBudget = Budget();
     updatedBudget.id = id;
     updatedBudget.amount =
@@ -397,13 +589,14 @@ updateBudget(
     DateTime newEndDate = parsedEndDate.add(const Duration(hours: 2));
     updatedBudget.startDate = newStartDate;
     updatedBudget.endDate = newEndDate;
+    updatedBudget.notification = notificationBudget;
 
     if (!context.mounted) return;
     Map<String, dynamic> budgetRes =
         await BudgetService().updateBudget(updatedBudget, user.id!);
     if (budgetRes['success']) {
       if (!context.mounted) return;
-      updateUser(context, name, surname, phone, mail);
+      updateUser(context, name, surname, phone, mail, notification);
     } else if (!budgetRes['success'] &&
         budgetRes['message'] == 'budgetOverlaps') {
       showInfo(

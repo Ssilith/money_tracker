@@ -190,6 +190,7 @@ class _BalanceBoxState extends State<BalanceBox> {
   sentNotifications(var data) async {
     if (data['over90'] && !data['budget']['notification']['sentBudgetValue']) {
       notificationService.showNotification(
+        id: 0,
         title: 'Limit budżetu',
         body:
             'Wykorzystano już ${data['budget']['notification']['budgetValue']}% ustawionego budżetu.',
@@ -201,6 +202,7 @@ class _BalanceBoxState extends State<BalanceBox> {
     }
     if (data['over100'] && !data['budget']['notification']['sentBudgetOver']) {
       notificationService.showNotification(
+        id: 1,
         title: 'Przekroczenie budżetu',
         body:
             'Przekroczono już ${data['budget']['notification']['budgetOver']}% ustawionego budżetu.',
