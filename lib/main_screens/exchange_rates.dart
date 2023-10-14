@@ -128,45 +128,48 @@ class _ExchangeRatesState extends State<ExchangeRates> {
         builder: (context) {
           return StatefulBuilder(
               builder: (BuildContext context, StateSetter modalSetState) {
-            return Column(
-              children: [
-                Text("Wybierz waluty",
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold)),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: currencyDataList.length,
-                    itemBuilder: (context, index) {
-                      String currencyPair = currencyDataList[index].fromName;
-                      if (currencyDataList[index].toName != null) {
-                        currencyPair += " ${currencyDataList[index].toName}";
-                      }
-                      bool isSelected = chosenCurrency.contains(currencyPair);
-                      return CheckboxListTile(
-                        activeColor: Theme.of(context).colorScheme.secondary,
-                        value: isSelected,
-                        title: Text(currencyPair),
-                        onChanged: (bool? value) async {
-                          modalSetState(() {
-                            if (value!) {
-                              if (!chosenCurrency.contains(currencyPair)) {
-                                chosenCurrency.add(currencyPair);
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Text("Wybierz waluty",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: currencyDataList.length,
+                      itemBuilder: (context, index) {
+                        String currencyPair = currencyDataList[index].fromName;
+                        if (currencyDataList[index].toName != null) {
+                          currencyPair += " ${currencyDataList[index].toName}";
+                        }
+                        bool isSelected = chosenCurrency.contains(currencyPair);
+                        return CheckboxListTile(
+                          activeColor: Theme.of(context).colorScheme.secondary,
+                          value: isSelected,
+                          title: Text(currencyPair),
+                          onChanged: (bool? value) async {
+                            modalSetState(() {
+                              if (value!) {
+                                if (!chosenCurrency.contains(currencyPair)) {
+                                  chosenCurrency.add(currencyPair);
+                                }
+                              } else {
+                                chosenCurrency.remove(currencyPair);
                               }
-                            } else {
-                              chosenCurrency.remove(currencyPair);
-                            }
-                          });
-                          await UserSimplePreferences.setChosenCurrency(
-                              chosenCurrency);
-                          setState(() {});
-                        },
-                      );
-                    },
+                            });
+                            await UserSimplePreferences.setChosenCurrency(
+                                chosenCurrency);
+                            setState(() {});
+                          },
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           });
         });
