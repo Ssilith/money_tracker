@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:money_tracker/authentication/login_screen.dart';
-import 'package:money_tracker/create_document/privacy_policy.dart';
 import 'package:money_tracker/global.dart';
 import 'package:money_tracker/models/user.dart';
 import 'package:money_tracker/models/notification.dart';
@@ -327,13 +326,6 @@ class _RegisterFormState extends State<RegisterForm> {
                     textAlign: TextAlign.justify,
                     style:
                         TextStyle(fontStyle: FontStyle.italic, fontSize: 12)),
-                subtitle: InkWell(
-                    onTap: () => privacyPolicyPdf(),
-                    child: const Text(
-                        "Pełną klauzulę informacyjną znajdziesz pod tym adresem.",
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(
-                            fontStyle: FontStyle.italic, fontSize: 12))),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
