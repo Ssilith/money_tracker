@@ -1,12 +1,17 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:expandable/expandable.dart';
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:money_tracker/global.dart';
 import 'package:money_tracker/models/budget.dart';
+import 'package:money_tracker/models/category.dart';
 import 'package:money_tracker/resources/budget_service.dart';
+import 'package:money_tracker/resources/category_service.dart';
 import 'package:money_tracker/resources/user_service.dart';
 import 'package:money_tracker/widgets/indicator.dart';
 import 'package:money_tracker/widgets/message.dart';
@@ -28,6 +33,7 @@ class _EditProfileFormState extends State<EditProfileForm> {
   final TextEditingController _mail = TextEditingController();
   final TextEditingController _phone = TextEditingController();
   final TextEditingController _amount = TextEditingController();
+
   final TextEditingController _startDate = TextEditingController();
   final TextEditingController _endDate = TextEditingController();
   final ExpandableController addMoreController = ExpandableController();
@@ -35,14 +41,23 @@ class _EditProfileFormState extends State<EditProfileForm> {
   int value = 90;
   int over = 100;
   DateTime now = DateTime.now();
+
   bool editBudget = false;
   Future? budgetData;
   bool isBudgetDataInitialized = false;
   String id = "";
 
+  final TextEditingController _categoryName = TextEditingController();
+  Category? selectedcategory;
+  Future? allCategories;
+  bool updateCat = false;
+  Color chosenColor = Colors.white;
+  String catId = "";
+
   @override
   void initState() {
     budgetData = BudgetService().getCurrentBudget(user.id!);
+    allCategories = CategoryService().getCategories(user.id!);
     addMoreController.expanded = notification;
     super.initState();
   }
@@ -313,8 +328,8 @@ class _EditProfileFormState extends State<EditProfileForm> {
                                       const Text("Powiadomienia",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 20)),
-                                      const Divider(thickness: 2, height: 2),
+                                              fontSize: 18)),
+                                      const Divider(thickness: 1, height: 1),
                                       const SizedBox(height: 10),
                                       Row(
                                         mainAxisAlignment:
@@ -403,18 +418,127 @@ class _EditProfileFormState extends State<EditProfileForm> {
                                       ),
                                     ],
                                   ),
-                                if (!(notification)) const SizedBox(height: 10),
                               ],
                             );
                           }
                         }),
+                  const SizedBox(height: 10),
+                  const Text("Dane kategorii",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                  const Divider(thickness: 2, height: 2),
+                  const SizedBox(height: 10),
+                  FutureBuilder(
+                      future: allCategories,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Indicator();
+                        } else if (snapshot.hasError) {
+                          return const Center(
+                              child: Text(
+                                  'Wystąpił błąd. Spróbuj ponownie później.'));
+                        } else if (snapshot.data!.isEmpty) {
+                          return const Center(
+                              child: Text('Nie znaleziono budżetu.'));
+                        } else {
+                          List<Category> allCategories = snapshot.data!;
+                          return Container(
+                            width: size.width * 0.92,
+                            decoration: BoxDecoration(
+                              border: Border.all(width: 1, color: Colors.black),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<Category>(
+                                hint: const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Wybierz kategorię',
+                                    style: TextStyle(color: Colors.black54),
+                                  ),
+                                ),
+                                value: selectedcategory,
+                                isExpanded: true,
+                                onChanged: (Category? cat) {
+                                  setState(() {
+                                    updateCat = true;
+                                    selectedcategory = cat;
+                                    _categoryName.text = cat!.name!;
+                                    chosenColor = Color(
+                                        int.parse(cat.color ?? "0xFF000000"));
+                                    catId = cat.id!;
+                                  });
+                                },
+                                items: allCategories.map((Category categor) {
+                                  return DropdownMenuItem(
+                                    value: categor,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(categor.name!),
+                                    ),
+                                  );
+                                }).toList(),
+                                dropdownColor: Theme.of(context).canvasColor,
+                                iconEnabledColor:
+                                    Theme.of(context).colorScheme.secondary,
+                              ),
+                            ),
+                          );
+                        }
+                      }),
+                  if (updateCat)
+                    Column(
+                      children: [
+                        const SizedBox(height: 10),
+                        TextInputForm(
+                          width: size.width * 0.92,
+                          hint: "Nazwa",
+                          controller: _categoryName,
+                        ),
+                        ColorPicker(
+                          title: Text(
+                            'Kolor',
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                          color: chosenColor,
+                          onColorChanged: (Color color) =>
+                              setState(() => chosenColor = color),
+                          width: 44,
+                          height: 44,
+                          borderRadius: 22,
+                          subheading: Text(
+                            'Wybierz odcień',
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                        ),
+                      ],
+                    ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: Center(
                       child: SimpleDarkButton(
                           width: 300,
                           onPressed: () {
-                            if (editBudget) {
+                            if (updateCat) {
+                              updateCategory(
+                                  context,
+                                  _categoryName,
+                                  chosenColor,
+                                  catId,
+                                  _amount,
+                                  _startDate,
+                                  _endDate,
+                                  _name,
+                                  _surname,
+                                  _phone,
+                                  _mail,
+                                  id,
+                                  notification,
+                                  value,
+                                  over,
+                                  editBudget);
+                            } else if (editBudget) {
                               updateBudget(
                                   context,
                                   _amount,
@@ -591,11 +715,9 @@ updateBudget(
     updatedBudget.endDate = newEndDate;
     updatedBudget.notification = notificationBudget;
 
-    if (!context.mounted) return;
     Map<String, dynamic> budgetRes =
         await BudgetService().updateBudget(updatedBudget, user.id!);
     if (budgetRes['success']) {
-      if (!context.mounted) return;
       updateUser(context, name, surname, phone, mail, notification);
     } else if (!budgetRes['success'] &&
         budgetRes['message'] == 'budgetOverlaps') {
@@ -605,6 +727,46 @@ updateBudget(
     } else {
       if (!context.mounted) return;
       showInfo('Podczas zmiany danych budżetu wystąpił błąd.', Colors.red);
+    }
+  }
+}
+
+updateCategory(
+    BuildContext context,
+    TextEditingController catname,
+    Color chosenColor,
+    String catid,
+    TextEditingController amount,
+    TextEditingController startDate,
+    TextEditingController endDate,
+    TextEditingController name,
+    TextEditingController surname,
+    TextEditingController phone,
+    TextEditingController mail,
+    String id,
+    bool notification,
+    int value,
+    int over,
+    bool editBudget) async {
+  if (catname.text.isEmpty) {
+    showInfo('Nazwa jest wymagana.', Colors.blue);
+    return;
+  }
+  if (catname.text.isNotEmpty) {
+    Category updatedcategory = Category();
+    updatedcategory.name = catname.text.trim();
+    updatedcategory.color = '0xFF${chosenColor.hex}';
+    var catRes = await CategoryService().updateCategory(catid, updatedcategory);
+
+    if (catRes['success']) {
+      if (editBudget) {
+        updateBudget(context, amount, startDate, endDate, name, surname, phone,
+            mail, id, notification, value, over);
+      } else {
+        updateUser(context, name, surname, phone, mail, notification);
+      }
+    } else {
+      showInfo('Podczas zmiany danych categorii wystąpił błąd.', Colors.red);
     }
   }
 }

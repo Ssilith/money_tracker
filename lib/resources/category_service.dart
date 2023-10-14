@@ -33,8 +33,7 @@ class CategoryService {
       body: jsonEncode(body),
     );
     Map<String, dynamic> categories = json.decode(res.body);
-    if (!categories['success']) return {};
-    return Category.fromJson(categories['category']);
+    return categories;
   }
 
   getCategories(String userId) async {

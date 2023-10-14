@@ -9,6 +9,7 @@ import 'package:money_tracker/main.dart';
 import 'package:money_tracker/models/user.dart';
 import 'package:money_tracker/profile/edit_profile_form.dart';
 import 'package:money_tracker/resources/user_service.dart';
+import 'package:money_tracker/widgets/message.dart';
 import 'package:money_tracker/widgets/popup_window.dart';
 
 class SideDrawer extends StatelessWidget {
@@ -103,6 +104,7 @@ class SideDrawer extends StatelessWidget {
                         message: "Czy na pewno chcesz usunąć konto?",
                         onPressed: () async {
                           await UserService().deleteAccount(context, user.id!);
+                          showInfo("Konto zostało usunięte.", Colors.green);
                           Navigator.of(context).pop();
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
