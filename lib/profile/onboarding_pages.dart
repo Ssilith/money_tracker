@@ -6,6 +6,7 @@ import 'package:money_tracker/models/notification.dart';
 import 'package:money_tracker/models/user.dart';
 import 'package:money_tracker/resources/notification_service.dart';
 import 'package:money_tracker/resources/user_service.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class OnboardingPages extends StatefulWidget {
   const OnboardingPages({super.key});
@@ -17,6 +18,7 @@ class OnboardingPages extends StatefulWidget {
 class _OnboardingPagesState extends State<OnboardingPages> {
   final introKey = GlobalKey<IntroductionScreenState>();
   final notificationService = NotificationService();
+  final String timeZoneLocation = 'Europe/Warsaw';
 
   void _onIntroEnd(context) async {
     user.onboard = true;
@@ -28,8 +30,9 @@ class _OnboardingPagesState extends State<OnboardingPages> {
 
   @override
   void initState() {
-    setCyclicNotifications();
     super.initState();
+    tz.setLocalLocation(tz.getLocation(timeZoneLocation));
+    setCyclicNotifications();
   }
 
   setCyclicNotifications() async {

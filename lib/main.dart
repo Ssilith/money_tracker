@@ -16,6 +16,7 @@ import 'package:money_tracker/widgets/side_drawer.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -82,6 +83,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int screenIndex = 0;
   Screens chosenScreen = Screens.summaryScreen;
+  final String timeZoneLocation = 'Europe/Warsaw';
 
   Widget mainScreen() {
     switch (chosenScreen) {
@@ -107,6 +109,12 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       chosenScreen = newScreen;
     });
+  }
+
+  @override
+  void initState() {
+    tz.setLocalLocation(tz.getLocation(timeZoneLocation));
+    super.initState();
   }
 
   @override

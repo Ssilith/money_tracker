@@ -97,7 +97,7 @@ class _CostGaugeState extends State<CostGauge> {
                           fontWeight: FontWeight.w700,
                           height: 1)),
                   const Text(
-                    "KOSZTY W POPRZEDNIM MIESIĄCU",
+                    "KOSZTY W TYM MIESIĄCU",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                   if (monthCost['monthlyAverage']['averageCost'] != 0 &&
