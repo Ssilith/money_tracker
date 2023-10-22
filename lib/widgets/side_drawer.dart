@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:money_tracker/authentication/login_screen.dart';
 import 'package:money_tracker/expenses/new_category_form.dart';
+import 'package:money_tracker/expenses/new_type_form.dart';
 import 'package:money_tracker/expenses/set_budget_form.dart';
 import 'package:money_tracker/main.dart';
 import 'package:money_tracker/models/user.dart';
@@ -68,7 +69,15 @@ class SideDrawer extends StatelessWidget {
                       builder: (context) => const NewCategoryForm()));
                 },
                 text: "Dodaj kategorię",
-                icon: Icons.folder,
+                icon: Icons.add_box,
+                size: 26),
+            DrawerTile(
+                onTap: () {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const NewTypeForm()));
+                },
+                text: "Dodaj typ",
+                icon: Icons.create,
                 size: 26),
             DrawerTile(
                 onTap: () {

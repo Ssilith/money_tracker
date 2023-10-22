@@ -105,6 +105,7 @@ class _TilesTitleState extends State<TilesTitle> {
                       canvasColor: Colors.transparent,
                     ),
                     child: ReorderableListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: widgetItems.length,
                       itemBuilder: (BuildContext context, int index) {
@@ -146,9 +147,11 @@ class _TilesTitleState extends State<TilesTitle> {
                           widgetItems.insert(newIndex, item);
                         });
                         widget.updateScreen();
-
+                        List<WidgetItem> tempItems = widgetItems
+                            .where((element) => element.isSelected)
+                            .toList();
                         List<String> reorderedWidgets =
-                            widgetItems.map((item) => item.title).toList();
+                            tempItems.map((item) => item.title).toList();
                         UserSimplePreferences.setChosenWidgets(
                             reorderedWidgets);
                       },

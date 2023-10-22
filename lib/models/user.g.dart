@@ -23,7 +23,8 @@ User _$UserFromJson(Map<String, dynamic> json) => User()
   ..notificationId =
       (json['notificationId'] as List<dynamic>).map((e) => e as String).toList()
   ..categoryId =
-      (json['categoryId'] as List<dynamic>).map((e) => e as String).toList();
+      (json['categoryId'] as List<dynamic>).map((e) => e as String).toList()
+  ..typeId = (json['typeId'] as List<dynamic>).map((e) => e as String).toList();
 
 Map<String, dynamic> _$UserToJson(User instance) {
   final val = <String, dynamic>{};
@@ -47,5 +48,6 @@ Map<String, dynamic> _$UserToJson(User instance) {
   val['budgetId'] = instance.budgetId;
   val['notificationId'] = instance.notificationId;
   val['categoryId'] = instance.categoryId;
+  val['typeId'] = instance.typeId;
   return val;
 }

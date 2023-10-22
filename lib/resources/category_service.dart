@@ -51,7 +51,7 @@ class CategoryService {
         cat['category'].map((u) => Category.fromJson(u)));
   }
 
-  getCategoriesNames(String userId) async {
+  Future<List<String>> getCategoriesNames(String userId) async {
     final http.Response res = await client.post(
       Uri.parse('$_urlPrefix/category/$userId/getCategoriesNames'),
       headers: <String, String>{
