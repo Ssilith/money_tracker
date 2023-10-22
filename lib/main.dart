@@ -42,15 +42,25 @@ class MyApp extends StatelessWidget {
       title: 'Money Tracker',
       navigatorKey: navigatorKey,
       theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-            iconTheme: IconThemeData(color: Colors.white),
-            backgroundColor: Color(0xFF005b3d),
-            titleTextStyle: TextStyle(color: Colors.white, fontSize: 21)),
-        drawerTheme: const DrawerThemeData(),
-        colorScheme: const ColorScheme.light(secondary: Color(0xFF005b3d)),
-        useMaterial3: true,
-        fontFamily: "Poppins",
-      ),
+          appBarTheme: const AppBarTheme(
+              iconTheme: IconThemeData(color: Colors.white),
+              backgroundColor: Color(0xFF005b3d),
+              titleTextStyle: TextStyle(color: Colors.white, fontSize: 21)),
+          drawerTheme: const DrawerThemeData(),
+          dialogTheme: const DialogTheme(
+            elevation: 0,
+          ),
+          textSelectionTheme: const TextSelectionThemeData(
+            cursorColor: Colors.black,
+          ),
+          colorScheme: const ColorScheme.light(secondary: Color(0xFF005b3d)),
+          useMaterial3: true,
+          fontFamily: "Poppins",
+          inputDecorationTheme: const InputDecorationTheme(
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
+          )),
       home: ValueListenableBuilder<bool>(
         valueListenable: UserService().isAuthenticated,
         builder: (context, value, _) {

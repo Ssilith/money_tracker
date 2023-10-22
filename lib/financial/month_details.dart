@@ -72,50 +72,73 @@ class MonthDetailsSummary extends StatefulWidget {
 class _MonthDetailsSummaryState extends State<MonthDetailsSummary> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        MonthDetailsValueTitle(
-            name: "Przychody",
-            value:
-                currencyFormat("PLN").format(widget.monthlyData['totalIncome']),
-            width: widget.width * 0.98),
-        ...widget.monthlyData['incomes']
-            .map((finance) => MonthDetailsValueContainer(
-                  width: widget.width,
-                  name: finance['categoryName'],
-                  value: currencyFormat("PLN").format(finance['amount']),
-                )),
-        const SizedBox(height: 14),
-        MonthDetailsValueTitle(
-            name: "Koszty",
-            value:
-                currencyFormat("PLN").format(widget.monthlyData['totalCost']),
-            width: widget.width * 0.98),
-        ...widget.monthlyData['costs']
-            .map((finance) => MonthDetailsValueContainer(
-                  width: widget.width,
-                  name: finance['categoryName'],
-                  value: currencyFormat("PLN").format(finance['amount']),
-                )),
-        const SizedBox(height: 7),
-        Divider(
-          height: 10,
-          color: Theme.of(context).colorScheme.secondary,
-          thickness: 1,
-        ),
-        const SizedBox(height: 7),
-        MonthDetailsValueTitle(
-            name: (widget.monthlyData['totalIncome'] -
-                        widget.monthlyData['totalCost']) >=
-                    0
-                ? "Zysk"
-                : "Strata",
-            value: currencyFormat("PLN").format(
-                (widget.monthlyData['totalIncome'] -
-                        widget.monthlyData['totalCost'])
-                    .abs()),
-            width: widget.width * 0.98),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          MonthDetailsValueTitle(
+              name: "Przychody",
+              value: currencyFormat("PLN")
+                  .format(widget.monthlyData['totalIncome']),
+              width: widget.width * 0.98),
+          ...widget.monthlyData['incomes']
+              .map((finance) => MonthDetailsValueContainer(
+                    width: widget.width,
+                    name: finance['categoryName'],
+                    value: currencyFormat("PLN").format(finance['amount']),
+                  )),
+          const SizedBox(height: 14),
+          MonthDetailsValueTitle(
+              name: "Koszty",
+              value:
+                  currencyFormat("PLN").format(widget.monthlyData['totalCost']),
+              width: widget.width * 0.98),
+          ...widget.monthlyData['costs']
+              .map((finance) => MonthDetailsValueContainer(
+                    width: widget.width,
+                    name: finance['categoryName'],
+                    value: currencyFormat("PLN").format(finance['amount']),
+                  )),
+          ...widget.monthlyData['otherTypes'].entries.expand((entry) {
+            var type = entry.key;
+            var typeData = entry.value;
+            if (typeData['total'] == 0) {
+              return <Widget>[];
+            }
+            return [
+              const SizedBox(height: 14),
+              MonthDetailsValueTitle(
+                  name: type,
+                  value: currencyFormat("PLN").format(typeData['total']),
+                  width: widget.width * 0.98),
+              ...typeData['breakdown']
+                  .map((finance) => MonthDetailsValueContainer(
+                        width: widget.width,
+                        name: finance['categoryName'],
+                        value: currencyFormat("PLN").format(finance['amount']),
+                      ))
+            ];
+          }).toList(),
+          const SizedBox(height: 7),
+          Divider(
+            height: 10,
+            color: Theme.of(context).colorScheme.secondary,
+            thickness: 1,
+          ),
+          const SizedBox(height: 7),
+          MonthDetailsValueTitle(
+              name: (widget.monthlyData['totalIncome'] -
+                          widget.monthlyData['totalCost']) >=
+                      0
+                  ? "Zysk"
+                  : "Strata",
+              value: currencyFormat("PLN").format(
+                  (widget.monthlyData['totalIncome'] -
+                          widget.monthlyData['totalCost'])
+                      .abs()),
+              width: widget.width * 0.98,
+              fontsize: 22),
+        ],
+      ),
     );
   }
 }
@@ -124,11 +147,13 @@ class MonthDetailsValueTitle extends StatelessWidget {
   final String name;
   final String value;
   final double width;
+  final double fontsize;
   const MonthDetailsValueTitle(
       {super.key,
       required this.name,
       required this.value,
-      required this.width});
+      required this.width,
+      this.fontsize = 17});
 
   @override
   Widget build(BuildContext context) {
@@ -140,14 +165,14 @@ class MonthDetailsValueTitle extends StatelessWidget {
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
                     fontWeight: FontWeight.w500,
-                    fontSize: 17))),
+                    fontSize: fontsize))),
         SizedBox(
             width: width * 0.35,
             child: Text(value,
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
                     fontWeight: FontWeight.w500,
-                    fontSize: 17))),
+                    fontSize: fontsize))),
       ],
     );
   }

@@ -11,6 +11,7 @@ import 'package:money_tracker/models/user.dart';
 import 'package:money_tracker/resources/type_service.dart';
 import 'package:money_tracker/resources/user_service.dart';
 import 'package:money_tracker/widgets/message.dart';
+import 'package:money_tracker/widgets/simple_button.dart';
 import 'package:money_tracker/widgets/simple_dark_button.dart';
 import 'package:money_tracker/widgets/text_input_form.dart';
 
@@ -29,9 +30,30 @@ class _NewTypeFormState extends State<NewTypeForm> {
   IconData _iconData = Icons.create;
 
   _pickIcon() async {
-    IconData? icon = await FlutterIconPicker.showIconPicker(context,
-        title: const Text("Wybierz ikonę"), iconPackModes: [IconPack.material]);
-
+    IconData? icon = await FlutterIconPicker.showIconPicker(
+      context,
+      title: const Text("Wybierz ikonę"),
+      iconPackModes: [IconPack.material],
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      searchHintText: "Szukaj",
+      iconColor: Colors.white,
+      searchIcon: const Icon(
+        Icons.search,
+        color: Colors.white,
+      ),
+      searchClearIcon: const Icon(
+        Icons.close,
+        color: Colors.white,
+      ),
+      noResultsText: "Brak wyników",
+      closeChild: Center(
+        child: SimpleButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            text: "Anuluj"),
+      ),
+    );
     _iconData = icon ?? Icons.create;
     setState(() {});
   }

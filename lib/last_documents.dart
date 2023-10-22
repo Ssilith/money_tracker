@@ -135,8 +135,12 @@ class DocumentContainer extends StatelessWidget {
                   ],
                 ),
                 PaymentStatusChip(
-                  isPaid: document['type'] == 'Przychód',
-                )
+                    isPaid: document['type'] == 'Przychód'
+                        ? 0
+                        : document['type'] == 'Wydatek'
+                            ? 1
+                            : 2,
+                    data: document['transactionType'])
               ],
             ),
             showDescription && document['description'] != ""
@@ -150,8 +154,9 @@ class DocumentContainer extends StatelessWidget {
 }
 
 class PaymentStatusChip extends StatelessWidget {
-  final bool isPaid;
-  const PaymentStatusChip({super.key, required this.isPaid});
+  final int isPaid;
+  final Map? data;
+  const PaymentStatusChip({super.key, required this.isPaid, this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -159,18 +164,35 @@ class PaymentStatusChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       height: 30,
       decoration: BoxDecoration(
-          color: isPaid
+          color: isPaid == 0
               ? const Color.fromARGB(255, 38, 174, 108)
-              : const Color.fromARGB(255, 241, 81, 70),
+              : isPaid == 1
+                  ? const Color.fromARGB(255, 241, 81, 70)
+                  : Color(int.parse(data!['color'] ?? "0xFF000000")),
           borderRadius: BorderRadius.circular(10)),
       child: Row(children: [
-        Icon(isPaid ? Icons.check_circle : Icons.cancel_rounded, size: 16),
+        Icon(
+            isPaid == 0
+                ? Icons.check_circle
+                : isPaid == 1
+                    ? Icons.cancel_rounded
+                    : parseToIconData(data!['icon']),
+            size: 16),
         const SizedBox(width: 5),
         Text(
-          isPaid ? "Przychód" : "Wydatek",
+          isPaid == 0
+              ? "Przychód"
+              : isPaid == 1
+                  ? "Wydatek"
+                  : data!['name'],
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
         )
       ]),
     );
   }
+}
+
+parseToIconData(int datapoint) {
+  IconData icons = IconData(datapoint, fontFamily: 'MaterialIcons');
+  return icons;
 }
