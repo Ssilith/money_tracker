@@ -105,7 +105,7 @@ class _RegisterFormState extends State<RegisterForm> {
                           SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              "Po co nam informacja o terminie podatków?",
+                              "Po co nam informacja o terminie płatności?",
                               maxLines: 2,
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
@@ -118,7 +118,7 @@ class _RegisterFormState extends State<RegisterForm> {
                           children: [
                             TextSpan(
                                 text:
-                                    "Podanie informacji o terminie płatności Twoich podatków w aplikacji jest całkowicie opcjonalne. Jednakże, znając dokładną datę, możemy pomóc Ci lepiej zarządzać Twoim budżetem i przypomnieć o zbliżającym się terminie, co może pomóc uniknąć nieprzyjemnych sytuacji związanych z opóźnionymi płatnościami.\nPamiętaj, że zaznaczając opcję ",
+                                    "Podanie informacji o terminie płatności w aplikacji jest całkowicie opcjonalne. Jednakże, znając dokładną datę, możemy pomóc Ci lepiej zarządzać Twoim budżetem i przypomnieć o zbliżającym się terminie, co może pomóc uniknąć nieprzyjemnych sytuacji związanych z opóźnionymi płatnościami.\nPamiętaj, że zaznaczając opcję ",
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontFamily: "Poppins")),
