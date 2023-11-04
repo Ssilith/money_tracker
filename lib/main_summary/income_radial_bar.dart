@@ -66,7 +66,8 @@ class _IncomeRadailBarState extends State<IncomeRadailBar> {
                             legend: Legend(
                                 shouldAlwaysShowScrollbar: false,
                                 isVisible: true,
-                                textStyle: const TextStyle(fontSize: 16)),
+                                textStyle:
+                                    const TextStyle(fontSize: 16, height: 0)),
                             onLegendTapped: (LegendTapArgs args) {
                               setState(() {
                                 labelOpacity[args.pointIndex!] =
