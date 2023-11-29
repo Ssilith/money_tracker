@@ -316,8 +316,10 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
   addNewTransaction() async {
     var cat = await CategoryService().getCategoryIdByName(category!);
     var typ;
-    if (type != "Wydatek" && type != "Przychod") {
+    if (type != "Wydatek" && type != "Przychod" && type != "Przychód") {
       typ = await TypeService().getTypeIdByName(type);
+    } else {
+      typ = {'success': true};
     }
     if (cat['success'] && typ['success']) {
       if (_amount.text.isNotEmpty && _date.text.isNotEmpty) {
@@ -328,7 +330,7 @@ class _NewExpenseFormState extends State<NewExpenseForm> {
         DateTime newDate = parsedDate.add(const Duration(hours: 2));
         transaction.date = newDate;
         transaction.category = cat['category']['_id'].toString();
-        if (type != "Wydatek" && type != "Przychod") {
+        if (type != "Wydatek" && type != "Przychod" && type != "Przychód") {
           transaction.type = typ['type']['_id'].toString();
         } else {
           transaction.type = type;

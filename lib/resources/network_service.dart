@@ -5,7 +5,7 @@ class NetworkService {
     if (kReleaseMode) {
       return "";
     } else {
-      return "http://192.168.112.107:8080"; //1.105
+      return "http://192.168.1.106:8080"; //1.105
     }
   }
 }
