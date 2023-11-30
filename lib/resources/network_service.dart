@@ -1,11 +1,7 @@
-import 'package:flutter/foundation.dart';
-
 class NetworkService {
   static String getApiUrl() {
-    if (kReleaseMode) {
-      return "";
-    } else {
-      return "http://192.168.1.106:8080"; //1.105
-    }
+    const ip =
+        String.fromEnvironment('API_IP', defaultValue: 'default_ip_here');
+    return "http://$ip:8080";
   }
 }
